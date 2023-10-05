@@ -23,12 +23,26 @@ public class TestFactory {
 
     public static ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type){
         // FIXME
+        if (type == ChessPiece.PieceType.KING){
+            return new KingPiece(pieceColor);
+        } else if(type == ChessPiece.PieceType.QUEEN){
+            return new QueenPiece(pieceColor);
+        } else if(type == ChessPiece.PieceType.ROOK) {
+            return new RookPiece(pieceColor);
+        } else if(type == ChessPiece.PieceType.BISHOP) {
+            return new BishopPiece(pieceColor);
+        } else if(type == ChessPiece.PieceType.KNIGHT) {
+            return new KnightPiece(pieceColor);
+        } else if(type == ChessPiece.PieceType.PAWN) {
+            return new PawnPiece(pieceColor);
+        }
+
 		return null;
     }
 
     public static ChessPosition getNewPosition(Integer row, Integer col){
         // FIXME
-		return null;
+		return new GameChessPosition(row, col);
     }
 
     public static ChessMove getNewMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece){
