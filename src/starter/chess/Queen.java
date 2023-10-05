@@ -1,12 +1,12 @@
 package chess;
 
-import java.util.Collection;
+import java.util.Set;
 
-public class BishopPiece implements ChessPiece{
-    private PieceType pieceType = PieceType.BISHOP;
+public class Queen implements ChessPiece{
+    private PieceType pieceType = PieceType.QUEEN;
     private ChessGame.TeamColor teamColor;
 
-    public BishopPiece(ChessGame.TeamColor teamColor) {
+    public Queen(ChessGame.TeamColor teamColor) {
         this.teamColor=teamColor;
     }
     @Override
@@ -20,7 +20,7 @@ public class BishopPiece implements ChessPiece{
     }
 
     @Override
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+    public Set<ChessMoveImpl> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         return null;
     }
 }

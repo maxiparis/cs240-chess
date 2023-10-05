@@ -1,10 +1,10 @@
 package chess;
 
-public class GameChessPosition implements ChessPosition{
+public class ChessPositionImpl implements ChessPosition{
     private int rowNumber;
     private int columnNumber;
 
-    public GameChessPosition(int rowNumber, int columnNumber) {
+    public ChessPositionImpl(int rowNumber, int columnNumber) {
         this.rowNumber=rowNumber;
         this.columnNumber=columnNumber;
     }

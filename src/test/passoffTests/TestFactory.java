@@ -12,7 +12,7 @@ public class TestFactory {
     //------------------------------------------------------------------------------------------------------------------
     public static ChessBoard getNewBoard(){
         // FIXME
-        GameChessBoard testChessBoard = new GameChessBoard();
+        ChessBoardImpl testChessBoard = new ChessBoardImpl();
 		return testChessBoard;
     }
 
@@ -24,17 +24,17 @@ public class TestFactory {
     public static ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type){
         // FIXME
         if (type == ChessPiece.PieceType.KING){
-            return new KingPiece(pieceColor);
+            return new King(pieceColor);
         } else if(type == ChessPiece.PieceType.QUEEN){
-            return new QueenPiece(pieceColor);
+            return new Queen(pieceColor);
         } else if(type == ChessPiece.PieceType.ROOK) {
-            return new RookPiece(pieceColor);
+            return new Rook(pieceColor);
         } else if(type == ChessPiece.PieceType.BISHOP) {
-            return new BishopPiece(pieceColor);
+            return new Bishop(pieceColor);
         } else if(type == ChessPiece.PieceType.KNIGHT) {
-            return new KnightPiece(pieceColor);
+            return new Knight(pieceColor);
         } else if(type == ChessPiece.PieceType.PAWN) {
-            return new PawnPiece(pieceColor);
+            return new Pawn(pieceColor);
         }
 
 		return null;
@@ -42,12 +42,13 @@ public class TestFactory {
 
     public static ChessPosition getNewPosition(Integer row, Integer col){
         // FIXME
-		return new GameChessPosition(row, col);
+		return new ChessPositionImpl(row, col);
     }
 
     public static ChessMove getNewMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece){
         // FIXME
-		return null;
+
+		return new ChessMoveImpl(startPosition, endPosition);
     }
     //------------------------------------------------------------------------------------------------------------------
 

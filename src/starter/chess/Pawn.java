@@ -1,12 +1,12 @@
 package chess;
 
-import java.util.Collection;
+import java.util.Set;
 
-public class RookPiece implements ChessPiece{
-    private PieceType pieceType = PieceType.ROOK;
+public class Pawn implements ChessPiece{
+    private PieceType pieceType = PieceType.PAWN;
     private ChessGame.TeamColor teamColor;
 
-    public RookPiece(ChessGame.TeamColor teamColor) {
+    public Pawn(ChessGame.TeamColor teamColor) {
         this.teamColor=teamColor;
     }
     @Override
@@ -20,7 +20,7 @@ public class RookPiece implements ChessPiece{
     }
 
     @Override
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+    public Set<ChessMoveImpl> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         return null;
     }
 }
