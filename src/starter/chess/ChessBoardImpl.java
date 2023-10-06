@@ -8,7 +8,7 @@ public class ChessBoardImpl implements ChessBoard {
     //constructor
     public ChessBoardImpl() {
         boardTable= new ChessPiece[8][8]; //0-7
-        resetBoard();
+//        resetBoard();
     }
 
 
