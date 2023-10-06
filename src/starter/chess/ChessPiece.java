@@ -73,4 +73,35 @@ public interface ChessPiece {
 
         return false;
     }
+
+    default boolean moveWouldGoOutOfBoard(ChessPosition endPosition) {
+        if (endPosition.getRow() > 8
+                || endPosition.getRow() < 1
+                || endPosition.getColumn() > 8
+                || endPosition.getColumn() < 1){
+            return true;
+        }
+
+        return false;
+    }
+
+    default ChessPositionImpl toLeftOf(ChessPosition myPosition){
+        ChessPositionImpl endDestination = new ChessPositionImpl(myPosition.getRow(), myPosition.getColumn()-1);
+        return endDestination;
+    }
+
+    default ChessPositionImpl toRightOf(ChessPosition myPosition){
+        ChessPositionImpl endDestination = new ChessPositionImpl(myPosition.getRow(), myPosition.getColumn()+1);
+        return endDestination;
+    }
+
+    default ChessPositionImpl goUpOf(ChessPosition myPosition){
+        ChessPositionImpl endDestination = new ChessPositionImpl(myPosition.getRow()+1, myPosition.getColumn());
+        return endDestination;
+    }
+
+    default ChessPositionImpl goDownOf(ChessPosition myPosition){
+        ChessPositionImpl endDestination = new ChessPositionImpl(myPosition.getRow()-1, myPosition.getColumn());
+        return endDestination;
+    }
 }

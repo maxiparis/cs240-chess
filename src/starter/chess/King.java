@@ -76,7 +76,7 @@ public class King implements ChessPiece{
                 int colMove = myColPosition + col;
 
                 ChessPositionImpl endPosition = new ChessPositionImpl(rowMove, colMove);
-                if(!pieceWouldGoOutOfBoard(endPosition)){
+                if(!moveWouldGoOutOfBoard(endPosition)){
                     ChessMoveImpl move = new ChessMoveImpl(myPosition, endPosition);
 
                     if(board.getPiece(endPosition) == null){
@@ -90,14 +90,5 @@ public class King implements ChessPiece{
         return possibleMoves;
     }
 
-    public boolean pieceWouldGoOutOfBoard(ChessPosition endPosition) {
-        if (endPosition.getRow() > 8
-            || endPosition.getRow() < 1
-            || endPosition.getColumn() > 8
-            || endPosition.getColumn() < 1){
-            return true;
-        }
 
-        return false;
-    }
 }
