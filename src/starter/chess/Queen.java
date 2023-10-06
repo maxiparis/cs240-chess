@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Queen implements ChessPiece{
@@ -21,6 +22,11 @@ public class Queen implements ChessPiece{
 
     @Override
     public Set<ChessMoveImpl> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return null;
+        Set<ChessMoveImpl> possibleMoves = new HashSet<>();
+
+        possibleMoves.addAll(getsPossibleLineMoves(board, myPosition));
+        possibleMoves.addAll(getsPossibleDiagonalMoves(board, myPosition));
+
+        return possibleMoves;
     }
 }
