@@ -40,4 +40,37 @@ public interface ChessPiece {
      * @return Collection of valid moves
      */
     Set<ChessMoveImpl> pieceMoves(ChessBoard board, ChessPosition myPosition);
+
+
+    default boolean thereIsAnEnemyIn(ChessBoard board, ChessPosition positionToCheck) {
+        //if the position at board is not null and is not my dataType -> (is my enemy)
+        //return true
+
+        if (board.getPiece(positionToCheck) != null
+                && board.getPiece(positionToCheck).getTeamColor() != this.getTeamColor()){
+            return true;
+        }
+
+        return false;
+    }
+
+    default boolean thereIsAnAllyIn(ChessBoard board, ChessPosition positionToCheck) {
+        //if the position at board is not null and is not my dataType -> (is my enemy)
+        //return true
+
+        if (board.getPiece(positionToCheck) != null
+                && board.getPiece(positionToCheck).getTeamColor() == this.getTeamColor()){
+            return true;
+        }
+
+        return false;
+    }
+
+    default boolean thereIsANullIn(ChessBoard board, ChessPosition positionToCheck) {
+        if (board.getPiece(positionToCheck) == null){
+            return true;
+        }
+
+        return false;
+    }
 }

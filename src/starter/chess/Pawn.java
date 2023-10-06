@@ -139,37 +139,7 @@ public class Pawn implements ChessPiece{
         return false;
     }
 
-    private boolean thereIsAnEnemyIn(ChessBoard board, ChessPosition positionToCheck) {
-        //if the position at board is not null and is not my dataType -> (is my enemy)
-            //return true
 
-        if (board.getPiece(positionToCheck) != null
-                && board.getPiece(positionToCheck).getTeamColor() != this.teamColor){
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean thereIsAnAllyIn(ChessBoard board, ChessPosition positionToCheck) {
-        //if the position at board is not null and is not my dataType -> (is my enemy)
-        //return true
-
-        if (board.getPiece(positionToCheck) != null
-                && board.getPiece(positionToCheck).getTeamColor() == this.teamColor){
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean thereIsANullIn(ChessBoard board, ChessPosition positionToCheck) {
-        if (board.getPiece(positionToCheck) == null){
-            return true;
-        }
-
-        return false;
-    }
 
 
 }
