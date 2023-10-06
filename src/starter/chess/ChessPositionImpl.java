@@ -33,4 +33,9 @@ public class ChessPositionImpl implements ChessPosition{
     public int getColumn() {
         return columnNumber;
     }
+
+    @Override
+    public String toString() {
+        return "(" + rowNumber + ", " + columnNumber + ") ";
+    }
 }

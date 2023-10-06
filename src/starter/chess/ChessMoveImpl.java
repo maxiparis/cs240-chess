@@ -13,10 +13,18 @@ public class ChessMoveImpl implements ChessMove{
     private ChessPiece.PieceType promotionPiece;
 
     //Constructor
+    //setting promotion piece as null automatically
     public ChessMoveImpl(ChessPosition startPosition, ChessPosition endPosition) {
         this.startPosition =(ChessPositionImpl) startPosition;
         this.endPosition =(ChessPositionImpl) endPosition;
         promotionPiece = null;
+    }
+
+    //Constructor for pawns
+    public ChessMoveImpl(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece) {
+        this.startPosition =(ChessPositionImpl) startPosition;
+        this.endPosition =(ChessPositionImpl) endPosition;
+        this.promotionPiece = promotionPiece;
     }
 
     @Override
@@ -49,5 +57,14 @@ public class ChessMoveImpl implements ChessMove{
     @Override
     public ChessPiece.PieceType getPromotionPiece() {
         return promotionPiece;
+    }
+
+    @Override
+    public String toString() {
+        return "Move{" +
+                "start" + startPosition +
+                ", end" + endPosition +
+                ", promotion=" + promotionPiece +
+                "}\n";
     }
 }
