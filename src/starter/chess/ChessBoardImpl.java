@@ -23,6 +23,11 @@ public class ChessBoardImpl implements ChessBoard {
 
     @Override
     public ChessPiece getPiece(ChessPosition position) {
+        //start fix
+        if ((position.getRow() == 0) || (position.getColumn() == 0)){
+            return null;
+        }
+        //end fix
         if(boardTable[position.getRow()-1][position.getColumn()-1] != null){
             return boardTable[position.getRow()-1][position.getColumn()-1];
         }
@@ -76,5 +81,10 @@ public class ChessBoardImpl implements ChessBoard {
         for (int column = 1; column <= 8; column++) {
             addPiece(new ChessPositionImpl(7,column),new Pawn(ChessGame.TeamColor.BLACK));
         }
+    }
+
+    @Override
+    public void removePiece(ChessPosition position) {
+        boardTable[position.getRow()-1][position.getColumn()-1] = null;
     }
 }

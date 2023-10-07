@@ -1,6 +1,6 @@
 package chess;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -28,10 +28,11 @@ public interface ChessGame {
 
     /**
      * Gets a valid moves for a piece at the given location
+     *
      * @param startPosition the piece to get valid moves for
      * @return Set of valid moves for requested piece, or null if no piece at startPosition
      */
-    Collection<ChessMove> validMoves(ChessPosition startPosition);
+    Set<ChessMoveImpl> validMoves(ChessPosition startPosition);
 
     /**
      * Makes a move in a chess game
