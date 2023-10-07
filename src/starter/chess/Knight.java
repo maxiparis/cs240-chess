@@ -39,61 +39,77 @@ public class Knight implements ChessPiece{
 
         //UP-UP-LEFT
         endPosition = goUpOf(goUpLeftOf(myPosition));
-        if(!moveWouldGoOutOfBoard(endPosition) || !thereIsAnAllyIn(board, endPosition)){
-            move = new ChessMoveImpl(myPosition, endPosition);
-            possibleMoves.add(move);
+        if(!moveWouldGoOutOfBoard(endPosition)){
+            if(!thereIsAnAllyIn(board, endPosition)){
+                move=new ChessMoveImpl(myPosition, endPosition);
+                possibleMoves.add(move);
+            }
         }
 
 
         //UP-UP-RIGHT
         endPosition = goUpOf(goUpRightOf(myPosition));
-        if(!moveWouldGoOutOfBoard(endPosition) || !thereIsAnAllyIn(board, endPosition)){
-            move = new ChessMoveImpl(myPosition, endPosition);
-            possibleMoves.add(move);
+        if(!moveWouldGoOutOfBoard(endPosition)){
+            if(!thereIsAnAllyIn(board, endPosition)){
+                move=new ChessMoveImpl(myPosition, endPosition);
+                possibleMoves.add(move);
+            }
         }
 
         //DOWN-DOWN-LEFT
         endPosition = goDownOf(goDownLeftOf(myPosition));
-        if(!moveWouldGoOutOfBoard(endPosition) || !thereIsAnAllyIn(board, endPosition)){
-            move = new ChessMoveImpl(myPosition, endPosition);
-            possibleMoves.add(move);
+        if(!moveWouldGoOutOfBoard(endPosition)){
+            if(!thereIsAnAllyIn(board, endPosition)){
+                move=new ChessMoveImpl(myPosition, endPosition);
+                possibleMoves.add(move);
+            }
         }
 
 
         //DOWN-DOWN-RIGHT
         endPosition = goDownOf(goDownRightOf(myPosition));
-        if(!moveWouldGoOutOfBoard(endPosition) || !thereIsAnAllyIn(board, endPosition)){
-            move = new ChessMoveImpl(myPosition, endPosition);
-            possibleMoves.add(move);
+        if(!moveWouldGoOutOfBoard(endPosition)){
+            if(!thereIsAnAllyIn(board, endPosition)){
+                move=new ChessMoveImpl(myPosition, endPosition);
+                possibleMoves.add(move);
+            }
         }
 
         //RIGHT-RIGHT-UP
         endPosition = goRightOf(goUpRightOf(myPosition));
-        if(!moveWouldGoOutOfBoard(endPosition) || !thereIsAnAllyIn(board, endPosition)){
-            move = new ChessMoveImpl(myPosition, endPosition);
-            possibleMoves.add(move);
+        if(!moveWouldGoOutOfBoard(endPosition)){
+            if(!thereIsAnAllyIn(board, endPosition)){
+                move=new ChessMoveImpl(myPosition, endPosition);
+                possibleMoves.add(move);
+            }
         }
 
         //RIGHT-RIGHT-DOWN
         endPosition = goRightOf(goDownRightOf(myPosition));
-        if(!moveWouldGoOutOfBoard(endPosition) || !thereIsAnAllyIn(board, endPosition)){
-            move = new ChessMoveImpl(myPosition, endPosition);
-            possibleMoves.add(move);
+        if(!moveWouldGoOutOfBoard(endPosition)){
+            if(!thereIsAnAllyIn(board, endPosition)){
+                move=new ChessMoveImpl(myPosition, endPosition);
+                possibleMoves.add(move);
+            }
         }
 
 
         //LEFT-LEFT-UP
         endPosition = goLeftOf(goUpLeftOf(myPosition));
-        if(!moveWouldGoOutOfBoard(endPosition) || !thereIsAnAllyIn(board, endPosition)){
-            move = new ChessMoveImpl(myPosition, endPosition);
-            possibleMoves.add(move);
+        if(!moveWouldGoOutOfBoard(endPosition)){
+            if(!thereIsAnAllyIn(board, endPosition)){
+                move=new ChessMoveImpl(myPosition, endPosition);
+                possibleMoves.add(move);
+            }
         }
 
         //LEFT-LEFT-DOWN
         endPosition = goLeftOf(goDownLeftOf(myPosition));
-        if(!moveWouldGoOutOfBoard(endPosition) || !thereIsAnAllyIn(board, endPosition)){
-            move = new ChessMoveImpl(myPosition, endPosition);
-            possibleMoves.add(move);
+        if(!moveWouldGoOutOfBoard(endPosition)){
+            if(!thereIsAnAllyIn(board, endPosition)){
+                move=new ChessMoveImpl(myPosition, endPosition);
+                possibleMoves.add(move);
+            }
         }
 
         return possibleMoves;
