@@ -23,7 +23,6 @@ public class ChessBoardImpl implements ChessBoard {
 
     @Override
     public ChessPiece getPiece(ChessPosition position) {
-
         if(boardTable[position.getRow()-1][position.getColumn()-1] != null){
             return boardTable[position.getRow()-1][position.getColumn()-1];
         }
