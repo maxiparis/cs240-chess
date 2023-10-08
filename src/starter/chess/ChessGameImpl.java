@@ -1,6 +1,6 @@
 package chess;
 
-import java.util.HashSet;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.Set;
 
 public class ChessGameImpl implements ChessGame{
@@ -61,11 +61,29 @@ public class ChessGameImpl implements ChessGame{
             throw new InvalidMoveException("InvalidMoveException: would leave the king in check");
         }
 
-//        if (piece.getPieceType() == ChessPiece.PieceType.PAWN){ //promotion
-//
-//        }
+        if (piece.getPieceType() == ChessPiece.PieceType.PAWN && move.getPromotionPiece() != null){ //promotion
+            ChessPiece promotionPiece= null;
+            switch (move.getPromotionPiece()){
+                case QUEEN:
+                    promotionPiece = new Queen(piece.getTeamColor());
+                    break;
+                case BISHOP:
+                    promotionPiece = new Bishop(piece.getTeamColor());
+                    break;
+                case ROOK:
+                    promotionPiece = new Rook(piece.getTeamColor());
+                    break;
+                case KNIGHT:
+                    promotionPiece = new Knight(piece.getTeamColor());
+                    break;
+                default:
+                    break;
+            }
+            board.addPiece(endPosition, promotionPiece);
+        } else {
+            board.addPiece(endPosition, piece);
+        }
 
-        board.addPiece(endPosition, piece);
         board.removePiece(startPosition);
         changeTurn(piece.getTeamColor());
     }
@@ -80,6 +98,21 @@ public class ChessGameImpl implements ChessGame{
 
     @Override
     public boolean isInCheck(TeamColor teamColor) {
+//        	○ Make a set with each possible move of each enemy piece on the board.
+//  	    ○ If there is at least one move that would end in my kings position
+//		        ○ Return true
+//          Return false
+        Set<ChessMove> enemyPieces = board.getMovesOfTeamColor(teamColor);
+        //do I need all the moves or just the moves.endPosition??
+        ChessPositionImpl myKingPosition = board.getKingPosition(teamColor);
+        for (ChessMove move : enemyPieces) {
+            if (move.getEndPosition() == myKingPosition){
+                return true;
+            }
+        }
+
+
+
         return false;
     }
 

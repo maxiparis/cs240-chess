@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ChessBoardImpl implements ChessBoard {
     //members
         //2d array of ChessPieces
@@ -87,4 +90,53 @@ public class ChessBoardImpl implements ChessBoard {
     public void removePiece(ChessPosition position) {
         boardTable[position.getRow()-1][position.getColumn()-1] = null;
     }
+
+    /**
+     * Creates a set with all the moves the teamColor could do.
+     * Traverse through all the board
+     *
+     * @param teamColor
+     * @return a set with all the moves that the teamColor could do
+     */
+    @Override
+    public Set<ChessMove> getMovesOfTeamColor(ChessGame.TeamColor teamColor) {
+        //set<ChessMove> toReturn;
+        //for i 0 ... 8
+            //for j 0...8
+                //if the piece is not null & is the teamColor
+                    //piecePosition = new ChessPosition(row = i+1, col= j+1)
+                    //toReturn.addAll(piece.pieceMoves(ChessBoard board = this.board, ChessPosition piecePosition));
+
+        Set<ChessMove> movesOfTeam = new HashSet<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                ChessPiece chessPiece = boardTable[i][j];
+                if (chessPiece != null && chessPiece.getTeamColor() == teamColor){
+                    ChessPositionImpl piecePosition = new ChessPositionImpl(i+1, j+1);
+                    movesOfTeam.addAll(chessPiece.pieceMoves(this, piecePosition));
+                }
+            }
+        }
+
+
+        return movesOfTeam;
+    }
+
+    @Override
+    public ChessPositionImpl getKingPosition(ChessGame.TeamColor teamColor) {
+        for (int row=1; row <= 8; row++) {
+            for (int col=1; col <= 8; col++) {
+                ChessPiece chessPiece = getPiece(new ChessPositionImpl(row,col));
+                if (chessPiece != null){
+                    if (chessPiece.getPieceType() == ChessPiece.PieceType.KING
+                            && chessPiece.getTeamColor() == teamColor){
+                        return new ChessPositionImpl(row, col); //King's team position
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
 }
