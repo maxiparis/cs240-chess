@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,20 +38,6 @@ public class ChessBoardImpl implements ChessBoard {
         return null;
     }
 
-    /**
-     * (row, column)
-    row
-    8       |r|n|b|q|k|b|n|r|
-    7       |p|p|p|p|p|p|p|p|
-    6       | | | | | | | | |
-    5       | | | | | | | | |
-    4       | | | | | | | | |
-    3       | | | | | | | | |
-    2       |P|P|P|P|P|P|P|P|
-    1       |R|N|B|Q|K|B|N|R|
-
-     column |1|2|3|4|5|6|7|8|
-     **/
 
     @Override
     public void resetBoard() {
@@ -138,5 +125,51 @@ public class ChessBoardImpl implements ChessBoard {
         return null;
     }
 
+    @Override
+    public String toString() {
+//      | | | | | | |q| |
+//		| | | | | | | | |
+//		| | |n| | | |p| |
+//		| | | | | | | | |
+//		| | | | | | | | |
+//		| | | | | | | | |
+//		| | |B| | | | | |
+//		|K| | | | | | |R|
+        StringBuilder toReturn = new StringBuilder();
+        for (int row=7; row >= 0; row--) {
+            for (int col=0; col < 8; col++) {
+                String s = "";
+                if (col == 0){
+                    toReturn.append("|");
+                }
+                ChessPiece piece = boardTable[row][col];
+                if (piece == null){
+                    toReturn.append(" |");
+                    continue;
+                } else if (piece.getPieceType() == ChessPiece.PieceType.PAWN){
+                    s = "p";
+                } else if (piece.getPieceType() == ChessPiece.PieceType.BISHOP) {
+                    s ="b";
+                } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
+                    s ="r";
+                } else if (piece.getPieceType() == ChessPiece.PieceType.KNIGHT) {
+                    s ="n";
+                } else if (piece.getPieceType() == ChessPiece.PieceType.KING) {
+                    s ="k";
+                } else if (piece.getPieceType() == ChessPiece.PieceType.QUEEN) {
+                    s ="q";
+                }
 
+                if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    toReturn.append(s.toUpperCase() + "|");
+                } else {
+                    toReturn.append(s + "|");
+                }
+
+            }
+            toReturn.append("\n");
+        }
+
+        return toReturn.toString();
+    }
 }

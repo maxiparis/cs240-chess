@@ -1,6 +1,7 @@
 package chess;
 
 import java.nio.file.attribute.UserDefinedFileAttributeView;
+import java.util.HashSet;
 import java.util.Set;
 
 public class ChessGameImpl implements ChessGame{
@@ -24,13 +25,74 @@ public class ChessGameImpl implements ChessGame{
 
     @Override
     public Set<ChessMoveImpl> validMoves(ChessPosition startPosition) {
-        Set<ChessMoveImpl> validMoves;
-        if(board.getPiece(startPosition) == null){
+        //TODO filter validMoves to only include those movements that would not put my king in check
+        Set<ChessMoveImpl> validMovesBeforeCheckFilter;
+
+        ChessPiece piece = board.getPiece(startPosition);
+        if(piece == null){
             return null;
         }
-        validMoves = board.getPiece(startPosition).pieceMoves(board, startPosition);
-        return validMoves;
+        validMovesBeforeCheckFilter = piece.pieceMoves(board, startPosition);
+
+        //filter here
+        Set<ChessMoveImpl> validMovesAfterCheckFilter = new HashSet<>();
+        for (ChessMoveImpl move : validMovesBeforeCheckFilter){
+            if (!wouldBeCheck(move, piece.getTeamColor())){
+                validMovesAfterCheckFilter.add(move);
+            }
+        }
+
+
+
+        return validMovesAfterCheckFilter;
     }
+
+    private boolean wouldBeCheck(ChessMoveImpl move, TeamColor teamColor) {
+
+        ChessPiece originalPiece = getBoard().getPiece(move.getStartPosition());
+        ChessPiece pieceToBeReplaced;
+
+
+        //make the move in testGame.board
+        //****************
+        if (originalPiece.getPieceType() == ChessPiece.PieceType.PAWN && move.getPromotionPiece() != null){ //promotion
+            ChessPiece promotionPiece = null;
+            switch (move.getPromotionPiece()){
+                case QUEEN:
+                    promotionPiece = new Queen(originalPiece.getTeamColor());
+                    break;
+                case BISHOP:
+                    promotionPiece = new Bishop(originalPiece.getTeamColor());
+                    break;
+                case ROOK:
+                    promotionPiece = new Rook(originalPiece.getTeamColor());
+                    break;
+                case KNIGHT:
+                    promotionPiece = new Knight(originalPiece.getTeamColor());
+                    break;
+                default:
+                    break;
+            }
+            pieceToBeReplaced = board.getPiece(move.getEndPosition());
+            getBoard().addPiece(move.getEndPosition(), promotionPiece);
+        } else {
+            pieceToBeReplaced = board.getPiece(move.getEndPosition());
+            getBoard().addPiece(move.getEndPosition(), originalPiece);
+        }
+
+        getBoard().removePiece(move.getStartPosition());
+        //****************
+
+
+        boolean wouldBeCheck = isInCheck(teamColor);
+
+        // put pieces back
+        getBoard().addPiece(move.getStartPosition(), originalPiece);
+        getBoard().addPiece(move.getEndPosition(), pieceToBeReplaced); //adding the piece back in case there was something there
+
+        return wouldBeCheck;
+    }
+
 
     @Override
     public void makeMove(ChessMove move) throws InvalidMoveException {
@@ -51,13 +113,16 @@ public class ChessGameImpl implements ChessGame{
             throw new InvalidMoveException("InvalidMoveException: piece in start position is null");
         }
 
-        Set<ChessMoveImpl> pieceValidMoves = piece.pieceMoves(board, startPosition);
+//        Set<ChessMoveImpl> pieceValidMoves = piece.pieceMoves(board, startPosition);
+        Set<ChessMoveImpl> pieceValidMoves = validMoves(move.getStartPosition());
 
         if (piece.getTeamColor() != teamTurn){
             throw new InvalidMoveException("InvalidMoveException: is not the piece turn.");
         } else if (!pieceValidMoves.contains(move)){
             throw new InvalidMoveException("InvalidMoveException: this move is not in validMoves");
-        } else if (isInCheck(piece.getTeamColor())){
+        } else if (isInCheck(piece.getTeamColor())){   //FIXME
+            // fix this line of code. Right now is checking the current status of the teamColor,
+            // but what needs to be checked is if the teamColor would be in check if the move is executed.
             throw new InvalidMoveException("InvalidMoveException: would leave the king in check");
         }
 
