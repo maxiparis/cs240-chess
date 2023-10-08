@@ -102,11 +102,18 @@ public class ChessGameImpl implements ChessGame{
 //  	    ○ If there is at least one move that would end in my kings position
 //		        ○ Return true
 //          Return false
-        Set<ChessMove> enemyPieces = board.getMovesOfTeamColor(teamColor);
+        TeamColor enemyTeamColor;
+        if (teamColor == TeamColor.WHITE){
+            enemyTeamColor = TeamColor.BLACK;
+        } else {
+            enemyTeamColor = TeamColor.WHITE;
+        }
+
+        Set<ChessMove> enemyMoves = board.getMovesOfTeamColor(enemyTeamColor);
         //do I need all the moves or just the moves.endPosition??
         ChessPositionImpl myKingPosition = board.getKingPosition(teamColor);
-        for (ChessMove move : enemyPieces) {
-            if (move.getEndPosition() == myKingPosition){
+        for (ChessMove move : enemyMoves) {
+            if (move.getEndPosition().equals(myKingPosition)){
                 return true;
             }
         }
