@@ -140,7 +140,7 @@ public class ChessBoardImpl implements ChessBoard {
             for (int col=0; col < 8; col++) {
                 String s = "";
                 if (col == 0){
-                    toReturn.append("|");
+                    toReturn.append((row+1)+ " |");
                 }
                 ChessPiece piece = boardTable[row][col];
                 if (piece == null){
@@ -169,6 +169,7 @@ public class ChessBoardImpl implements ChessBoard {
             }
             toReturn.append("\n");
         }
+        toReturn.append("   1 2 3 4 5 6 7 8 ");
 
         return toReturn.toString();
     }

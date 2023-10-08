@@ -1,6 +1,5 @@
 package chess;
 
-import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -191,14 +190,18 @@ public class ChessGameImpl implements ChessGame{
 
     @Override
     public boolean isInCheckmate(TeamColor teamColor) {
-        boolean inCheck=isInCheck(teamColor);
-        boolean teamHasLegalMoves = false;
+        boolean inCheck = isInCheck(teamColor);
 
-        //for each of my pieces
-        //if they have valid moves
-        //set variable to teamHasLegalMoves
-        //break
+        boolean teamHasLegalMoves = teamHasLegalMove(teamColor);
 
+
+        if(inCheck && !teamHasLegalMoves){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean teamHasLegalMove(TeamColor teamColor) {
         for (int row=1; row <= 8; row++) {
             for (int col=1; col <= 8; col++) {
                 ChessPiece chessPiece = board.getPiece(new ChessPositionImpl(row,col));
@@ -207,16 +210,11 @@ public class ChessGameImpl implements ChessGame{
                         ChessPositionImpl piecePosition = new ChessPositionImpl(row, col);
                         Set<ChessMoveImpl> pieceValidMoves = validMoves(piecePosition);
                         if (!pieceValidMoves.isEmpty()){
-                            teamHasLegalMoves = true;
+                            return true;
                         }
                     }
                 }
             }
-        }
-
-
-        if(inCheck && !teamHasLegalMoves){
-            return true;
         }
         return false;
     }
@@ -231,20 +229,7 @@ public class ChessGameImpl implements ChessGame{
                 //set variable to teamHasLegalMoves
                 //break
 
-        for (int row=1; row <= 8; row++) {
-            for (int col=1; col <= 8; col++) {
-                ChessPiece chessPiece = board.getPiece(new ChessPositionImpl(row,col));
-                if (chessPiece != null){
-                    if (chessPiece.getTeamColor() == teamColor){
-                        ChessPositionImpl piecePosition = new ChessPositionImpl(row, col);
-                        Set<ChessMoveImpl> pieceValidMoves = validMoves(piecePosition);
-                        if (!pieceValidMoves.isEmpty()){
-                            teamHasLegalMoves = true;
-                        }
-                    }
-                }
-            }
-        }
+        teamHasLegalMoves = teamHasLegalMove(teamColor);
 
 
         if(!inCheck && !teamHasLegalMoves){
