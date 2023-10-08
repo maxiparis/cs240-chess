@@ -118,12 +118,8 @@ public class ChessGameImpl implements ChessGame{
 
         if (piece.getTeamColor() != teamTurn){
             throw new InvalidMoveException("InvalidMoveException: is not the piece turn.");
-        } else if (!pieceValidMoves.contains(move)){
+        } else if (!pieceValidMoves.contains(move)) {
             throw new InvalidMoveException("InvalidMoveException: this move is not in validMoves");
-        } else if (isInCheck(piece.getTeamColor())){   //FIXME
-            // fix this line of code. Right now is checking the current status of the teamColor,
-            // but what needs to be checked is if the teamColor would be in check if the move is executed.
-            throw new InvalidMoveException("InvalidMoveException: would leave the king in check");
         }
 
         if (piece.getPieceType() == ChessPiece.PieceType.PAWN && move.getPromotionPiece() != null){ //promotion
