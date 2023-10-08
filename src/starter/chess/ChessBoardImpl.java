@@ -27,7 +27,7 @@ public class ChessBoardImpl implements ChessBoard {
     @Override
     public ChessPiece getPiece(ChessPosition position) {
         //start fix
-        if ((position.getRow() == 0) || (position.getColumn() == 0)){
+        if ((position.getRow() <= 0) || (position.getColumn() <= 0) || (position.getRow() >= 9) || (position.getColumn() >= 9)){
             return null;
         }
         //end fix
