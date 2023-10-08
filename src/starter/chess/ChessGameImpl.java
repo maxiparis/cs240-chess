@@ -163,12 +163,7 @@ public class ChessGameImpl implements ChessGame{
 //  	    ○ If there is at least one move that would end in my kings position
 //		        ○ Return true
 //          Return false
-        TeamColor enemyTeamColor;
-        if (teamColor == TeamColor.WHITE){
-            enemyTeamColor = TeamColor.BLACK;
-        } else {
-            enemyTeamColor = TeamColor.WHITE;
-        }
+        TeamColor enemyTeamColor = getOppositeTeamColor(teamColor);
 
         Set<ChessMove> enemyMoves = board.getMovesOfTeamColor(enemyTeamColor);
         //do I need all the moves or just the moves.endPosition??
@@ -184,13 +179,77 @@ public class ChessGameImpl implements ChessGame{
         return false;
     }
 
+    private static TeamColor getOppositeTeamColor(TeamColor teamColor) {
+        TeamColor enemyTeamColor;
+        if (teamColor == TeamColor.WHITE){
+            enemyTeamColor = TeamColor.BLACK;
+        } else {
+            enemyTeamColor = TeamColor.WHITE;
+        }
+        return enemyTeamColor;
+    }
+
     @Override
     public boolean isInCheckmate(TeamColor teamColor) {
+        boolean inCheck=isInCheck(teamColor);
+        boolean teamHasLegalMoves = false;
+
+        //for each of my pieces
+        //if they have valid moves
+        //set variable to teamHasLegalMoves
+        //break
+
+        for (int row=1; row <= 8; row++) {
+            for (int col=1; col <= 8; col++) {
+                ChessPiece chessPiece = board.getPiece(new ChessPositionImpl(row,col));
+                if (chessPiece != null){
+                    if (chessPiece.getTeamColor() == teamColor){
+                        ChessPositionImpl piecePosition = new ChessPositionImpl(row, col);
+                        Set<ChessMoveImpl> pieceValidMoves = validMoves(piecePosition);
+                        if (!pieceValidMoves.isEmpty()){
+                            teamHasLegalMoves = true;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if(inCheck && !teamHasLegalMoves){
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean isInStalemate(TeamColor teamColor) {
+        boolean inCheck=isInCheck(teamColor);
+        boolean teamHasLegalMoves = false;
+
+        //for each of my pieces
+            //if they have valid moves
+                //set variable to teamHasLegalMoves
+                //break
+
+        for (int row=1; row <= 8; row++) {
+            for (int col=1; col <= 8; col++) {
+                ChessPiece chessPiece = board.getPiece(new ChessPositionImpl(row,col));
+                if (chessPiece != null){
+                    if (chessPiece.getTeamColor() == teamColor){
+                        ChessPositionImpl piecePosition = new ChessPositionImpl(row, col);
+                        Set<ChessMoveImpl> pieceValidMoves = validMoves(piecePosition);
+                        if (!pieceValidMoves.isEmpty()){
+                            teamHasLegalMoves = true;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if(!inCheck && !teamHasLegalMoves){
+            return true;
+        }
         return false;
     }
 
