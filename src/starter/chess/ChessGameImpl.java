@@ -24,7 +24,6 @@ public class ChessGameImpl implements ChessGame{
 
     @Override
     public Set<ChessMoveImpl> validMoves(ChessPosition startPosition) {
-        //TODO filter validMoves to only include those movements that would not put my king in check
         Set<ChessMoveImpl> validMovesBeforeCheckFilter;
 
         ChessPiece piece = board.getPiece(startPosition);
