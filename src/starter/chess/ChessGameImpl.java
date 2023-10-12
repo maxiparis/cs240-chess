@@ -45,7 +45,7 @@ public class ChessGameImpl implements ChessGame{
         return validMovesAfterCheckFilter;
     }
 
-    private boolean wouldBeCheck(ChessMoveImpl move, TeamColor teamColor) {
+    public boolean wouldBeCheck(ChessMoveImpl move, TeamColor teamColor) {
 
         ChessPiece originalPiece = getBoard().getPiece(move.getStartPosition());
         ChessPiece pieceToBeReplaced;
@@ -147,7 +147,7 @@ public class ChessGameImpl implements ChessGame{
         changeTurn(piece.getTeamColor());
     }
 
-    private void changeTurn(TeamColor currentTurn) {
+    public void changeTurn(TeamColor currentTurn) {
         if(currentTurn == TeamColor.WHITE){
             setTeamTurn(TeamColor.BLACK);
         } else {
@@ -177,7 +177,7 @@ public class ChessGameImpl implements ChessGame{
         return false;
     }
 
-    private static TeamColor getOppositeTeamColor(TeamColor teamColor) {
+    public static TeamColor getOppositeTeamColor(TeamColor teamColor) {
         TeamColor enemyTeamColor;
         if (teamColor == TeamColor.WHITE){
             enemyTeamColor = TeamColor.BLACK;
