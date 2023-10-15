@@ -9,10 +9,6 @@ public class Game {
 //    gameName	String
 //    game	ChessGame implementation
 
-    
-    
-    
-    
     private int gameID;
     private String whiteUsername;
     private String blackUsername;
@@ -21,11 +17,11 @@ public class Game {
 
 
     public Game(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGameImpl game) {
-        this.gameID=gameID;
-        this.whiteUsername=whiteUsername;
-        this.blackUsername=blackUsername;
-        this.gameName=gameName;
-        this.game=game;
+        this.gameID = gameID;
+        this.whiteUsername = whiteUsername;
+        this.blackUsername = blackUsername;
+        this.gameName = gameName;
+        this.game = game;
     }
 
 

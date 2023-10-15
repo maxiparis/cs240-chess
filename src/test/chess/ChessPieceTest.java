@@ -88,4 +88,92 @@ class ChessPieceTest {
 
 
     }
+
+    @Test
+    void moves() {
+        //8 |r|n|b|q|k|b|n|r|
+        //7 |p|p|p|p|p|p|p|p|
+        //6 | | | | | | | | |
+        //5 | | | | | | | | |
+        //4 | | | |p| | | | |
+        //3 | | | | | | | | |
+        //2 |P|P|P|P|P|P|P|P|
+        //1 |R|N|B|Q|K|B|N|R|
+        //   1 2 3 4 5 6 7 8
+
+        Pawn pieceToAdd = new Pawn(ChessGame.TeamColor.WHITE);
+        ChessPositionImpl position = new ChessPositionImpl(4, 4);
+        testBoard.addPiece(position, pieceToAdd);
+
+        ChessPositionImpl expected;
+        ChessPositionImpl actual;
+
+
+        //left
+        actual = pieceToAdd.goLeftOf(position);
+        expected = new ChessPositionImpl(4,3);
+
+        assertTrue(expected.equals(actual));
+
+        //8 |r|n|b|q|k|b|n|r|
+        //7 |p|p|p|p|p|p|p|p|
+        //6 | | | | | | | | |
+        //5 | | | | | | | | |
+        //4 | | |p| | | | | |
+        //3 | | | | | | | | |
+        //2 |P|P|P|P|P|P|P|P|
+        //1 |R|N|B|Q|K|B|N|R|
+        //   1 2 3 4 5 6 7 8
+
+
+        //right
+        actual = pieceToAdd.goRightOf(actual);
+        expected = new ChessPositionImpl(4,4);
+
+        assertTrue(expected.equals(actual));
+
+        //8 |r|n|b|q|k|b|n|r|
+        //7 |p|p|p|p|p|p|p|p|
+        //6 | | | | | | | | |
+        //5 | | | | | | | | |
+        //4 | | | |p| | | | |
+        //3 | | | | | | | | |
+        //2 |P|P|P|P|P|P|P|P|
+        //1 |R|N|B|Q|K|B|N|R|
+        //   1 2 3 4 5 6 7 8
+
+        //up
+        actual = pieceToAdd.goUpOf(actual);
+        expected = new ChessPositionImpl(5,4);
+
+        assertTrue(expected.equals(actual));
+
+        //8 |r|n|b|q|k|b|n|r|
+        //7 |p|p|p|p|p|p|p|p|
+        //6 | | | | | | | | |
+        //5 | | | |p| | | | |
+        //4 | | | | | | | | |
+        //3 | | | | | | | | |
+        //2 |P|P|P|P|P|P|P|P|
+        //1 |R|N|B|Q|K|B|N|R|
+        //   1 2 3 4 5 6 7 8
+
+        //down
+        actual = pieceToAdd.goDownOf(actual);
+        expected = new ChessPositionImpl(4,4);
+
+        assertTrue(expected.equals(actual));
+
+        //8 |r|n|b|q|k|b|n|r|
+        //7 |p|p|p|p|p|p|p|p|
+        //6 | | | | | | | | |
+        //5 | | | | | | | | |
+        //4 | | | |p| | | | |
+        //3 | | | | | | | | |
+        //2 |P|P|P|P|P|P|P|P|
+        //1 |R|N|B|Q|K|B|N|R|
+        //   1 2 3 4 5 6 7 8
+    }
+
+
 }
