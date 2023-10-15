@@ -24,6 +24,8 @@ public class Game {
         this.game = game;
     }
 
+    public Game() {
+    }
 
     public int getGameID() {
         return gameID;
