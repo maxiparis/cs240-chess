@@ -18,7 +18,7 @@ public class AuthDAO {
 
     }
 
-    public AuthToken find() throws DataAccessException{
+    public AuthToken find(AuthToken token) throws DataAccessException{
         return new AuthToken();
     }
 
@@ -26,16 +26,11 @@ public class AuthDAO {
         return new HashSet<>();
     }
 
-
-    public void updateUsername(String username, String newUsername) throws DataAccessException{
-
-    }
-
-    public void updateAuthToken(String username, String newAuthToken) throws DataAccessException{
+    public void update(String username, AuthToken updatedToken) throws DataAccessException{
 
     }
 
-    public void remove(String username) throws DataAccessException{
+    public void remove(AuthToken token) throws DataAccessException{
 
     }
 

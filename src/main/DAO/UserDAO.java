@@ -17,7 +17,7 @@ public class UserDAO {
 
     }
 
-    public User find() throws DataAccessException{
+    public User find(User user) throws DataAccessException{
         return new User();
     }
 
@@ -26,19 +26,11 @@ public class UserDAO {
     }
 
 
-    public void updateUsername(String username, String newUsername) throws DataAccessException{
+    public void update(String username, User user) throws DataAccessException{
 
     }
 
-    public void updatePassword(String username, String newPassword) throws DataAccessException{
-
-    }
-
-    public void updateEmail(String username, String newEmail) throws DataAccessException{
-
-    }
-
-    public void remove(String username) throws DataAccessException{
+    public void remove(User user) throws DataAccessException{
 
     }
 
