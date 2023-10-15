@@ -1,9 +1,6 @@
 package model;
 
 public class AuthToken {
-//    authToken	String
-//    username	String
-
 
     private String authToken;
     private String username;
@@ -13,6 +10,8 @@ public class AuthToken {
         this.username=username;
     }
 
+    public AuthToken() {
+    }
 
     public String getAuthToken() {
         return authToken;
