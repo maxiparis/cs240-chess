@@ -1,13 +1,13 @@
 package responses;
 
-public class LoginResponse extends ErrorResponse {
+public class RegisterResponse extends ErrorResponse {
     private String username;
     private String authToken;
 
-    public LoginResponse(String errorMessage, String username, String authToken) {
+    public RegisterResponse(String errorMessage, String username, String authToken) {
         super(errorMessage);
-        this.username=username;
-        this.authToken=authToken;
+        this.username = username;
+        this.authToken = authToken;
     }
 
     public String getUsername() {
