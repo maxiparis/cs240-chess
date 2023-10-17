@@ -21,7 +21,8 @@ public class AuthDAO {
     }
 
     /**
-     * Tries to insert a new authToken into the DB. If the authToken is already in the DB, DataAccessException will be thrown.
+     * Tries to insert a new authToken into the DB. If the authToken is already in the DB, DataAccessException
+     * will be thrown.
      * @param token the AuthToken to be inserted into the DB
      * @throws DataAccessException the exception to be thrown in case the authToken cannot be inserted.
      */
@@ -51,7 +52,8 @@ public class AuthDAO {
     /**
      * Tries to update an AuthToken already in the DB.
      * @param username the username of the AuthToken to be updated in the DB.
-     * @param updatedToken the new AuthToken to be inserted into the DB, in the same spot than the AuthToken represented by the username.
+     * @param updatedToken the new AuthToken to be inserted into the DB, in the same spot than the AuthToken
+     *                     represented by the username.
      * @throws DataAccessException in case the username is not found in any User in the DB.
      */
     public void update(String username, AuthToken updatedToken) throws DataAccessException{

@@ -39,9 +39,6 @@ public class User {
     }
 
 
-    //methods
-
-
     /**
      * Returns the username
      * @return username member
