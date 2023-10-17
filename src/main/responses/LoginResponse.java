@@ -6,8 +6,8 @@ public class LoginResponse extends ErrorResponse {
 
     public LoginResponse(String errorMessage, String username, String authToken) {
         super(errorMessage);
-        this.username=username;
-        this.authToken=authToken;
+        this.username = username;
+        this.authToken = authToken;
     }
 
     public String getUsername() {
@@ -15,7 +15,7 @@ public class LoginResponse extends ErrorResponse {
     }
 
     public void setUsername(String username) {
-        this.username=username;
+        this.username = username;
     }
 
     public String getAuthToken() {
@@ -23,6 +23,6 @@ public class LoginResponse extends ErrorResponse {
     }
 
     public void setAuthToken(String authToken) {
-        this.authToken=authToken;
+        this.authToken = authToken;
     }
 }

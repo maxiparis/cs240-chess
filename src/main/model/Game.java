@@ -3,11 +3,6 @@ package model;
 import chess.ChessGameImpl;
 
 public class Game {
-//    gameID	int
-//    whiteUsername	String
-//    blackUsername	String
-//    gameName	String
-//    game	ChessGame implementation
 
     private int gameID;
     private String whiteUsername;
