@@ -2,10 +2,35 @@ package model;
 
 import chess.ChessGameImpl;
 
+import java.util.Objects;
+
 /**
  * A class that represents the Games in the server.
  */
 public class Game {
+    @Override
+    public String toString() {
+        return "Game{" +
+                "gameID=" + gameID +
+                ", whiteUsername='" + whiteUsername + '\'' +
+                ", blackUsername='" + blackUsername + '\'' +
+                ", gameName='" + gameName + '\'' +
+                ", game=" + game +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Game game1=(Game) o;
+        return gameID == game1.gameID && Objects.equals(whiteUsername, game1.whiteUsername) && Objects.equals(blackUsername, game1.blackUsername) && Objects.equals(gameName, game1.gameName) && Objects.equals(game, game1.game);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gameID, whiteUsername, blackUsername, gameName, game);
+    }
 
     /**
      * gameID will be used to identify each game in the DB.
