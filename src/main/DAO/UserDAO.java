@@ -3,13 +3,12 @@ package DAO;
 import dataAccess.DataAccessException;
 import model.User;
 
-import java.util.Collection;
 import java.util.HashSet;
 
 /**
  * A class used to insert Users into the Database
  */
-public class UserDAO {
+public class UserDAO extends ClearDAO {
     /**
      * A HashSet representing all users in the DB. Later on this will changed to an actual DB.
      */
@@ -72,11 +71,12 @@ public class UserDAO {
 
     /**
      * Tries to return all Users in the DB. If the DB is emtpy, DataAccessException will be thrown.
+     *
      * @return a set with a all the model Users, representing the found in the DB.
      * @throws DataAccessException the exception to be thrown in case the DB does not have any user.
      */
-    public Collection<User> findAll() throws DataAccessException {
-        if(!users.isEmpty()){
+    public HashSet<User> findAll() throws DataAccessException {
+        if(!users.isEmpty()) {
             return users;
         } else {
             throw new DataAccessException("The Users DB is empty.");
@@ -90,12 +90,21 @@ public class UserDAO {
      *             username.
      * @throws DataAccessException in case the username is not found in any User in the DB.
      */
-    public void update(String username, User user) throws DataAccessException{
-        // ------------------
-        // WORK HERE
-        // ------------------
+    public void update(String username, String updatedPassword, String updatedEmail) throws DataAccessException {
+        if(!users.isEmpty()){
+            for (User theUser : users) {
+                if(theUser.getUsername() == username){
+                    remove(theUser);
+                    insert(new User(username, updatedPassword, updatedEmail));
+                    return;
+                }
+            }
 
-
+            throw new DataAccessException("The DB did not contain a user with the username" +
+                    username);
+        } else {
+            throw new DataAccessException("The DB is empty, therefore nothing can be updated");
+        }
 
     }
 
@@ -105,16 +114,21 @@ public class UserDAO {
      * @throws DataAccessException in case the user is not found in the DB.
      */
     public void remove(User user) throws DataAccessException{
-
+        try {
+            User tokenToRemove = find(user);
+            users.remove(tokenToRemove);
+        } catch (DataAccessException e) {
+            throw new DataAccessException("The user " + user.toString() + " could not be removed because it is not " +
+                    "in the DB.");
+        }
     }
 
     /**
      * tries to remove all elements from the DB.
      * @throws DataAccessException in case the DB is empty.
      */
-    public void clear() throws DataAccessException{
-
+    public void clear() throws DataAccessException {
+        super.clear(users);
     }
-
 
 }

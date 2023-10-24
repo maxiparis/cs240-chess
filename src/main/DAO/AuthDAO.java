@@ -11,7 +11,7 @@ import java.util.HashSet;
 /**
  * A class used to do insert, remove, find or update AuthTokens in the DB.
  */
-public class AuthDAO {
+public class AuthDAO extends ClearDAO{
     static private HashSet<AuthToken> authTokens;
 
     /**
@@ -130,10 +130,6 @@ public class AuthDAO {
      * @throws DataAccessException in case the DB is empty.
      */
     public void clear() throws DataAccessException{
-        if (!authTokens.isEmpty()) {
-            authTokens = new HashSet<>();
-        } else {
-            throw new DataAccessException("The DB could not be cleared because it was empty.");
-        }
+        super.clear(authTokens);
     }
 }
