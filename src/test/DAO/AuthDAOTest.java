@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.management.InvalidAttributeValueException;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -22,8 +23,8 @@ class AuthDAOTest {
     public void setUp(){
         authDAO= new AuthDAO();
         authDAO2= new AuthDAO();
-        model = new AuthToken("434123412", "Alex");
-        model2 = new AuthToken("d123123dasd34", "Martha");
+        model = new AuthToken("Alex", "434123412");
+        model2 = new AuthToken("Martha", "d123123dasd34");
     }
 
     @Test
@@ -82,14 +83,56 @@ class AuthDAOTest {
     }
 
     @Test
-    void update() {
+    void update() throws DataAccessException {
+    //emtpy db
+        assertThrows(DataAccessException.class, () -> {
+            authDAO.update("Erick", "1238971945");
+        });
+    //non-emtpy db that does not have the username
+        authDAO.insert(model);
+        assertThrows(DataAccessException.class, () -> {
+            authDAO.update("Alejandra", "123asda3");
+        });
+    //valid
+        authDAO.update("Alex", "newToken");
+        AuthToken expected = new AuthToken("Alex", "newToken");
+        //contains the updated version
+        AuthToken actual = authDAO.find(expected);
+        assertEquals(expected, actual);
+        //does not contain the old version
+        assertFalse(authDAO.getAuthTokens().contains(model));
     }
 
     @Test
-    void remove() {
+    void remove() throws DataAccessException {
+        //remove something that does not exist
+            assertThrows(DataAccessException.class, () -> {
+                AuthToken invalidToken = new AuthToken("invalid", "invalid");
+                authDAO.remove(invalidToken);
+            });
+        //valid
+            authDAO.insert(model2);
+            authDAO.insert(model);
+            assertTrue(authDAO.getAuthTokens().size() == 2);
+
+            authDAO.remove(model2);
+            assertTrue(authDAO.getAuthTokens().size() == 1);
+            assertTrue(authDAO.getAuthTokens().contains(model));
+            assertFalse(authDAO.getAuthTokens().contains(model2));
     }
 
     @Test
-    void clear() {
+    void clear() throws DataAccessException {
+        //empty DB
+        assertThrows(DataAccessException.class, () -> {
+            authDAO.clear();
+        });
+        //valid
+        authDAO.insert(model2);
+        authDAO.insert(model);
+        assertTrue(authDAO.getAuthTokens().size() == 2);
+
+        authDAO.clear();
+        assertTrue(authDAO.getAuthTokens().size() == 0);
     }
 }

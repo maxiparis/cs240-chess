@@ -12,7 +12,7 @@ import java.util.HashSet;
  * A class used to do insert, remove, find or update AuthTokens in the DB.
  */
 public class AuthDAO {
-    static private HashSet<AuthToken> authTokens;
+    static public HashSet<AuthToken> authTokens;
 
     /**
      * Constructs a new AuthDAO object, and initializes the collection of authTokens.
@@ -94,7 +94,9 @@ public class AuthDAO {
         if(!authTokens.isEmpty()){
             for (AuthToken authToken : authTokens) {
                 if(authToken.getUsername() == username){
-                    authToken.setToken(updatedToken);
+                    remove(authToken);
+                    insert(new AuthToken(username, updatedToken));
+//                    authToken.setToken(updatedToken);
                     return;
                 }
             }
@@ -116,7 +118,7 @@ public class AuthDAO {
             AuthToken tokenToRemove = find(token);
             authTokens.remove(tokenToRemove);
         } catch (DataAccessException e) {
-            System.out.println("The token " + token.toString() + " could not be removed because it is not " +
+            throw new DataAccessException("The token " + token.toString() + " could not be removed because it is not " +
                     "in the DB.");
         }
 

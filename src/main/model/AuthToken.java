@@ -23,7 +23,7 @@ public class AuthToken {
      * @param token the token to be set.
      * @param username the username linked to the token generated.
      */
-    public AuthToken(String token, String username) {
+    public AuthToken(String username, String token) {
         this.token = token;
         this.username = username;
     }
@@ -32,7 +32,7 @@ public class AuthToken {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AuthToken authToken=(AuthToken) o;
+        AuthToken authToken = (AuthToken) o;
         return Objects.equals(token, authToken.token) && Objects.equals(username, authToken.username);
     }
 
