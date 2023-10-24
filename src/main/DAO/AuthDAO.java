@@ -12,7 +12,7 @@ import java.util.HashSet;
  * A class used to do insert, remove, find or update AuthTokens in the DB.
  */
 public class AuthDAO {
-    static public HashSet<AuthToken> authTokens;
+    static private HashSet<AuthToken> authTokens;
 
     /**
      * Constructs a new AuthDAO object, and initializes the collection of authTokens.
