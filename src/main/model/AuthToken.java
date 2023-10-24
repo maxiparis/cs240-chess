@@ -1,8 +1,10 @@
 package model;
 
+import java.util.Objects;
+
 /**
  * A class that represents the AuthTokens in the server. Authtokens have a String authToken and they a
- * String usernameb they are linked or generated for.
+ * String username they are linked or generated for.
  */
 public class AuthToken {
 
@@ -26,6 +28,19 @@ public class AuthToken {
         this.username = username;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthToken authToken=(AuthToken) o;
+        return Objects.equals(token, authToken.token) && Objects.equals(username, authToken.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(token, username);
+    }
+
     /**
      * Constructs a new AuthToken object. Used for compiling purposes.
      */
@@ -46,5 +61,13 @@ public class AuthToken {
 
     public void setUsername(String username) {
         this.username=username;
+    }
+
+    @Override
+    public String toString() {
+        return "AuthToken{" +
+                "token='" + token + '\'' +
+                ", username='" + username + '\'' +
+                '}';
     }
 }

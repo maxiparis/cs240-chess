@@ -68,7 +68,6 @@ public class Game {
      */
     public void setGameID(int gameID) {
         this.gameID=gameID;
-
     }
 
     /**

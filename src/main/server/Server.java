@@ -3,8 +3,17 @@ package server;
 import spark.Spark;
 public class Server {
     public static void main(String[] args) {
+
+        Spark.externalStaticFileLocation("web");
+
         System.out.println("Listening.... Please go to http://localhost:4567/hello\n");
-        Spark.get("/hello", (req, res) -> "Hello BYU!");
+        runHomePage();
+
+    }
+
+    private static void runHomePage() {
+        Spark.get("/", (req, res) -> ""
+        );
     }
 
 }
