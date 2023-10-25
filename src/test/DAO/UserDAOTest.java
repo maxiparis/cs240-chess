@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserDAOTest {
     private UserDAO userDAO;
-    private UserDAO userDAO2;
     private User model;
     private User model2;
 
@@ -19,7 +18,6 @@ class UserDAOTest {
     @BeforeEach
     void setUp() {
         userDAO = new UserDAO();
-        userDAO2 = new UserDAO();
         model = new User("john7", "johnPass", "john@gmail.com");
         model2 = new User("carla6", "carlaPass", "carla@gmail.com");
     }
@@ -116,5 +114,43 @@ class UserDAOTest {
             userDAO.clear();
         });
 
+    }
+
+    @Test
+    void findWithUsernameAndPassword() throws DataAccessException {
+        //valid
+            //model = new User("john7", "johnPass", "john@gmail.com");
+        userDAO.insert(model);
+        User actual = userDAO.findWithUsernameAndPassword(model.getUsername(), model.getPassword());
+        assertSame(model, actual);
+
+        //invalid
+        String actualErrorMessage = "";
+            //username does not match password
+            try {
+                User actual2 = userDAO.findWithUsernameAndPassword(model.getUsername(), "badPassword");
+            } catch (DataAccessException e) {
+                actualErrorMessage = e.getMessage();
+            }
+            assertSame("Error: unauthorized", actualErrorMessage);
+
+
+            //username is not in the DB
+            try {
+                User actual3 = userDAO.findWithUsernameAndPassword("badUserName", model.getPassword());
+            } catch (DataAccessException e) {
+                actualErrorMessage = e.getMessage();
+            }
+            assertSame("Error: the username is not in the DB.", actualErrorMessage);
+
+            //empty
+            userDAO.clear();
+            try {
+                User actual4 = userDAO.findWithUsernameAndPassword("badUserName", model.getPassword());
+            } catch (DataAccessException e) {
+                actualErrorMessage = e.getMessage();
+            }
+
+        assertSame("Error: DB is empty.", actualErrorMessage);
     }
 }

@@ -1,8 +1,12 @@
 package services;
 
+import DAO.UserDAO;
 import dataAccess.DataAccessException;
+import model.User;
 import requests.LoginRequest;
 import responses.LoginResponse;
+
+import java.util.UUID;
 
 /**
  * This class represents an API that clears the logins a user.
@@ -15,11 +19,18 @@ public class LoginService {
      * @return a response to the given action.
      */
     public LoginResponse login(LoginRequest request) {
-//        try {
-//
-//        } catch (DataAccessException e){
-//
-//        }
-        return new LoginResponse(null, null, null);
+        //returns response with username and authtoken
+        //request = username and password
+        try {
+            UserDAO userDB = new UserDAO();
+            User found = userDB.findWithUsernameAndPassword(request.getUsername(), request.getPassword());
+
+            String authToken = UUID.randomUUID().toString();
+
+            LoginResponse response = new LoginResponse(null, found.getUsername(), authToken);
+            return response;
+        } catch (DataAccessException e){
+            return new LoginResponse(e.getMessage(), null, null);
+        }
     }
 }

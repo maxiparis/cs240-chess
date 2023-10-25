@@ -82,6 +82,30 @@ public class UserDAO extends ClearDAO {
     }
 
     /**
+     * Tries to find a user in the DB by looking at the username and the password.
+     * @param username of the user to look for.
+     * @param password of the user we are looking for.
+     */
+    public User findWithUsernameAndPassword(String username, String password) throws DataAccessException {
+        if(usersDB.isEmpty()){
+            throw new DataAccessException("Error: DB is empty."); //description 500
+        }
+
+        for (User user : usersDB) {
+            if(user.getUsername() == username){
+                if(user.getPassword() == password){
+                    return user;
+                } else {
+                    //found a user but their password don't match
+                    throw new DataAccessException("Error: unauthorized"); //401
+                }
+            }
+            throw new DataAccessException("Error: the username is not in the DB."); //500
+        }
+        return null;
+    }
+
+    /**
      * Tries to return all Users in the DB. If the DB is emtpy, DataAccessException will be thrown.
      *
      * @return a set with a all the model Users, representing the found in the DB.
