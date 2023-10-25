@@ -5,7 +5,6 @@ import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,11 +28,11 @@ class UserDAOTest {
     void insert() throws DataAccessException {
         //insert one user
         userDAO.insert(model);
-        assertTrue(UserDAO.getUsers().contains(model));
+        assertTrue(UserDAO.getUsersDB().contains(model));
 
         userDAO.insert(model2);
-        assertTrue(UserDAO.getUsers().contains(model));
-        assertTrue(UserDAO.getUsers().contains(model2));
+        assertTrue(UserDAO.getUsersDB().contains(model));
+        assertTrue(UserDAO.getUsersDB().contains(model2));
 
         //insert user that is already there
         assertThrows(DataAccessException.class, () -> {
@@ -80,8 +79,8 @@ class UserDAOTest {
         userDAO.insert(model);
         userDAO.update(model.getUsername(), "newPassword", "updatedEmail");
         User update = new User(model.getUsername(), "newPassword", "updatedEmail");
-        assertTrue(UserDAO.getUsers().contains(update));
-        assertFalse(UserDAO.getUsers().contains(model));
+        assertTrue(UserDAO.getUsersDB().contains(update));
+        assertFalse(UserDAO.getUsersDB().contains(model));
 
         //invalid - trying to update something that is not there
         assertThrows(DataAccessException.class, () -> {
@@ -94,7 +93,7 @@ class UserDAOTest {
         //valid
             userDAO.insert(model);
             userDAO.remove(model);
-            assertTrue(UserDAO.getUsers().isEmpty());
+            assertTrue(UserDAO.getUsersDB().isEmpty());
 
         //invalid - the user is not in the db
             assertThrows(DataAccessException.class, () -> {
@@ -110,7 +109,7 @@ class UserDAOTest {
         userDAO.insert(model);
         userDAO.insert(model2);
         userDAO.clear();
-        assertTrue(UserDAO.getUsers().isEmpty());
+        assertTrue(UserDAO.getUsersDB().isEmpty());
 
         //invalid - it was empty already
         assertThrows(DataAccessException.class, () -> {

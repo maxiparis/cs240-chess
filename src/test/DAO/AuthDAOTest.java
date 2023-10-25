@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.management.InvalidAttributeValueException;
-import java.util.Collection;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +19,7 @@ class AuthDAOTest {
 
     @BeforeEach
     public void setUp(){
-        authDAO= new AuthDAO();
+        authDAO = new AuthDAO();
         authDAO2= new AuthDAO();
         model = new AuthToken("Alex", "434123412");
         model2 = new AuthToken("Martha", "d123123dasd34");
@@ -31,20 +29,20 @@ class AuthDAOTest {
     void insert() throws DataAccessException {
     //valid
         authDAO.insert(model);
-        Assertions.assertTrue(authDAO.getAuthTokens().size() == 1);
-        Assertions.assertFalse(authDAO.getAuthTokens().size() == 0
-                || authDAO.getAuthTokens().size() == 2
+        Assertions.assertTrue(authDAO.getAuthTokensDB().size() == 1);
+        Assertions.assertFalse(authDAO.getAuthTokensDB().size() == 0
+                || authDAO.getAuthTokensDB().size() == 2
         );
-        Assertions.assertTrue(authDAO.getAuthTokens().contains(model));
+        Assertions.assertTrue(authDAO.getAuthTokensDB().contains(model));
 
         //testing that all instances have same elements
-        Assertions.assertTrue(authDAO2.getAuthTokens().size() == 1);
-        Assertions.assertTrue(authDAO2.getAuthTokens().contains(model));
+        Assertions.assertTrue(authDAO2.getAuthTokensDB().size() == 1);
+        Assertions.assertTrue(authDAO2.getAuthTokensDB().contains(model));
 
         //adding a second element
         authDAO.insert(model2);
-        Assertions.assertTrue(authDAO.getAuthTokens().size() == 2);
-        Assertions.assertTrue(authDAO.getAuthTokens().contains(model2));
+        Assertions.assertTrue(authDAO.getAuthTokensDB().size() == 2);
+        Assertions.assertTrue(authDAO.getAuthTokensDB().contains(model2));
     //invalid -> throws an exception
         assertThrows(DataAccessException.class, () -> {
             authDAO.insert(model);
@@ -100,7 +98,7 @@ class AuthDAOTest {
         AuthToken actual = authDAO.find(expected);
         assertEquals(expected, actual);
         //does not contain the old version
-        assertFalse(authDAO.getAuthTokens().contains(model));
+        assertFalse(authDAO.getAuthTokensDB().contains(model));
     }
 
     @Test
@@ -113,12 +111,12 @@ class AuthDAOTest {
         //valid
             authDAO.insert(model2);
             authDAO.insert(model);
-            assertTrue(authDAO.getAuthTokens().size() == 2);
+            assertTrue(authDAO.getAuthTokensDB().size() == 2);
 
             authDAO.remove(model2);
-            assertTrue(authDAO.getAuthTokens().size() == 1);
-            assertTrue(authDAO.getAuthTokens().contains(model));
-            assertFalse(authDAO.getAuthTokens().contains(model2));
+            assertTrue(authDAO.getAuthTokensDB().size() == 1);
+            assertTrue(authDAO.getAuthTokensDB().contains(model));
+            assertFalse(authDAO.getAuthTokensDB().contains(model2));
     }
 
     @Test
@@ -130,9 +128,9 @@ class AuthDAOTest {
         //valid
         authDAO.insert(model2);
         authDAO.insert(model);
-        assertTrue(authDAO.getAuthTokens().size() == 2);
+        assertTrue(authDAO.getAuthTokensDB().size() == 2);
 
         authDAO.clear();
-        assertTrue(authDAO.getAuthTokens().size() == 0);
+        assertTrue(authDAO.getAuthTokensDB().size() == 0);
     }
 }

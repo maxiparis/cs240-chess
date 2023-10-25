@@ -32,11 +32,11 @@ class GameDAOTest {
     void insert() throws DataAccessException {
         //insert one
         gameDAO.insert(model);
-        assertTrue(GameDAO.getGames().contains(model));
+        assertTrue(GameDAO.getGamesDB().contains(model));
 
         gameDAO.insert(model2);
-        assertTrue(GameDAO.getGames().contains(model));
-        assertTrue(GameDAO.getGames().contains(model2));
+        assertTrue(GameDAO.getGamesDB().contains(model));
+        assertTrue(GameDAO.getGamesDB().contains(model2));
 
         //insert one that is already there
         assertThrows(DataAccessException.class, () -> {
@@ -85,8 +85,8 @@ class GameDAOTest {
         gameDAO.updateGame(model.getGameID(), update.getWhiteUsername(), update.getBlackUsername(), update.getGameName(),
                 update.getGame());
 
-        assertTrue(GameDAO.getGames().contains(update));
-        assertFalse(GameDAO.getGames().contains(model));
+        assertTrue(GameDAO.getGamesDB().contains(update));
+        assertFalse(GameDAO.getGamesDB().contains(model));
 
         //invalid - trying to update something that is not there
         assertThrows(DataAccessException.class, () -> {
@@ -100,7 +100,7 @@ class GameDAOTest {
         //valid
         gameDAO.insert(model);
         gameDAO.remove(model);
-        assertTrue(GameDAO.getGames().isEmpty());
+        assertTrue(GameDAO.getGamesDB().isEmpty());
 
         //invalid - the user is not in the db
         assertThrows(DataAccessException.class, () -> {
@@ -115,7 +115,7 @@ class GameDAOTest {
         gameDAO.insert(model);
         gameDAO.insert(model2);
         gameDAO.clear();
-        assertTrue(GameDAO.getGames().isEmpty());
+        assertTrue(GameDAO.getGamesDB().isEmpty());
 
         //invalid - it was empty already
         assertThrows(DataAccessException.class, () -> {

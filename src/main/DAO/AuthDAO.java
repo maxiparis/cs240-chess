@@ -2,31 +2,28 @@ package DAO;
 
 import dataAccess.DataAccessException;
 import model.AuthToken;
-import model.User;
 
-import javax.xml.crypto.Data;
-import java.util.Collection;
 import java.util.HashSet;
 
 /**
  * A class used to do insert, remove, find or update AuthTokens in the DB.
  */
 public class AuthDAO extends ClearDAO{
-    static private HashSet<AuthToken> authTokens;
+    static public HashSet<AuthToken> authTokensDB = new HashSet<>();
 
     /**
      * Constructs a new AuthDAO object, and initializes the collection of authTokens.
      */
     public AuthDAO() {
-        authTokens = new HashSet<>();
+//        authTokensDB = new HashSet<>();
     }
 
-    public static HashSet<AuthToken> getAuthTokens() {
-        return authTokens;
+    public static HashSet<AuthToken> getAuthTokensDB() {
+        return authTokensDB;
     }
 
-    public static void setAuthTokens(HashSet<AuthToken> authTokens) {
-        AuthDAO.authTokens=authTokens;
+    public static void setAuthTokensDB(HashSet<AuthToken> authTokensDB) {
+        AuthDAO.authTokensDB=authTokensDB;
     }
 
     /**
@@ -37,7 +34,7 @@ public class AuthDAO extends ClearDAO{
      */
     public void insert(AuthToken token) throws DataAccessException {
             if(!tokenIsInDB(token)){
-                authTokens.add(token);
+                authTokensDB.add(token);
             } else {
                 throw new DataAccessException("The token " + token.toString() + " could not be " +
                         "added because it is already in the DB.");
@@ -62,7 +59,7 @@ public class AuthDAO extends ClearDAO{
      * @throws DataAccessException the exception to be thrown in case the AuthToken cannot be found.
      */
     public AuthToken find(AuthToken token) throws DataAccessException{
-        if(authTokens.contains(token)){
+        if(authTokensDB.contains(token)){
             return token;
         } else {
             throw new DataAccessException("The token " + token.toString() + " was not found in the DB.");
@@ -76,8 +73,8 @@ public class AuthDAO extends ClearDAO{
      * @throws DataAccessException the exception to be thrown in case the DB does not have any AuthToken.
      */
     public HashSet<AuthToken> findAll() throws DataAccessException{
-        if(!authTokens.isEmpty()){
-            return authTokens;
+        if(!authTokensDB.isEmpty()){
+            return authTokensDB;
         } else {
             throw new DataAccessException("The AuthToken DB is empty.");
         }
@@ -91,8 +88,8 @@ public class AuthDAO extends ClearDAO{
      * @throws DataAccessException in case the username is not found in any User in the DB.
      */
     public void update(String username, String updatedToken) throws DataAccessException{
-        if(!authTokens.isEmpty()){
-            for (AuthToken authToken : authTokens) {
+        if(!authTokensDB.isEmpty()){
+            for (AuthToken authToken : authTokensDB) {
                 if(authToken.getUsername() == username){
                     remove(authToken);
                     insert(new AuthToken(username, updatedToken));
@@ -116,7 +113,7 @@ public class AuthDAO extends ClearDAO{
     public void remove(AuthToken token) throws DataAccessException{
         try {
             AuthToken tokenToRemove = find(token);
-            authTokens.remove(tokenToRemove);
+            authTokensDB.remove(tokenToRemove);
         } catch (DataAccessException e) {
             throw new DataAccessException("The token " + token.toString() + " could not be removed because it is not " +
                     "in the DB.");
@@ -130,6 +127,6 @@ public class AuthDAO extends ClearDAO{
      * @throws DataAccessException in case the DB is empty.
      */
     public void clear() throws DataAccessException{
-        super.clear(authTokens);
+        super.clear(authTokensDB);
     }
 }

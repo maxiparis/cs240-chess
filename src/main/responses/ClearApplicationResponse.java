@@ -4,7 +4,7 @@ package responses;
  * A Class that represents the JSON response for ClearApplicationService. It extends ErrorResponse to
  * be able to return an error message.
  */
-public class ClearApplicationResponse  extends ErrorResponse {
+public class ClearApplicationResponse extends ErrorResponse {
 
     /**
      * Constructs a new object with the parameter passed.

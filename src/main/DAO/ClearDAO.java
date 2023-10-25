@@ -10,7 +10,7 @@ public class ClearDAO {
         if (!setToClear.isEmpty()) {
             setToClear.clear();
         } else {
-            throw new DataAccessException("The DB could not be cleared because it was empty.");
+            throw new DataAccessException("The DB of could not be cleared because it was empty.");
         }
     }
 }

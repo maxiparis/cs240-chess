@@ -12,21 +12,21 @@ public class UserDAO extends ClearDAO {
     /**
      * A HashSet representing all users in the DB. Later on this will changed to an actual DB.
      */
-    static public HashSet<User> users;
+    static public HashSet<User> usersDB = new HashSet<>();
 
     /**
      * Constructor. Initializes the HashSet of users.
      */
     public UserDAO() {
-        users = new HashSet<>();
+//        usersDB= new HashSet<>();
     }
 
-    public static HashSet<User> getUsers() {
-        return users;
+    public static HashSet<User> getUsersDB() {
+        return usersDB;
     }
 
-    public static void setUsers(HashSet<User> users) {
-        UserDAO.users = users;
+    public static void setUsersDB(HashSet<User> usersDB) {
+        UserDAO.usersDB=usersDB;
     }
 
     /**
@@ -36,7 +36,7 @@ public class UserDAO extends ClearDAO {
      */
     public void insert(User user) throws DataAccessException{
         if(!userIsInDB(user)){
-            users.add(user);
+            usersDB.add(user);
         } else {
             throw new DataAccessException("The user " + user.toString() + " could not be " +
                     "added because it is already in the DB."
@@ -62,7 +62,7 @@ public class UserDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the User cannot be found.
      */
     public User find(User user) throws DataAccessException{
-        if(users.contains(user)){
+        if(usersDB.contains(user)){
             return user;
         } else {
             throw new DataAccessException("The user " + user.toString() + " was not found in the DB.");
@@ -76,8 +76,8 @@ public class UserDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the DB does not have any user.
      */
     public HashSet<User> findAll() throws DataAccessException {
-        if(!users.isEmpty()) {
-            return users;
+        if(!usersDB.isEmpty()) {
+            return usersDB;
         } else {
             throw new DataAccessException("The Users DB is empty.");
         }
@@ -91,8 +91,8 @@ public class UserDAO extends ClearDAO {
      * @throws DataAccessException in case the username is not found in any User in the DB.
      */
     public void update(String username, String updatedPassword, String updatedEmail) throws DataAccessException {
-        if(!users.isEmpty()){
-            for (User theUser : users) {
+        if(!usersDB.isEmpty()){
+            for (User theUser : usersDB) {
                 if(theUser.getUsername() == username){
                     remove(theUser);
                     insert(new User(username, updatedPassword, updatedEmail));
@@ -116,7 +116,7 @@ public class UserDAO extends ClearDAO {
     public void remove(User user) throws DataAccessException{
         try {
             User tokenToRemove = find(user);
-            users.remove(tokenToRemove);
+            usersDB.remove(tokenToRemove);
         } catch (DataAccessException e) {
             throw new DataAccessException("The user " + user.toString() + " could not be removed because it is not " +
                     "in the DB.");
@@ -128,7 +128,7 @@ public class UserDAO extends ClearDAO {
      * @throws DataAccessException in case the DB is empty.
      */
     public void clear() throws DataAccessException {
-        super.clear(users);
+        super.clear(usersDB);
     }
 
 }

@@ -2,24 +2,22 @@ package DAO;
 
 import chess.ChessGameImpl;
 import dataAccess.DataAccessException;
-import model.AuthToken;
 import model.Game;
 
-import java.util.Collection;
 import java.util.HashSet;
 
 /**
  * A class used to do insert, remove, find or update Games in the DB.
  */
 public class GameDAO extends ClearDAO {
-    public static HashSet<Game> games;
+    static public HashSet<Game> gamesDB = new HashSet<>();
 
-    public static HashSet<Game> getGames() {
-        return games;
+    public static HashSet<Game> getGamesDB() {
+        return gamesDB;
     }
 
-    public static void setGames(HashSet<Game> games) {
-        GameDAO.games = games;
+    public static void setGamesDB(HashSet<Game> gamesDB) {
+        GameDAO.gamesDB=gamesDB;
     }
 
 
@@ -28,7 +26,7 @@ public class GameDAO extends ClearDAO {
      * Constructs a new GameDAO object, and initializes the collection of games.
      */
     public GameDAO() {
-        games = new HashSet<>();
+//        gamesDB= new HashSet<>();
     }
 
     /**
@@ -38,7 +36,7 @@ public class GameDAO extends ClearDAO {
      */
     public void insert(Game game) throws DataAccessException {
         if(!gameIsInDB(game)){
-            games.add(game);
+            gamesDB.add(game);
         } else {
             throw new DataAccessException("The game " + game.toString() + " could not be " +
                     "added because it is already in the DB."
@@ -64,7 +62,7 @@ public class GameDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the Game cannot be found.
      */
     public Game find(Game game) throws DataAccessException{
-        if(games.contains(game)){
+        if(gamesDB.contains(game)){
             return game;
         } else {
             throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
@@ -77,8 +75,8 @@ public class GameDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the DB does not have any Game.
      */
     public HashSet<Game> findAll() throws DataAccessException{
-        if(!games.isEmpty()) {
-            return games;
+        if(!gamesDB.isEmpty()) {
+            return gamesDB;
         } else {
             throw new DataAccessException("The Games DB is empty.");
         }
@@ -93,8 +91,8 @@ public class GameDAO extends ClearDAO {
      */
     public void updateGame(int gameID, String newWhiteUsername, String newBlackUsername,
                            String newGameName, ChessGameImpl newGame) throws DataAccessException {
-        if(!games.isEmpty()){
-            for (Game theGame : games) {
+        if(!gamesDB.isEmpty()){
+            for (Game theGame : gamesDB) {
                 if(theGame.getGameID() == gameID){
                     remove(theGame);
                     insert(new Game(gameID, newWhiteUsername, newBlackUsername, newGameName, newGame));
@@ -118,7 +116,7 @@ public class GameDAO extends ClearDAO {
     public void remove(Game game) throws DataAccessException{
         try {
             Game gameToRemove = find(game);
-            games.remove(gameToRemove);
+            gamesDB.remove(gameToRemove);
         } catch (DataAccessException e) {
             throw new DataAccessException("The game " + game.toString() + " could not be removed because it is not " +
                     "in the DB.");
@@ -130,6 +128,6 @@ public class GameDAO extends ClearDAO {
      * @throws DataAccessException in case the DB is empty.
      */
     public void clear() throws DataAccessException{
-        super.clear(games);
+        super.clear(gamesDB);
     }
 }
