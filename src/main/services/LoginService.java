@@ -1,5 +1,6 @@
 package services;
 
+import dataAccess.DataAccessException;
 import requests.LoginRequest;
 import responses.LoginResponse;
 
@@ -14,6 +15,11 @@ public class LoginService {
      * @return a response to the given action.
      */
     public LoginResponse login(LoginRequest request) {
+//        try {
+//
+//        } catch (DataAccessException e){
+//
+//        }
         return new LoginResponse(null, null, null);
     }
 }

@@ -35,13 +35,25 @@ public class UserDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the User cannot be inserted.
      */
     public void insert(User user) throws DataAccessException{
+        if(!isValid(user)){
+            throw new DataAccessException("Error: bad request");
+        }
+
         if(!userIsInDB(user)){
             usersDB.add(user);
         } else {
-            throw new DataAccessException("The user " + user.toString() + " could not be " +
-                    "added because it is already in the DB."
-            );
+            throw new DataAccessException("Error: already taken");
         }
+    }
+
+    private boolean isValid(User user) {
+        if((user.getUsername() == null) || (user.getUsername() == "") ||
+            (user.getPassword() == null) || (user.getPassword() == "") ||
+            (user.getEmail() == null) || (user.getEmail() == "") ){
+            return false;
+        }
+
+        return true;
     }
 
     private boolean userIsInDB(User user) {

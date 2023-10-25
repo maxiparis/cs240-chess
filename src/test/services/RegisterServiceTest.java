@@ -36,11 +36,26 @@ class RegisterServiceTest {
 
         assertSame(response.getUsername(), request.getUsername());
         assertNotSame(response.getAuthToken(), "");
-        System.out.println(response.getAuthToken());
 
+        //invalid - already taken
+        RegisterResponse invalidResponse = registerService.register(request);
+        assertNull(invalidResponse.getUsername());
+        assertNull(invalidResponse.getAuthToken());
+        assertNotNull(invalidResponse.getMessage());
+        System.out.println(invalidResponse.getMessage());
 
-        //invalid
-        RegisterResponse invalidResponse = registerService.register(request); //same request than before
+        //invalid - bad request
+        RegisterRequest badRequest = new RegisterRequest(null, "pass", "email");
+        RegisterRequest badRequest2 = new RegisterRequest("username", "", "email");
+
+        invalidResponse = registerService.register(badRequest);
+        assertSame("Error: bad request", invalidResponse.getMessage());
+        assertNull(invalidResponse.getUsername());
+        assertNull(invalidResponse.getAuthToken());
+        assertNotNull(invalidResponse.getMessage());
+
+        invalidResponse = registerService.register(badRequest2);
+        assertSame("Error: bad request", invalidResponse.getMessage());
         assertNull(invalidResponse.getUsername());
         assertNull(invalidResponse.getAuthToken());
         assertNotNull(invalidResponse.getMessage());

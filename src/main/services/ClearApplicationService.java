@@ -26,7 +26,7 @@ public class ClearApplicationService {
             gameDB.clear();
 
         } catch (DataAccessException e) {
-            return new ClearApplicationResponse(e.getMessage());
+            return new ClearApplicationResponse("Error: " + e.getMessage());
         }
 
         return new ClearApplicationResponse(null);
