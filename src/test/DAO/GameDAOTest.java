@@ -55,6 +55,7 @@ class GameDAOTest {
 
     @Test
     void find() throws DataAccessException {
+        //not the best, needs to improve this one, there was a bug and it didn't detect it.
         //game is in db
         gameDAO.insert(model);
         Game actual = gameDAO.find(model);

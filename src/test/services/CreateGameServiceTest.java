@@ -32,9 +32,16 @@ class CreateGameServiceTest {
         Game gameDbShouldHave = new Game(0, null, null, "MyGame",
                 new ChessGameImpl(ChessGame.TeamColor.WHITE));
         //validate what the db has
-        assertNotNull(GameDAO.getInstance().find(gameDbShouldHave));
+        assertNotNull(GameDAO.getInstance().findGameByName(gameDbShouldHave.getGameName()));
         //validate the response
+        assertNull(response.getMessage());
+        assertSame(0, response.getGameID());
+
+
         //invalid -- game is already there
+        CreateGameResponse invalidResponse = service.createGame(request);
+        assertNull(invalidResponse.getGameID(), "The GameID is not null. ");
+        assertSame("Error: game is already in DB", invalidResponse.getMessage());
 
     }
 
