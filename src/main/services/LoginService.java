@@ -22,8 +22,8 @@ public class LoginService {
         //returns response with username and authtoken
         //request = username and password
         try {
-            UserDAO userDB = new UserDAO();
-            User found = userDB.findWithUsernameAndPassword(request.getUsername(), request.getPassword());
+
+            User found = UserDAO.getInstance().findWithUsernameAndPassword(request.getUsername(), request.getPassword());
 
             String authToken = UUID.randomUUID().toString();
 

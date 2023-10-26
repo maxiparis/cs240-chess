@@ -16,14 +16,11 @@ public class ClearApplicationService {
      */
     public ClearApplicationResponse clearApplication() {
         try {
-            UserDAO userDB = new UserDAO();
-            userDB.clear();
+            UserDAO.getInstance().clear();
 
-            AuthDAO authDB = new AuthDAO();
-            authDB.clear();
+            AuthDAO.getInstance().clear();
 
-            GameDAO gameDB = new GameDAO();
-            gameDB.clear();
+            GameDAO.getInstance().clear();
 
         } catch (DataAccessException e) {
             return new ClearApplicationResponse("Error: " + e.getMessage());

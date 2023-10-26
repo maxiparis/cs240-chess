@@ -13,22 +13,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AuthDAOTest {
     private AuthDAO authDAO;
-    private AuthDAO authDAO2;
     private AuthDAO expected;
     private AuthToken model;
     private AuthToken model2;
 
     @BeforeEach
     public void setUp(){
-        authDAO = new AuthDAO();
-        authDAO2= new AuthDAO();
+        authDAO = AuthDAO.getInstance();
         model = new AuthToken("Alex", "434123412");
         model2 = new AuthToken("Martha", "d123123dasd34");
     }
 
     @AfterEach
     void tearDown() {
-        AuthDAO.getAuthTokensDB().clear();
+        AuthDAO.getInstance().getAuthTokensDB().clear();
     }
 
     @Test
@@ -41,9 +39,6 @@ class AuthDAOTest {
         );
         Assertions.assertTrue(authDAO.getAuthTokensDB().contains(model));
 
-        //testing that all instances have same elements
-        Assertions.assertTrue(authDAO2.getAuthTokensDB().size() == 1);
-        Assertions.assertTrue(authDAO2.getAuthTokensDB().contains(model));
 
         //adding a second element
         authDAO.insert(model2);

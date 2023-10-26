@@ -9,24 +9,31 @@ import java.util.HashSet;
  * A class used to insert Users into the Database
  */
 public class UserDAO extends ClearDAO {
+    static public UserDAO instance;
     /**
      * A HashSet representing all users in the DB. Later on this will changed to an actual DB.
      */
-    static public HashSet<User> usersDB = new HashSet<>();
+    private HashSet<User> usersDB = new HashSet<>();
 
     /**
      * Constructor. Initializes the HashSet of users.
      */
-    public UserDAO() {
-//        usersDB= new HashSet<>();
+    private UserDAO() {
     }
 
-    public static HashSet<User> getUsersDB() {
+    public static UserDAO getInstance(){
+        if(instance == null){
+            instance = new UserDAO();
+        }
+        return instance;
+    }
+
+    public HashSet<User> getUsersDB() {
         return usersDB;
     }
 
-    public static void setUsersDB(HashSet<User> usersDB) {
-        UserDAO.usersDB=usersDB;
+    public void setUsersDB(HashSet<User> usersDB) {
+        this.usersDB=usersDB;
     }
 
     /**

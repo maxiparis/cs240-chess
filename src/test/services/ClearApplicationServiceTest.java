@@ -26,9 +26,9 @@ class ClearApplicationServiceTest {
     @BeforeEach
     void setUp() {
         service = new ClearApplicationService();
-        userDB = new UserDAO();
-        authDB = new AuthDAO();
-        gameDB = new GameDAO();
+        userDB = UserDAO.getInstance();
+        authDB = AuthDAO.getInstance();
+        gameDB = GameDAO.getInstance();
     }
 
     @Test
@@ -42,9 +42,9 @@ class ClearApplicationServiceTest {
 
         ClearApplicationResponse response = service.clearApplication();
 
-        assertTrue(UserDAO.getUsersDB().isEmpty());
-        assertTrue(AuthDAO.getAuthTokensDB().isEmpty());
-        assertTrue(GameDAO.getGamesDB().isEmpty());
+        assertTrue(UserDAO.getInstance().getUsersDB().isEmpty());
+        assertTrue(AuthDAO.getInstance().getAuthTokensDB().isEmpty());
+        assertTrue(GameDAO.getInstance().getGamesDB().isEmpty());
 
         assertNull(response.getMessage());
 

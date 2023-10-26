@@ -18,25 +18,28 @@ class UserDAOTest {
 
     @BeforeEach
     void setUp() {
-        userDAO = new UserDAO();
+        userDAO = UserDAO.getInstance();
         model = new User("john7", "johnPass", "john@gmail.com");
         model2 = new User("carla6", "carlaPass", "carla@gmail.com");
     }
 
     @AfterEach
     void cleanUp(){
-        UserDAO.getUsersDB().clear();
+        try {
+            userDAO.clear();
+        } catch (DataAccessException e) {
+        }
     }
 
     @Test
     void insert() throws DataAccessException {
         //insert one user
         userDAO.insert(model);
-        assertTrue(UserDAO.getUsersDB().contains(model));
+        assertTrue(UserDAO.getInstance().getUsersDB().contains(model));
 
         userDAO.insert(model2);
-        assertTrue(UserDAO.getUsersDB().contains(model));
-        assertTrue(UserDAO.getUsersDB().contains(model2));
+        assertTrue(UserDAO.getInstance().getUsersDB().contains(model));
+        assertTrue(UserDAO.getInstance().getUsersDB().contains(model2));
 
         //insert user that is already there
         assertThrows(DataAccessException.class, () -> {
@@ -83,8 +86,8 @@ class UserDAOTest {
         userDAO.insert(model);
         userDAO.update(model.getUsername(), "newPassword", "updatedEmail");
         User update = new User(model.getUsername(), "newPassword", "updatedEmail");
-        assertTrue(UserDAO.getUsersDB().contains(update));
-        assertFalse(UserDAO.getUsersDB().contains(model));
+        assertTrue(UserDAO.getInstance().getUsersDB().contains(update));
+        assertFalse(UserDAO.getInstance().getUsersDB().contains(model));
 
         //invalid - trying to update something that is not there
         assertThrows(DataAccessException.class, () -> {
@@ -97,7 +100,7 @@ class UserDAOTest {
         //valid
             userDAO.insert(model);
             userDAO.remove(model);
-            assertTrue(UserDAO.getUsersDB().isEmpty());
+            assertTrue(UserDAO.getInstance().getUsersDB().isEmpty());
 
         //invalid - the user is not in the db
             assertThrows(DataAccessException.class, () -> {
@@ -113,7 +116,7 @@ class UserDAOTest {
         userDAO.insert(model);
         userDAO.insert(model2);
         userDAO.clear();
-        assertTrue(UserDAO.getUsersDB().isEmpty());
+        assertTrue(UserDAO.getInstance().getUsersDB().isEmpty());
 
         //invalid - it was empty already
         assertThrows(DataAccessException.class, () -> {

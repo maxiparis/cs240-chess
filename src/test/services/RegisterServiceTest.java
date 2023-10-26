@@ -20,7 +20,7 @@ class RegisterServiceTest {
     void setUp() {
         registerService = new RegisterService();
         request = new RegisterRequest("Tom", "password", "email");
-        userDB = new UserDAO();
+        userDB = UserDAO.getInstance();
     }
 
     @Test

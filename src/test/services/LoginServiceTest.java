@@ -22,7 +22,7 @@ class LoginServiceTest {
     void setUp() {
         loginService = new LoginService();
         request = new LoginRequest("Jason", "1234*");
-        userDB = new UserDAO();
+        userDB = UserDAO.getInstance();
     }
 
     @Test

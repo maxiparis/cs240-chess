@@ -21,14 +21,13 @@ public class CreateGameService {
      */
     public CreateGameResponse createGame (CreateGameRequest request){
         try {
-            GameDAO gameDB = new GameDAO();
             Game gameToAdd = new Game();
             //gameToAdd will have ID, name, and a game, but no white/black usernames;
             gameToAdd.setGameName(request.getGameName());
             gameToAdd.setGameID(generateNewGameID());
             gameToAdd.setGame(new ChessGameImpl(ChessGame.TeamColor.WHITE));
 
-            gameDB.insert(gameToAdd);
+            GameDAO.getInstance().insert(gameToAdd);
             return new CreateGameResponse(null, gameToAdd.getGameID());
         } catch (DataAccessException e) {
             return new CreateGameResponse(e.getMessage(), null);
@@ -38,6 +37,6 @@ public class CreateGameService {
 
     public int generateNewGameID(){
         gameID++;
-        return gameID-1;
+        return (gameID-1);
     }
 }

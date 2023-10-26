@@ -21,8 +21,7 @@ public class RegisterService {
     public RegisterResponse register (RegisterRequest request) {
         try {
             User newUser = new User(request.getUsername(), request.getPassword(), request.getEmail());
-            UserDAO userDB = new UserDAO();
-            userDB.insert(newUser);
+            UserDAO.getInstance().insert(newUser);
 
             String authToken = UUID.randomUUID().toString();
 

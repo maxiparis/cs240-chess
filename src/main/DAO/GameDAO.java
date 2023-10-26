@@ -10,23 +10,28 @@ import java.util.HashSet;
  * A class used to do insert, remove, find or update Games in the DB.
  */
 public class GameDAO extends ClearDAO {
-    static public HashSet<Game> gamesDB = new HashSet<>();
+    private static GameDAO instance;
+    private HashSet<Game> gamesDB = new HashSet<>();
 
-    public static HashSet<Game> getGamesDB() {
+    public HashSet<Game> getGamesDB() {
         return gamesDB;
     }
 
-    public static void setGamesDB(HashSet<Game> gamesDB) {
-        GameDAO.gamesDB=gamesDB;
+    public void setGamesDB(HashSet<Game> gamesDB) {
+        this.gamesDB = gamesDB;
     }
-
-
 
     /**
      * Constructs a new GameDAO object, and initializes the collection of games.
      */
-    public GameDAO() {
-//        gamesDB= new HashSet<>();
+    private GameDAO() {
+    }
+
+    public static GameDAO getInstance() {
+        if (instance == null) {
+            instance = new GameDAO();
+        }
+        return instance;
     }
 
     /**
@@ -59,7 +64,7 @@ public class GameDAO extends ClearDAO {
      * @return a Game object, in case it's found in the DB.
      * @throws DataAccessException the exception to be thrown in case the Game cannot be found.
      */
-    public Game find(Game game) throws DataAccessException{
+    public Game find(Game game) throws DataAccessException {
         if(gamesDB.contains(game)){
             return game;
         } else {

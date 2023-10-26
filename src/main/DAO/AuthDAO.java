@@ -9,21 +9,28 @@ import java.util.HashSet;
  * A class used to do insert, remove, find or update AuthTokens in the DB.
  */
 public class AuthDAO extends ClearDAO{
-    static public HashSet<AuthToken> authTokensDB = new HashSet<>();
+    private static AuthDAO instance;
+    private HashSet<AuthToken> authTokensDB = new HashSet<>();
 
     /**
      * Constructs a new AuthDAO object, and initializes the collection of authTokens.
      */
-    public AuthDAO() {
-//        authTokensDB = new HashSet<>();
+    private AuthDAO() {
     }
 
-    public static HashSet<AuthToken> getAuthTokensDB() {
+    public static AuthDAO getInstance() {
+        if(instance == null){
+            instance = new AuthDAO();
+        }
+        return instance;
+    }
+
+    public HashSet<AuthToken> getAuthTokensDB() {
         return authTokensDB;
     }
 
-    public static void setAuthTokensDB(HashSet<AuthToken> authTokensDB) {
-        AuthDAO.authTokensDB=authTokensDB;
+    public void setAuthTokensDB(HashSet<AuthToken> authTokensDB) {
+        this.authTokensDB=authTokensDB;
     }
 
     /**
