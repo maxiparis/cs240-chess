@@ -133,4 +133,19 @@ public class GameDAO extends ClearDAO {
     public void clear() throws DataAccessException{
         super.clear(gamesDB);
     }
+
+    public Game findGameByName(String gameName) {
+        if(gamesDB.isEmpty()){
+            return null;
+        }
+
+        Game toReturn = null;
+        for (Game game : gamesDB) {
+            if(game.getGameName() == gameName){
+                toReturn = game;
+            }
+        }
+
+        return toReturn;
+    }
 }
