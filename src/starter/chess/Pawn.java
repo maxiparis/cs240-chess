@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Pawn implements ChessPiece{
@@ -140,6 +141,16 @@ public class Pawn implements ChessPiece{
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pawn pawn=(Pawn) o;
+        return pieceType == pawn.pieceType && teamColor == pawn.teamColor;
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceType, teamColor);
+    }
 }

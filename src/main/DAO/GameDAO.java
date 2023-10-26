@@ -65,11 +65,25 @@ public class GameDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the Game cannot be found.
      */
     public Game find(Game game) throws DataAccessException {
-        if(gamesDB.contains(game)){
-            return game;
-        } else {
+        Game foundGame = findGameByName(game.getGameName());
+
+        if(foundGame == null){
             throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
         }
+
+        //compare each value
+            //gameID, whiteUsername, blackusername, game (impl)
+
+        if(game.getGameID() != foundGame.getGameID()){
+            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
+        } else if (game.getWhiteUsername() != foundGame.getWhiteUsername()){
+            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
+        } else if (game.getBlackUsername() != foundGame.getBlackUsername()) {
+            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
+        } else if (!game.getGame().equals(foundGame.getGame())) { //failing here
+            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
+        }
+        return foundGame;
     }
 
     /**

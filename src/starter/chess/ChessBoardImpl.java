@@ -11,7 +11,7 @@ public class ChessBoardImpl implements ChessBoard {
 
     //constructor
     public ChessBoardImpl() {
-        boardTable= new ChessPiece[8][8]; //0-7
+        boardTable = new ChessPiece[8][8]; //0-7
 //        resetBoard();
     }
 
@@ -41,6 +41,7 @@ public class ChessBoardImpl implements ChessBoard {
 
     @Override
     public void resetBoard() {
+        clearBoard();
         //WHITE
         /**1,1 R**/ addPiece(new ChessPositionImpl(1,1),new Rook(ChessGame.TeamColor.WHITE));
         /**1,2 N**/ addPiece(new ChessPositionImpl(1,2),new Knight(ChessGame.TeamColor.WHITE));
@@ -71,6 +72,10 @@ public class ChessBoardImpl implements ChessBoard {
         for (int column = 1; column <= 8; column++) {
             addPiece(new ChessPositionImpl(7,column),new Pawn(ChessGame.TeamColor.BLACK));
         }
+    }
+
+    private void clearBoard() {
+        boardTable = new ChessPiece[8][8];
     }
 
     @Override
@@ -172,5 +177,39 @@ public class ChessBoardImpl implements ChessBoard {
         toReturn.append("   1 2 3 4 5 6 7 8 ");
 
         return toReturn.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessBoardImpl that=(ChessBoardImpl) o;
+        boolean BoardsAreEqual = boardsAreEqual(this.getBoardTable(), that.getBoardTable());
+        return BoardsAreEqual;
+    }
+
+    private boolean boardsAreEqual(ChessPiece[][] board1, ChessPiece[][] board2) {
+        for (int row = 0; row < 8; row++) {
+          for (int column = 0; column < 8; column++) {
+              ChessPiece board1Piece = board1[row][column];
+              ChessPiece board2Piece = board2[row][column];
+              if(board1Piece == null && board2Piece != null){
+                  return false;
+              } else if (board2Piece == null && board1Piece != null){
+                  return false;
+              }
+              if (board1Piece != null) {
+                  if(!board1Piece.equals(board2Piece)){
+                    return false;
+                  }
+              }
+          }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(boardTable);
     }
 }

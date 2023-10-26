@@ -57,8 +57,10 @@ class GameDAOTest {
     void find() throws DataAccessException {
         //not the best, needs to improve this one, there was a bug and it didn't detect it.
         //game is in db
+        Game modelClone = new Game(1, "sam", "tony",
+                "gameName", new ChessGameImpl(ChessGame.TeamColor.WHITE));
         gameDAO.insert(model);
-        Game actual = gameDAO.find(model);
+        Game actual = gameDAO.find(modelClone);
         Game expected = model;
         assertEquals(expected, actual);
 
