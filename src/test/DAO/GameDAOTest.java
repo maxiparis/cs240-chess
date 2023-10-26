@@ -4,6 +4,7 @@ import chess.ChessGame;
 import chess.ChessGameImpl;
 import dataAccess.DataAccessException;
 import model.Game;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,6 +27,11 @@ class GameDAOTest {
                 "gameName", new ChessGameImpl(ChessGame.TeamColor.WHITE));
         model2 = new Game(2, "jack", "chalo",
                 "myGame", new ChessGameImpl(ChessGame.TeamColor.BLACK));
+    }
+
+    @AfterEach
+    void tearDown() {
+        GameDAO.getGamesDB().clear();
     }
 
     @Test

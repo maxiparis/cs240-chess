@@ -2,6 +2,7 @@ package DAO;
 
 import dataAccess.DataAccessException;
 import model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +21,11 @@ class UserDAOTest {
         userDAO = new UserDAO();
         model = new User("john7", "johnPass", "john@gmail.com");
         model2 = new User("carla6", "carlaPass", "carla@gmail.com");
+    }
+
+    @AfterEach
+    void cleanUp(){
+        UserDAO.getUsersDB().clear();
     }
 
     @Test

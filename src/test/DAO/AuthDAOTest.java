@@ -2,6 +2,7 @@ package DAO;
 
 import dataAccess.DataAccessException;
 import model.AuthToken;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,11 @@ class AuthDAOTest {
         authDAO2= new AuthDAO();
         model = new AuthToken("Alex", "434123412");
         model2 = new AuthToken("Martha", "d123123dasd34");
+    }
+
+    @AfterEach
+    void tearDown() {
+        AuthDAO.getAuthTokensDB().clear();
     }
 
     @Test

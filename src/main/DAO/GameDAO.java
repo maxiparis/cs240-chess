@@ -38,9 +38,7 @@ public class GameDAO extends ClearDAO {
         if(!gameIsInDB(game)){
             gamesDB.add(game);
         } else {
-            throw new DataAccessException("The game " + game.toString() + " could not be " +
-                    "added because it is already in the DB."
-            );
+            throw new DataAccessException("Error: game is already in DB");
         }
     }
 
