@@ -7,7 +7,7 @@ package responses;
 public class CreateGameResponse extends ErrorResponse {
 
     /**
-     * the gameID of the game created.
+     * the gameID of the game created. If it is 0 then that means that its a null or invalid.
      */
     private int gameID;
 
@@ -19,7 +19,9 @@ public class CreateGameResponse extends ErrorResponse {
      */
     public CreateGameResponse(String errorMessage, Integer gameID) {
         super(errorMessage);
-        this.gameID = gameID;
+        if(gameID != null){
+            this.gameID = gameID;
+        }
     }
 
     /**

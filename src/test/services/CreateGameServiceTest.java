@@ -35,17 +35,13 @@ class CreateGameServiceTest {
         assertNotNull(GameDAO.getInstance().findGameByName(gameDbShouldHave.getGameName()));
         //validate the response
         assertNull(response.getMessage());
-        assertSame(0, response.getGameID());
+        assertSame(1, response.getGameID());
 
 
         //invalid -- game is already there
         CreateGameResponse invalidResponse = service.createGame(request);
-        assertNull(invalidResponse.getGameID(), "The GameID is not null. ");
-        assertSame("Error: game is already in DB", invalidResponse.getMessage());
-
+        assertTrue(invalidResponse.getGameID() == 0, "The GameID is not null. ");
+        assertSame("Error: there is another game with the same name", invalidResponse.getMessage());
     }
-
-    @Test
-    void generateNewGameID() {
-    }
+    
 }

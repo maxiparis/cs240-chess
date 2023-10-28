@@ -40,6 +40,9 @@ public class GameDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the game cannot be inserted.
      */
     public void insert(Game game) throws DataAccessException {
+        if(findGameByName(game.getGameName()) != null){ //we found another game inside the db with the same name
+            throw new DataAccessException("Error: there is another game with the same name");
+        }
         if(!gameIsInDB(game)){
             gamesDB.add(game);
         } else {

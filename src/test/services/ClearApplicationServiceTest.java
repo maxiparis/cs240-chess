@@ -39,7 +39,6 @@ class ClearApplicationServiceTest {
         gameDB.insert(new Game(1, "test", "test", "test",
                 new ChessGameImpl(ChessGame.TeamColor.WHITE))
         );
-
         ClearApplicationResponse response = service.clearApplication();
 
         assertTrue(UserDAO.getInstance().getUsersDB().isEmpty());
@@ -48,11 +47,11 @@ class ClearApplicationServiceTest {
 
         assertNull(response.getMessage());
 
+        //calling for the second time
         response = service.clearApplication();
 
-        assertNotNull(response.getMessage());
+        assertEquals("Error: DB was empty", response.getMessage());
 
-        System.out.println(response.getMessage());
 
     }
 }

@@ -12,6 +12,12 @@ public class LogoutService {
      * @return a reponse to the action.
      */
     public LogoutResponse logout () {
+        try {
+            //TODO
+
+        } catch (Exception e) {
+            return new LogoutResponse(null);
+        }
         return new LogoutResponse(null);
     }
 }

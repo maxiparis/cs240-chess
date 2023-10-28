@@ -12,7 +12,8 @@ import responses.CreateGameResponse;
  * This class represents an API that creates a new game.
  */
 public class CreateGameService {
-    private static int gameID = 0;
+    private static int gameID = 1;
+
 
     /**
      * Creates a new game, using the specifications given by the parameter.

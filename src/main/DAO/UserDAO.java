@@ -14,7 +14,6 @@ public class UserDAO extends ClearDAO {
      * A HashSet representing all users in the DB. Later on this will changed to an actual DB.
      */
     private HashSet<User> usersDB = new HashSet<>();
-
     /**
      * Constructor. Initializes the HashSet of users.
      */
@@ -59,7 +58,6 @@ public class UserDAO extends ClearDAO {
             (user.getEmail() == null) || (user.getEmail() == "") ){
             return false;
         }
-
         return true;
     }
 
