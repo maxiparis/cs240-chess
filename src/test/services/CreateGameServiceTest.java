@@ -47,7 +47,7 @@ class CreateGameServiceTest {
 
 
         //invalid -- game is already there
-        CreateGameResponse invalidResponse = service.createGame(request, token.getToken());
+         CreateGameResponse invalidResponse = service.createGame(request, token.getToken());
         assertEquals(0, invalidResponse.getGameID(), "The GameID is not null. ");
         assertSame("Error: there is another game with the same name", invalidResponse.getMessage());
 

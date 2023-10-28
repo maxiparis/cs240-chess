@@ -165,4 +165,24 @@ public class GameDAO extends ClearDAO {
 
         return toReturn;
     }
+
+    public Game findGameById(int gameID) throws DataAccessException {
+        if(gamesDB.isEmpty()){
+            throw new DataAccessException("Error: DB is empty");
+        }
+
+
+        Game toReturn = null;
+        for (Game game : gamesDB) {
+            if(game.getGameID() == gameID){
+                toReturn = game;
+            }
+        }
+
+        if(toReturn == null){
+            throw new DataAccessException("Error: bad request");
+        }
+
+        return toReturn;
+    }
 }

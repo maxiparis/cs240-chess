@@ -1,5 +1,6 @@
 package requests;
 
+import chess.ChessGame;
 import chess.ChessPiece;
 
 /**
@@ -9,7 +10,7 @@ public class JoinGameRequest {
     /**
      * the color of the player that will join the game
      */
-    private ChessPiece.PieceType playerColor;
+    private ChessGame.TeamColor playerColor;
 
     /**
      * the gameID of the game the player is trying to join.
@@ -21,7 +22,7 @@ public class JoinGameRequest {
      * @param playerColor is the value this.playerColor will be initialized to.
      * @param gameID is the value this.gameID will be initialized to.
      */
-    public JoinGameRequest(ChessPiece.PieceType playerColor, int gameID) {
+    public JoinGameRequest(ChessGame.TeamColor playerColor, int gameID) {
         this.playerColor = playerColor;
         this.gameID = gameID;
     }
@@ -29,7 +30,7 @@ public class JoinGameRequest {
     /**
      * @return the playerColor.
      */
-    public ChessPiece.PieceType getPlayerColor() {
+    public ChessGame.TeamColor getPlayerColor() {
         return playerColor;
     }
 
@@ -37,7 +38,7 @@ public class JoinGameRequest {
      * Sets the playerColor to the parameter value.
      * @param playerColor is the value this.playerColor will be assigned to.
      */
-    public void setPlayerColor(ChessPiece.PieceType playerColor) {
+    public void setPlayerColor(ChessGame.TeamColor playerColor) {
         this.playerColor = playerColor;
     }
 
