@@ -27,9 +27,7 @@ class LogoutServiceTest {
     void tearDown() throws DataAccessException {
         try {
             DB.clear();
-        } catch (DataAccessException e){
-
-        }
+        } catch (DataAccessException e){  }
     }
 
     @Test
@@ -61,7 +59,7 @@ class LogoutServiceTest {
     void logoutInvalidAuthTokenNotFound() throws DataAccessException {
         DB.insert(token);
         LogoutResponse response = service.logout("wrongAuthToken");
-        assertEquals("Error: authToken was not found in the DB", response.getMessage(),
+        assertEquals("Error: unauthorized", response.getMessage(),
                 "The error messages are not the same.");
 
         DB.insert(new AuthToken("alex","53254325"));
@@ -71,7 +69,7 @@ class LogoutServiceTest {
         DB.insert(new AuthToken("thomas","1123123"));
 
         LogoutResponse response2 = service.logout("wrongAuthToken");
-        assertEquals("Error: authToken was not found in the DB", response2.getMessage(),
+        assertEquals("Error: unauthorized", response2.getMessage(),
                 "The error messages are not the same.");
 
 

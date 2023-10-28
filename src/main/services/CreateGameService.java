@@ -11,7 +11,7 @@ import responses.CreateGameResponse;
 /**
  * This class represents an API that creates a new game.
  */
-public class CreateGameService {
+public class CreateGameService extends AuthTokenValidator{
     private static int gameID = 1;
 
 
@@ -20,8 +20,9 @@ public class CreateGameService {
      * @param request includes all the specifications to create the new game.
      * @return a response to the given action.
      */
-    public CreateGameResponse createGame (CreateGameRequest request){
+    public CreateGameResponse createGame (CreateGameRequest request, String authToken){
         try {
+            tryToValidateAuthToken(authToken);
             Game gameToAdd = new Game();
             //gameToAdd will have ID, name, and a game, but no white/black usernames;
             gameToAdd.setGameName(request.getGameName());

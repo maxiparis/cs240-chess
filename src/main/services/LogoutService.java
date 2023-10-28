@@ -7,7 +7,7 @@ import responses.LogoutResponse;
 /**
  * This class represents an API that logs out the user.
  */
-public class LogoutService {
+public class LogoutService extends AuthTokenValidator{
 
     /**
      * Logs out the user.
@@ -17,6 +17,9 @@ public class LogoutService {
      */
     public LogoutResponse logout (String authToken) {
         try {
+
+
+            tryToValidateAuthToken(authToken);
             AuthToken token = AuthDAO.getInstance().findWithAuthToken(authToken);
             AuthDAO.getInstance().remove(token);
             return new LogoutResponse(null);

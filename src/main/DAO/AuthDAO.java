@@ -147,10 +147,8 @@ public class AuthDAO extends ClearDAO{
         for (AuthToken token : authTokensDB) {
             if(token.getToken() == theToken){
                 toReturn = token;
-                return toReturn;
             }
         }
-
-        throw new DataAccessException("Error: unauthorized");
+        return toReturn;
     }
 }

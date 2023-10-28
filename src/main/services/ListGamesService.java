@@ -11,7 +11,7 @@ public class ListGamesService {
      * Lists all the games.
      * @return a response to the given action.
      */
-    public ListGamesResponse listGames(){
+    public ListGamesResponse listGames(String authToken){
         return new ListGamesResponse(null, null);
     }
 }

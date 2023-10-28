@@ -21,11 +21,11 @@ public class ClearApplicationService {
             AuthDAO.getInstance().clear();
 
             GameDAO.getInstance().clear();
-
+            return new ClearApplicationResponse(null);
         } catch (DataAccessException e) {
             return new ClearApplicationResponse("Error: " + e.getMessage());
         }
 
-        return new ClearApplicationResponse(null);
+
     }
 }
