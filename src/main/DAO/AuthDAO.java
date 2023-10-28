@@ -151,6 +151,6 @@ public class AuthDAO extends ClearDAO{
             }
         }
 
-        throw new DataAccessException("Error: authToken was not found in the DB");
+        throw new DataAccessException("Error: unauthorized");
     }
 }
