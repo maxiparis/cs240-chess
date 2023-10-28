@@ -32,6 +32,13 @@ public class RegisterHandler {
         RegisterService service = new RegisterService();
         RegisterResponse result = service.register(registerRequest);
 
+        if(result.getMessage() == "Error: already taken"){
+            response.status(403);
+        } else if (result.getMessage() == "Error: bad request") {
+            response.status(400);
+        }
+
+
         return gson.toJson(result);
     }
 
