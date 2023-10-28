@@ -2,6 +2,7 @@ package DAO;
 
 import dataAccess.DataAccessException;
 import model.AuthToken;
+import model.Game;
 
 import java.util.HashSet;
 
@@ -135,5 +136,21 @@ public class AuthDAO extends ClearDAO{
      */
     public void clear() throws DataAccessException{
         super.clear(authTokensDB);
+    }
+
+    public AuthToken findWithAuthToken(String theToken) throws DataAccessException {
+        if(authTokensDB.isEmpty()){
+            throw new DataAccessException("Error: DB is empty");
+        }
+
+        AuthToken toReturn = null;
+        for (AuthToken token : authTokensDB) {
+            if(token.getToken() == theToken){
+                toReturn = token;
+                return toReturn;
+            }
+        }
+
+        throw new DataAccessException("Error: authToken was not found in the DB");
     }
 }
