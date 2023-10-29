@@ -50,7 +50,7 @@ class ClearApplicationServiceTest {
         //calling for the second time
         response = service.clearApplication();
 
-        assertEquals("Error: DB was empty", response.getMessage());
+        assertNull(response.getMessage());
 
 
     }
