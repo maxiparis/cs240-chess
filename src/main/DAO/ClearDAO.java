@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 public class ClearDAO {
 
-    public void clear(HashSet setToClear) throws DataAccessException {
+    public void clear(HashSet setToClear){
 //        if (!setToClear.isEmpty()) {
 //            setToClear.clear();
 //        } else {

@@ -25,9 +25,7 @@ class LogoutServiceTest {
 
     @AfterEach
     void tearDown() throws DataAccessException {
-        try {
-            DB.clear();
-        } catch (DataAccessException e){  }
+        DB.clear();
     }
 
     @Test
@@ -78,7 +76,7 @@ class LogoutServiceTest {
     @Test
     void logoutInvalidEmptyDB() throws DataAccessException {
         LogoutResponse response = service.logout("wrongAuthToken");
-        assertEquals("Error: DB is empty", response.getMessage(),
+        assertEquals("Error: unauthorized", response.getMessage(),
                 "The error messages are not the same.");
 
         DB.insert(new AuthToken("alex","53254325"));

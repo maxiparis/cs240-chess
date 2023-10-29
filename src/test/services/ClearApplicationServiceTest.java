@@ -34,11 +34,30 @@ class ClearApplicationServiceTest {
     @Test
     void clearApplication() throws DataAccessException {
         //testing that after I call the clear application service, the all DB's are cleared.
-        userDB.insert(new User("test", "test", "test"));
-        authDB.insert(new AuthToken("test", "test"));
-        gameDB.insert(new Game(1, "test", "test", "test",
-                new ChessGameImpl(ChessGame.TeamColor.WHITE))
-        );
+        userDB.insert(new User("test1", "test1", "test1"));
+        userDB.insert(new User("test2", "test2", "test2"));
+        userDB.insert(new User("test3", "test3", "test3"));
+        userDB.insert(new User("test4", "test4", "test4"));
+        userDB.insert(new User("test5", "test5", "test5"));
+
+        authDB.insert(new AuthToken("test1", "test1"));
+        authDB.insert(new AuthToken("test2", "test2"));
+        authDB.insert(new AuthToken("test3", "test3"));
+        authDB.insert(new AuthToken("test4", "test4"));
+        authDB.insert(new AuthToken("test5", "test5"));
+
+
+        gameDB.insert(new Game(1, "test1", "test1", "test1",
+                new ChessGameImpl(ChessGame.TeamColor.WHITE)));
+        gameDB.insert(new Game(2, "test2", "test2", "test2",
+                new ChessGameImpl(ChessGame.TeamColor.WHITE)));
+        gameDB.insert(new Game(3, "test3", "test3", "test3",
+                new ChessGameImpl(ChessGame.TeamColor.WHITE)));
+        gameDB.insert(new Game(4, "test4", "test4", "test4",
+                new ChessGameImpl(ChessGame.TeamColor.WHITE)));
+        gameDB.insert(new Game(5, "test5", "test5", "test5",
+                new ChessGameImpl(ChessGame.TeamColor.WHITE)));
+
         ClearApplicationResponse response = service.clearApplication();
 
         assertTrue(UserDAO.getInstance().getUsersDB().isEmpty());
