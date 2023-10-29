@@ -71,11 +71,8 @@ public class GameDAO extends ClearDAO {
         Game foundGame = findGameByName(game.getGameName());
 
         if(foundGame == null){
-            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
+            throw new DataAccessException("The game was not found in the DB.");
         }
-
-        //compare each value
-            //gameID, whiteUsername, blackusername, game (impl)
 
         if(game.getGameID() != foundGame.getGameID()){
             throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
@@ -158,7 +155,7 @@ public class GameDAO extends ClearDAO {
 
         Game toReturn = null;
         for (Game game : gamesDB) {
-            if(game.getGameName() == gameName){
+            if(game.getGameName().equals(gameName)){
                 toReturn = game;
             }
         }

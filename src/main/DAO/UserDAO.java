@@ -82,7 +82,7 @@ public class UserDAO extends ClearDAO {
         if(usersDB.contains(user)){
             return user;
         } else {
-            throw new DataAccessException("The user " + user.toString() + " was not found in the DB.");
+            throw new DataAccessException("The user was not found in the DB.");
         }
     }
 
