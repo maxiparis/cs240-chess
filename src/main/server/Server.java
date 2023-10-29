@@ -34,7 +34,20 @@ public class Server {
         //Create Game
         Spark.post("/game", Server::handleCreateGame);
 
+        //List Games
+        Spark.get("/game", Server::handleListGames);
 
+        //Join Game
+        Spark.put("/game", Server::handleJoinGame);
+
+    }
+
+    private static Object handleJoinGame(Request request, Response response) {
+        return JoinGameHandler.getInstance().handleRequest(request, response);
+    }
+
+    private static Object handleListGames(Request request, Response response) {
+        return ListGamesHandler.getInstance().handleRequest(request, response);
     }
 
     private static Object handleCreateGame(Request request, Response response) {
