@@ -9,7 +9,7 @@ public class CreateGameResponse extends ErrorResponse {
     /**
      * the gameID of the game created. If it is 0 then that means that its a null or invalid.
      */
-    private int gameID;
+    private Integer gameID;
 
     /**
      * Constructs a new object with the parameter passed.
@@ -19,15 +19,15 @@ public class CreateGameResponse extends ErrorResponse {
      */
     public CreateGameResponse(String errorMessage, Integer gameID) {
         super(errorMessage);
-        if(gameID != null){
+//        if(gameID != null){
             this.gameID = gameID;
-        }
+//        }
     }
 
     /**
      * @return the gameID of the created game.
      */
-    public int getGameID() {
+    public Integer getGameID() {
         return gameID;
     }
 
@@ -35,7 +35,7 @@ public class CreateGameResponse extends ErrorResponse {
      * Sets the gameID with the value of the parameter.
      * @param gameID sets this.gameID to its value.
      */
-    public void setGameID(int gameID) {
-        this.gameID=gameID;
+    public void setGameID(Integer gameID) {
+        this.gameID = gameID;
     }
 }

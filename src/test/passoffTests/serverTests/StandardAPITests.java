@@ -1,5 +1,6 @@
 package passoffTests.serverTests;
 
+import DAO.AuthDAO;
 import chess.ChessGame;
 import org.junit.jupiter.api.*;
 import passoffTests.TestFactory;

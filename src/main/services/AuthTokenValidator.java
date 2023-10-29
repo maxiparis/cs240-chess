@@ -22,6 +22,8 @@ public class AuthTokenValidator {
     public static void tryToValidateAuthToken(String authToken) throws DataAccessException {
         if(!AuthDAO.getInstance().getAuthTokensDB().isEmpty()){
             validateAuthToken(authToken);
+        } else {
+            throw new DataAccessException("Error: unauthorized"); //empty db
         }
     }
 }

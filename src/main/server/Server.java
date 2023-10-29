@@ -1,9 +1,6 @@
 package server;
 
-import handlers.ClearHandler;
-import handlers.LoginHandler;
-import handlers.LogoutHandler;
-import handlers.RegisterHandler;
+import handlers.*;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -34,7 +31,14 @@ public class Server {
         //Logout
         Spark.delete("/session", Server::handleLogout);
 
+        //Create Game
+        Spark.post("/game", Server::handleCreateGame);
 
+
+    }
+
+    private static Object handleCreateGame(Request request, Response response) {
+        return CreateGameHandler.getInstance().handleRequest(request, response);
     }
 
     private static Object handleLogout(Request request, Response response) {

@@ -32,6 +32,7 @@ public class CreateGameService extends AuthTokenValidator{
             GameDAO.getInstance().insert(gameToAdd);
             return new CreateGameResponse(null, gameToAdd.getGameID());
         } catch (DataAccessException e) {
+            gameID--;
             return new CreateGameResponse(e.getMessage(), null);
         }
     }
