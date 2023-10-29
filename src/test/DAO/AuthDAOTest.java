@@ -57,7 +57,9 @@ class AuthDAOTest {
     //valid
         authDAO.insert(model);
         AuthToken expected = model;
-        AuthToken actual = authDAO.find(model);
+        AuthToken modelClone = new AuthToken("Alex", "434123412");
+
+        AuthToken actual = authDAO.find(modelClone);
         assertEquals(expected, actual);
     //invalid -> throws a new exception
         assertThrows(DataAccessException.class, ()-> {

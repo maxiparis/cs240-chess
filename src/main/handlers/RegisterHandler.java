@@ -4,11 +4,8 @@ import DAO.AuthDAO;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import model.AuthToken;
-import requests.LoginRequest;
 import requests.RegisterRequest;
-import responses.LoginResponse;
 import responses.RegisterResponse;
-import services.LoginService;
 import services.RegisterService;
 import spark.Request;
 import spark.Response;
@@ -41,6 +38,14 @@ public class RegisterHandler {
             response.status(400);
         }
 
+        //TODO move this function to a superclass that is shared with LoginHandler
+        tryToInsertTokenJustCreated(result);
+
+
+        return gson.toJson(result);
+    }
+
+    private static void tryToInsertTokenJustCreated(RegisterResponse result) {
         if(result.getMessage() == null){ //it was a valid call
             //add new authToken to the authsDB
             try {
@@ -49,9 +54,6 @@ public class RegisterHandler {
                 System.out.println(e.getMessage());
             }
         }
-
-
-        return gson.toJson(result);
     }
 
 }

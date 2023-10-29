@@ -44,8 +44,7 @@ public class AuthDAO extends ClearDAO{
             if(!tokenIsInDB(token)){
                 authTokensDB.add(token);
             } else {
-                throw new DataAccessException("The token " + token.toString() + " could not be " +
-                        "added because it is already in the DB.");
+                throw new DataAccessException("The token could not be added because it is already in the DB");
             }
     }
 
@@ -66,13 +65,12 @@ public class AuthDAO extends ClearDAO{
      * @return a AuthToken object, in case it's found in the DB.
      * @throws DataAccessException the exception to be thrown in case the AuthToken cannot be found.
      */
-    public AuthToken find(AuthToken token) throws DataAccessException{
+    public AuthToken find(AuthToken token) throws DataAccessException {
         if(authTokensDB.contains(token)){
             return token;
         } else {
             throw new DataAccessException("The token was not found in the DB.");
         }
-
     }
 
     /**
