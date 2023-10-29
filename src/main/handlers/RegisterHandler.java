@@ -1,6 +1,9 @@
 package handlers;
 
+import DAO.AuthDAO;
 import com.google.gson.Gson;
+import dataAccess.DataAccessException;
+import model.AuthToken;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.LoginResponse;
@@ -36,6 +39,15 @@ public class RegisterHandler {
             response.status(403);
         } else if (result.getMessage() == "Error: bad request") {
             response.status(400);
+        }
+
+        if(result.getMessage() == null){ //it was a valid call
+            //add new authToken to the authsDB
+            try {
+                AuthDAO.getInstance().insert(new AuthToken(result.getUsername(), result.getAuthToken()));
+            } catch (DataAccessException e) {
+                System.out.println(e.getMessage());
+            }
         }
 
 

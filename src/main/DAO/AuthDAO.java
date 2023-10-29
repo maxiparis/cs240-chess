@@ -70,7 +70,7 @@ public class AuthDAO extends ClearDAO{
         if(authTokensDB.contains(token)){
             return token;
         } else {
-            throw new DataAccessException("The token " + token.toString() + " was not found in the DB.");
+            throw new DataAccessException("The token was not found in the DB.");
         }
 
     }
@@ -119,13 +119,11 @@ public class AuthDAO extends ClearDAO{
      * @throws DataAccessException in case the token is not found in the DB.
      */
     public void remove(AuthToken token) throws DataAccessException{
-        try {
-            AuthToken tokenToRemove = find(token);
-            authTokensDB.remove(tokenToRemove);
-        } catch (DataAccessException e) {
-            throw new DataAccessException("The token " + token.toString() + " could not be removed because it is not " +
-                    "in the DB.");
-        }
+//        try {
+            authTokensDB.remove(token);
+//        } catch (DataAccessException e) {
+//            throw new DataAccessException(e.getMessage());
+//        }
 
 
     }
@@ -145,10 +143,12 @@ public class AuthDAO extends ClearDAO{
 
         AuthToken toReturn = null;
         for (AuthToken token : authTokensDB) {
-            if(token.getToken() == theToken){
-                toReturn = token;
+            if(token.getToken().equals(theToken)){
+                return token;
             }
         }
-        return toReturn;
+
+        throw new DataAccessException("Error: the token was not found in DB.");
+
     }
 }

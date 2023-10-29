@@ -97,17 +97,15 @@ public class UserDAO extends ClearDAO {
         }
 
         for (User user : usersDB) {
-            if(user.getUsername() == username){
-                if(user.getPassword() == password){
+            if(user.getUsername().equals(username)){
+                if(user.getPassword().equals(password)){
                     return user;
                 } else {
-                    //found a user but their password don't match
                     throw new DataAccessException("Error: unauthorized"); //401
                 }
             }
-            throw new DataAccessException("Error: the username is not in the DB."); //500
         }
-        return null;
+        throw new DataAccessException("Error: the username is not in the DB."); //500
     }
 
     /**

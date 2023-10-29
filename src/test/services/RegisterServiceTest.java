@@ -42,7 +42,6 @@ class RegisterServiceTest {
         assertNull(invalidResponse.getUsername());
         assertNull(invalidResponse.getAuthToken());
         assertNotNull(invalidResponse.getMessage());
-        System.out.println(invalidResponse.getMessage());
 
         //invalid - bad request
         RegisterRequest badRequest = new RegisterRequest(null, "pass", "email");

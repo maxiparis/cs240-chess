@@ -5,6 +5,9 @@ import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import requests.RegisterRequest;
+import responses.RegisterResponse;
+import services.RegisterService;
 
 import java.util.HashSet;
 
@@ -162,4 +165,24 @@ class UserDAOTest {
 
         assertSame("Error: DB is empty.", actualErrorMessage);
     }
+
+    @Test
+    void testFindWithUsernameAndPassword_Valid() throws DataAccessException {
+//        userDAO.insert(model);
+//        userDAO.insert(model2);
+
+        RegisterService registerService = new RegisterService();
+        RegisterResponse registerResponse = registerService.register
+                (new RegisterRequest("carla6", "carlaPass", "carla@gmail.com"));
+
+        User foundUser = userDAO.findWithUsernameAndPassword("carla6", "carlaPass");
+        assertNotNull(foundUser);
+
+    }
+
+    @Test
+    void testFindWithUsernameAndPassword_Invalid() {
+
+    }
+
 }

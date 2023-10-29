@@ -12,7 +12,7 @@ public class AuthTokenValidator {
         HashSet<AuthToken> authTokensDB = AuthDAO.getInstance().getAuthTokensDB();
 
         for (AuthToken token : authTokensDB) {
-            if(token.getToken() == authToken){
+            if(token.getToken().equals(authToken)){
                 return true;
             }
         }

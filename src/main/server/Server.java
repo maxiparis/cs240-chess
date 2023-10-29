@@ -1,6 +1,8 @@
 package server;
 
 import handlers.ClearHandler;
+import handlers.LoginHandler;
+import handlers.LogoutHandler;
 import handlers.RegisterHandler;
 import spark.Request;
 import spark.Response;
@@ -23,10 +25,24 @@ public class Server {
         //Register
         Spark.post("/user", Server::handleRegister);
 
-        //clear
+        //Clear
         Spark.delete("/db", Server::handleClear);
 
+        //Login
+        Spark.post("/session", Server::handleLogin);
 
+        //Logout
+        Spark.delete("/session", Server::handleLogout);
+
+
+    }
+
+    private static Object handleLogout(Request request, Response response) {
+        return LogoutHandler.getInstance().handleRequest(request, response);
+    }
+
+    private static Object handleLogin(Request request, Response response) {
+        return LoginHandler.getInstance().handleRequest(request, response);
     }
 
 

@@ -17,8 +17,6 @@ public class LogoutService extends AuthTokenValidator{
      */
     public LogoutResponse logout (String authToken) {
         try {
-
-
             tryToValidateAuthToken(authToken);
             AuthToken token = AuthDAO.getInstance().findWithAuthToken(authToken);
             AuthDAO.getInstance().remove(token);
