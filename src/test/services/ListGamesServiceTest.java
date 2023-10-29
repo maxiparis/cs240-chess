@@ -92,7 +92,7 @@ class ListGamesServiceTest {
     @Test
     void listGames_Invalid() throws DataAccessException {
         //invalid cases
-            //unauthrized
+            //unauthorized
         ListGamesResponse response = service.listGames("invalidToken");
 
         assertNull(response.getGames());

@@ -27,7 +27,6 @@ public class LoginHandler {
     public Object handleRequest(Request request, Response response){
         Gson gson = new Gson();
         String requestBody = request.body();
-        System.out.println("request body: " + requestBody);
 
         LoginRequest loginRequest = (LoginRequest) gson.fromJson(requestBody, LoginRequest.class);
         LoginService service = new LoginService();

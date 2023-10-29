@@ -28,10 +28,7 @@ class UserDAOTest {
 
     @AfterEach
     void cleanUp(){
-        try {
-            userDAO.clear();
-        } catch (DataAccessException e) {
-        }
+        userDAO.clear();
     }
 
     @Test

@@ -166,7 +166,7 @@ public class UserDAO extends ClearDAO {
      * tries to remove all elements from the DB.
      * @throws DataAccessException in case the DB is empty.
      */
-    public void clear() throws DataAccessException {
+    public void clear() {
         super.clear(usersDB);
     }
 

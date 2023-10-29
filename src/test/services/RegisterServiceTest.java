@@ -24,7 +24,7 @@ class RegisterServiceTest {
     }
 
     @Test
-    void register() throws DataAccessException {
+    void register_Valid() throws DataAccessException {
         //valid
         RegisterResponse response = registerService.register(request);
         User requestToUser = new User(request.getUsername(), request.getPassword(), request.getEmail());
@@ -36,6 +36,12 @@ class RegisterServiceTest {
 
         assertSame(response.getUsername(), request.getUsername());
         assertNotSame(response.getAuthToken(), "");
+    }
+
+    @Test
+    void register_Invalid() throws DataAccessException {
+        RegisterResponse response = registerService.register(request);
+        User requestToUser = new User(request.getUsername(), request.getPassword(), request.getEmail());
 
         //invalid - already taken
         RegisterResponse invalidResponse = registerService.register(request);
