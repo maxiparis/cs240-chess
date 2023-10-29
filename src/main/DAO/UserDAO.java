@@ -118,7 +118,7 @@ public class UserDAO extends ClearDAO {
         if(!usersDB.isEmpty()) {
             return usersDB;
         } else {
-            throw new DataAccessException("The Users DB is empty.");
+            throw new DataAccessException("Error: The Users DB is empty.");
         }
     }
 

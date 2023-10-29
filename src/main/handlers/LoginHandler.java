@@ -33,7 +33,8 @@ public class LoginHandler {
         LoginService service = new LoginService();
         LoginResponse result = service.login(loginRequest);
 
-        if(result.getMessage() == "Error: the username is not in the DB." || result.getMessage() == "Error: unauthorized"){
+        if(result.getMessage() == "Error: the username is not in the DB." ||
+                result.getMessage() == "Error: unauthorized" || result.getMessage() == "Error: The Users DB is empty."){
             response.status(401);
         }
 

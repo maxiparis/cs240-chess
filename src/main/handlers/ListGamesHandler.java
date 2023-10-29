@@ -28,11 +28,9 @@ public class ListGamesHandler {
         ListGamesService service = new ListGamesService();
         ListGamesResponse result = service.listGames(authorizationToken);
 
-//        if(result.getMessage() == "Error: already taken"){
-//            response.status(403);
-//        } else if (result.getMessage() == "Error: bad request") {
-//            response.status(400);
-//        }
+        if(result.getMessage() == "Error: unauthorized"){
+            response.status(401);
+        }
 
         return gson.toJson(result);
     }
