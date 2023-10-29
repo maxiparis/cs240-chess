@@ -23,10 +23,11 @@ class LoginServiceTest {
         loginService = new LoginService();
         request = new LoginRequest("Jason", "1234*");
         userDB = UserDAO.getInstance();
+        userDB.clear();
     }
 
     @Test
-    void login() throws DataAccessException {
+    void login_Valid() throws DataAccessException {
         //valid - the user is not in the db
         User user = new User("Jason", "1234*", "email");
         userDB.insert(user);
@@ -34,25 +35,30 @@ class LoginServiceTest {
         assertNotNull(response);
 
         assertSame(user.getUsername(), response.getUsername());
+    }
 
-
+    @Test
+    void login_Invalid() throws DataAccessException {
+        User user = new User("Jason", "1234*", "email");
+        userDB.insert(user);
+        LoginResponse response = loginService.login(request);
 
         //invalid
         String actualErrorMessage = "";
-            //unauthorized - password do not match the username
-            response = loginService.login(new LoginRequest("Jason", "wrongPassword"));
-            actualErrorMessage = response.getMessage();
-            assertSame("Error: unauthorized", actualErrorMessage);
+        //unauthorized - password do not match the username
+        response = loginService.login(new LoginRequest("Jason", "wrongPassword"));
+        actualErrorMessage = response.getMessage();
+        assertSame("Error: unauthorized", actualErrorMessage);
 
-            //username is not in db
-            response = loginService.login(new LoginRequest("wrongUserName", "wrongPassword"));
-            actualErrorMessage = response.getMessage();
-            assertSame("Error: the username is not in the DB.", actualErrorMessage);
+        //username is not in db
+        response = loginService.login(new LoginRequest("wrongUserName", "wrongPassword"));
+        actualErrorMessage = response.getMessage();
+        assertSame("Error: the username is not in the DB.", actualErrorMessage);
 
-            //empty
-            userDB.clear();
-            response = loginService.login(new LoginRequest("wrongUserName", "wrongPassword"));
-            actualErrorMessage = response.getMessage();
-            assertSame("Error: The Users DB is empty.", actualErrorMessage);
+        //empty
+        userDB.clear();
+        response = loginService.login(new LoginRequest("wrongUserName", "wrongPassword"));
+        actualErrorMessage = response.getMessage();
+        assertSame("Error: DB is empty.", actualErrorMessage);
     }
 }
