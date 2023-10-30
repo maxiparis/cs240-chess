@@ -29,12 +29,9 @@ class JoinGameServiceTest {
         authDB = AuthDAO.getInstance();
         gameDB = GameDAO.getInstance();
 
-        try {
-            authDB.clear();
-            gameDB.clear();
-        } catch (DataAccessException e) {
+        authDB.clear();
+        gameDB.clear();
 
-        }
 
         Game game1 = new Game(1,"white1", "black1", "game1",
                 new ChessGameImpl(ChessGame.TeamColor.WHITE));
@@ -70,12 +67,8 @@ class JoinGameServiceTest {
 
     @AfterEach
     void tearDown() throws DataAccessException {
-        try {
-            authDB.clear();
-            gameDB.clear();
-        } catch (DataAccessException e) {
-
-        }
+        authDB.clear();
+        gameDB.clear();
     }
 
     @Test
@@ -130,10 +123,7 @@ class JoinGameServiceTest {
     }
     @Test
     void joinGame_Invalid_EmptyDB() throws DataAccessException {
-        try {
-            gameDB.clear();
-        } catch (DataAccessException e) {
-        }
+        gameDB.clear();
 
         JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, 4);
 

@@ -93,7 +93,7 @@ public class UserDAO extends ClearDAO {
      */
     public User findWithUsernameAndPassword(String username, String password) throws DataAccessException {
         if(usersDB.isEmpty()){
-            throw new DataAccessException("Error: DB is empty."); //description 500
+            throw new DataAccessException("Error: unauthorized"); //description 500
         }
 
         for (User user : usersDB) {

@@ -15,17 +15,12 @@ public class ClearApplicationService {
      * @return a response sent from the ClearApplicationResponse class.
      */
     public ClearApplicationResponse clearApplication() {
-        try {
             UserDAO.getInstance().clear();
 
             AuthDAO.getInstance().clear();
 
             GameDAO.getInstance().clear();
             return new ClearApplicationResponse(null);
-        } catch (DataAccessException e) {
-            return new ClearApplicationResponse("Error: " + e.getMessage());
-        }
-
 
     }
 }

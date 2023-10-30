@@ -30,11 +30,7 @@ class GameDAOTest {
 
     @AfterEach
     void tearDown() {
-        try {
-            gameDAO.clear();
-        } catch (DataAccessException e) {
-
-        }
+        gameDAO.clear();
     }
 
     @Test

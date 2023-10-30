@@ -59,6 +59,6 @@ class LoginServiceTest {
         userDB.clear();
         response = loginService.login(new LoginRequest("wrongUserName", "wrongPassword"));
         actualErrorMessage = response.getMessage();
-        assertSame("Error: DB is empty.", actualErrorMessage);
+        assertSame("Error: unauthorized", actualErrorMessage);
     }
 }

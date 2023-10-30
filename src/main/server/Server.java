@@ -9,7 +9,6 @@ import javax.sound.sampled.Port;
 
 public class Server {
     public static void main(String[] args) {
-
         Spark.externalStaticFileLocation("web");
         Spark.port(8080);
         System.out.println("Listening.... Please go to http://localhost:8080/\n");

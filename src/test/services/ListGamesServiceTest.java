@@ -29,13 +29,8 @@ class ListGamesServiceTest {
         service = new ListGamesService();
         gameDB = GameDAO.getInstance();
         authDB = AuthDAO.getInstance();
-
-        try {
             gameDB.clear();
             authDB.clear();
-        } catch (DataAccessException e){
-
-        }
 
         Game game1 = new Game(1,"white1", "black1", "game1",
                 new ChessGameImpl(ChessGame.TeamColor.WHITE));
