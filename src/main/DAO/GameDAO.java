@@ -144,8 +144,8 @@ public class GameDAO extends ClearDAO {
      * tries to remove all elements from the DB.
      * @throws DataAccessException in case the DB is empty.
      */
-    public void clear(){
-        super.clear(gamesDB);
+    public void clear() throws DataAccessException {
+        super.clear(dataBaseType.GAME);
     }
 
     public Game findGameByName(String gameName) {

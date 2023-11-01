@@ -3,6 +3,9 @@ package DAO;
 import dataAccess.DataAccessException;
 import model.User;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashSet;
 
 /**
@@ -14,6 +17,9 @@ public class UserDAO extends ClearDAO {
      * A HashSet representing all users in the DB. Later on this will changed to an actual DB.
      */
     private HashSet<User> usersDB = new HashSet<>();
+
+    private Database database = new Database();
+
     /**
      * Constructor. Initializes the HashSet of users.
      */
@@ -41,15 +47,38 @@ public class UserDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the User cannot be inserted.
      */
     public void insert(User user) throws DataAccessException{
-        if(!isValid(user)){
-            throw new DataAccessException("Error: bad request");
+        String sql = "insert into user (username, password, email) values (?, ?, ?)";
+
+        Connection connection = database.getConnection();
+
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(3, user.getEmail());
+
+            if (preparedStatement.executeUpdate() == 1) {
+                System.out.println("Success!");
+            } else {
+                System.out.println("something unexpected happened. :(");
+            }
+        } catch (SQLException e) {
+            //TODO here I am supposed to grab the exception and then send another exception with the correct
+            //message.
+            System.out.println(e.getMessage());
+            throw new DataAccessException("Error: bad request"); //just an example
         }
 
-        if(!userIsInDB(user)){
-            usersDB.add(user);
-        } else {
-            throw new DataAccessException("Error: already taken");
-        }
+
+//        if(!isValid(user)){
+//            throw new DataAccessException("Error: bad request");
+//        }
+//
+//        if(!userIsInDB(user)){
+//            usersDB.add(user);
+//        } else {
+//            throw new DataAccessException("Error: already taken");
+//        }
     }
 
     private boolean isValid(User user) {
@@ -166,8 +195,8 @@ public class UserDAO extends ClearDAO {
      * tries to remove all elements from the DB.
      * @throws DataAccessException in case the DB is empty.
      */
-    public void clear() {
-        super.clear(usersDB);
+    public void clear() throws DataAccessException {
+        super.clear(dataBaseType.USER);
     }
 
 }

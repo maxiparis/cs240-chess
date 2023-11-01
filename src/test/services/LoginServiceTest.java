@@ -19,7 +19,7 @@ class LoginServiceTest {
     private UserDAO userDB;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws DataAccessException {
         loginService = new LoginService();
         request = new LoginRequest("Jason", "1234*");
         userDB = UserDAO.getInstance();

@@ -20,7 +20,7 @@ class AuthTokenValidatorTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown() throws DataAccessException {
         DB.clear();
     }
 
