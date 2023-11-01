@@ -29,9 +29,9 @@ class RegisterServiceTest {
         RegisterResponse response = registerService.register(request);
         User requestToUser = new User(request.getUsername(), request.getPassword(), request.getEmail());
 
-        assertSame(userDB.find(requestToUser).getUsername(), request.getUsername());
-        assertSame(userDB.find(requestToUser).getPassword(), request.getPassword());
-        assertSame(userDB.find(requestToUser).getEmail(), request.getEmail());
+        assertSame(userDB.find(requestToUser.getUsername()).getUsername(), request.getUsername());
+        assertSame(userDB.find(requestToUser.getUsername()).getPassword(), request.getPassword());
+        assertSame(userDB.find(requestToUser.getUsername()).getEmail(), request.getEmail());
         assertNull(response.getMessage());
 
         assertSame(response.getUsername(), request.getUsername());

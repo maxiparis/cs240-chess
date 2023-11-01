@@ -5,8 +5,11 @@ import model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * A class used to insert Users into the Database
@@ -92,7 +95,7 @@ public class UserDAO extends ClearDAO {
 
     private boolean userIsInDB(User user) {
         try {
-            if (find(user) != null){
+            if (find(user.getUsername()) != null){
                 return true;
             }
         } catch (DataAccessException e) {
@@ -107,13 +110,45 @@ public class UserDAO extends ClearDAO {
      * @return a User model, in case it's found in the DB.
      * @throws DataAccessException the exception to be thrown in case the User cannot be found.
      */
-    public User find(User user) throws DataAccessException{
-        if(usersDB.contains(user)){
-            return user;
-        } else {
+    public User find(String usernameToFind) throws DataAccessException{
+        String sql = "select * from user where username = ?";
+
+        Connection connection = database.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, usernameToFind);
+            List<User> usersReturned = new ArrayList<>();
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                String username = resultSet.getString(1);
+                String password = resultSet.getString(2);
+                String email = resultSet.getString(3);
+
+                usersReturned.add(new User(username, password, email));
+            }
+
+            if(usersReturned.size() == 1){
+                System.out.println("Find: success.");
+            } else if (usersReturned.size() == 0) {
+                System.out.println("Find: nothing was returned.");
+                return null;
+            } else {
+                System.out.println("Find: too many rows returned. ");
+            }
+
+            return usersReturned.get(0);
+        } catch (SQLException e) {
             throw new DataAccessException("The user was not found in the DB.");
         }
+
+//        if(usersDB.contains(user)){
+//            return user;
+//        } else {
+//            throw new DataAccessException("The user was not found in the DB.");
+//        }
     }
+
 
     /**
      * Tries to find a user in the DB by looking at the username and the password.
@@ -183,7 +218,7 @@ public class UserDAO extends ClearDAO {
      */
     public void remove(User user) throws DataAccessException{
         try {
-            User tokenToRemove = find(user);
+            User tokenToRemove = find(user.getUsername());
             usersDB.remove(tokenToRemove);
         } catch (DataAccessException e) {
             throw new DataAccessException("The user " + user.toString() + " could not be removed because it is not " +

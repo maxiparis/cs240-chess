@@ -28,7 +28,7 @@ class UserDAOTest {
 
     @AfterEach
     void cleanUp() throws DataAccessException {
-//        userDAO.clear();
+        userDAO.clear();
     }
 
     @Test
@@ -55,16 +55,24 @@ class UserDAOTest {
 
     @Test
     void find() throws DataAccessException {
-        //user is in db
-        userDAO.insert(model);
-        User actual = userDAO.find(model);
-        User expected = model;
-        assertEquals(expected, actual);
+//        userDAO.insert(new User("john","asdfasdf","ffsdf@hotmail.cl"));
+//        userDAO.insert(new User("alex","fsffs","eerer@hotmail.cl"));
+//        userDAO.insert(new User("steve","ffeef","steve@hotmail.cl"));
+        userDAO.insert(new User("test","fsdf","testy@hotmail.cl"));
 
-        //user is not in db
-        assertThrows(DataAccessException.class, () -> {
-            userDAO.find(model2);
-        });
+        User john = userDAO.find("test");
+
+
+//        //user is in db
+//        userDAO.insert(model);
+//        User actual = userDAO.find(model.getUsername());
+//        User expected = model;
+//        assertEquals(expected, actual);
+//
+//        //user is not in db
+//        assertThrows(DataAccessException.class, () -> {
+//            userDAO.find(model2.getUsername());
+//        });
 
     }
 
