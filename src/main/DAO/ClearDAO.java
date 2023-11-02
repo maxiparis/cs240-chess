@@ -1,13 +1,15 @@
 package DAO;
 
 import dataAccess.DataAccessException;
+
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashSet;
 
 public class ClearDAO {
-    private Database database = new Database();
+    private Database database = Database.getInstance();
     public enum dataBaseType {
         USER,
         AUTHTOKEN,

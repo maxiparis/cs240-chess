@@ -26,6 +26,7 @@ import java.util.LinkedList;
  * </pre>
  */
 public class Database {
+    private static Database instance;
 
     // FIXME: Change these fields, if necessary, to match your database configuration
     public static final String DB_NAME = "chess";
@@ -36,6 +37,15 @@ public class Database {
 //    TODO should I change this line to localhost:3306/chess?
 
     private final LinkedList<Connection> connections = new LinkedList<>();
+
+    private Database(){  } //to avoid creating a new object externally.
+
+    public synchronized static Database getInstance(){
+        if (instance == null){
+            instance = new Database();
+        }
+        return instance;
+    }
 
     /**
      * Get a connection to the database. This pulls a connection out of a simple

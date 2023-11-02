@@ -21,7 +21,7 @@ public class UserDAO extends ClearDAO {
      */
     private HashSet<User> usersDB = new HashSet<>();
 
-    private Database database = new Database();
+    private Database database = Database.getInstance();
 
     /**
      * Constructor. Initializes the HashSet of users.
