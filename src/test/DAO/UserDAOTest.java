@@ -20,10 +20,16 @@ class UserDAOTest {
 
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws DataAccessException {
         userDAO = UserDAO.getInstance();
         model = new User("john7", "johnPass", "john@gmail.com");
         model2 = new User("carla6", "carlaPass", "carla@gmail.com");
+
+        userDAO.insert(new User("john","asdfasdf--","ffsdf@hotmail.cl"));
+        userDAO.insert(new User("alex","fsffsff335#","eerer@hotmail.cl"));
+        userDAO.insert(new User("steve","ffeeffsd","steve@hotmail.cl"));
+        userDAO.insert(new User("kate","fsd@#$@f","test2@hotmail.cl"));
+        userDAO.insert(new User("connor","fsdf-sdfsd","test3@hotmail.cl"));
     }
 
     @AfterEach
@@ -33,46 +39,37 @@ class UserDAOTest {
 
     @Test
     void insert() throws DataAccessException {
-        //insert users
-        userDAO.insert(new User("john","asdfasdf","ffsdf@hotmail.cl"));
-        userDAO.insert(new User("alex","fsffs","eerer@hotmail.cl"));
-        userDAO.insert(new User("steve","ffeef","steve@hotmail.cl"));
-        userDAO.insert(new User("testy","fsdf","testy@hotmail.cl"));
+        //insert
+        userDAO.insert(new User("newUser","apassword","myemail@hotmail.cl"));
+        User expected = new User("newUser","apassword","myemail@hotmail.cl");
+        User actual = userDAO.find("newUser");
+            //make sure it was added correctly
+        assertEquals(expected, actual);
 
-
-//        assertTrue(UserDAO.getInstance().getUsersDB().contains(model));
-//
-//        userDAO.insert(model2);
-//        assertTrue(UserDAO.getInstance().getUsersDB().contains(model));
-//        assertTrue(UserDAO.getInstance().getUsersDB().contains(model2));
-//
-//        //insert user that is already there
-//        assertThrows(DataAccessException.class, () -> {
-//            userDAO.insert(model2);
-//        });
-
+        //insert user that is already there
+        assertThrows(DataAccessException.class, () -> {
+            userDAO.insert(new User("newUser","apassword","myemail@hotmail.cl"));
+        });
     }
 
     @Test
     void find() throws DataAccessException {
-//        userDAO.insert(new User("john","asdfasdf","ffsdf@hotmail.cl"));
-//        userDAO.insert(new User("alex","fsffs","eerer@hotmail.cl"));
-//        userDAO.insert(new User("steve","ffeef","steve@hotmail.cl"));
-        userDAO.insert(new User("test","fsdf","testy@hotmail.cl"));
-
-        User john = userDAO.find("test");
-
-
 //        //user is in db
-//        userDAO.insert(model);
-//        User actual = userDAO.find(model.getUsername());
-//        User expected = model;
-//        assertEquals(expected, actual);
-//
-//        //user is not in db
-//        assertThrows(DataAccessException.class, () -> {
-//            userDAO.find(model2.getUsername());
-//        });
+        User actual = userDAO.find("steve");
+        User expected = new User("steve","ffeeffsd","steve@hotmail.cl");
+        assertEquals(expected, actual);
+
+        //Invalid  cases
+        //user is not in db
+        assertThrows(DataAccessException.class, () -> {
+            userDAO.find("invalidUser");
+        });
+
+        //argument is null
+        assertThrows(DataAccessException.class, () -> {
+            userDAO.find(null);
+        });
+
 
     }
 

@@ -9,7 +9,7 @@ import java.util.HashSet;
 /**
  * A class used to do insert, remove, find or update AuthTokens in the DB.
  */
-public class AuthDAO extends ClearDAO{
+public class AuthDAO extends ClearDAO {
     private static AuthDAO instance;
     private HashSet<AuthToken> authTokensDB = new HashSet<>();
 

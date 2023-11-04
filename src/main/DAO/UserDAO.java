@@ -61,9 +61,9 @@ public class UserDAO extends ClearDAO {
             preparedStatement.setString(3, user.getEmail());
 
             if (preparedStatement.executeUpdate() == 1) {
-                System.out.println("Success!");
+                System.out.println("Insert: Success!");
             } else {
-                System.out.println("something unexpected happened. :(");
+                System.out.println("Insert: Something unexpected happened. :(");
             }
         } catch (SQLException e) {
             //TODO here I am supposed to grab the exception and then send another exception with the correct
@@ -110,7 +110,7 @@ public class UserDAO extends ClearDAO {
      * @return a User model, in case it's found in the DB.
      * @throws DataAccessException the exception to be thrown in case the User cannot be found.
      */
-    public User find(String usernameToFind) throws DataAccessException{
+    public User find(String usernameToFind) throws DataAccessException {
         String sql = "select * from user where username = ?";
 
         Connection connection = database.getConnection();
@@ -131,15 +131,14 @@ public class UserDAO extends ClearDAO {
             if(usersReturned.size() == 1){
                 System.out.println("Find: success.");
             } else if (usersReturned.size() == 0) {
-                System.out.println("Find: nothing was returned.");
-                return null;
+                throw new DataAccessException("The user was not found in the DB.");
             } else {
                 System.out.println("Find: too many rows returned. ");
             }
 
             return usersReturned.get(0);
         } catch (SQLException e) {
-            throw new DataAccessException("The user was not found in the DB.");
+            throw new DataAccessException("Error: " + e.getMessage());
         }
 
 //        if(usersDB.contains(user)){

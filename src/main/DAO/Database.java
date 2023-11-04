@@ -28,13 +28,11 @@ import java.util.LinkedList;
 public class Database {
     private static Database instance;
 
-    // FIXME: Change these fields, if necessary, to match your database configuration
     public static final String DB_NAME = "chess";
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "Erickostonsk8..";
 
     private static final String CONNECTION_URL = "jdbc:mysql://localhost:3306";
-//    TODO should I change this line to localhost:3306/chess?
 
     private final LinkedList<Connection> connections = new LinkedList<>();
 
