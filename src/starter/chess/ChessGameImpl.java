@@ -12,6 +12,13 @@ public class ChessGameImpl implements ChessGame{
         board = new ChessBoardImpl();
         this.teamTurn=teamTurn;
     }
+    @Override
+    public String toString() {
+        return "ChessGameImpl{" +
+                "teamTurn=" + teamTurn +
+                ", board=" + board +
+                '}';
+    }
 
     @Override
     public TeamColor getTeamTurn() {

@@ -1,10 +1,18 @@
 package DAO;
 
 import chess.ChessGameImpl;
+import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import model.Game;
+import requests.CreateGameRequest;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * A class used to do insert, remove, find or update Games in the DB.
@@ -12,6 +20,8 @@ import java.util.HashSet;
 public class GameDAO extends ClearDAO {
     private static GameDAO instance;
     private HashSet<Game> gamesDB = new HashSet<>();
+    private Database database = Database.getInstance();
+
 
     public HashSet<Game> getGamesDB() {
         return gamesDB;
@@ -40,14 +50,38 @@ public class GameDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the game cannot be inserted.
      */
     public void insert(Game game) throws DataAccessException {
-        if(findGameByName(game.getGameName()) != null){ //we found another game inside the db with the same name
-            throw new DataAccessException("Error: there is another game with the same name");
+        String sql = "insert into game(gameName, whiteUsername, blackUsername, game) values (?,?,?,?)";
+        Gson gson = new Gson();
+        String serializedGame = gson.toJson(game.getGame());
+        Connection connection = database.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, game.getGameName());
+            preparedStatement.setString(2, game.getWhiteUsername());
+            preparedStatement.setString(3, game.getBlackUsername());
+            preparedStatement.setString(4, serializedGame);
+
+            if (preparedStatement.executeUpdate() == 1) {
+                System.out.println("Insert: Success!");
+            } else {
+                System.out.println("Insert: Something unexpected happened. :(");
+            }
+        } catch (SQLException e) {
+            //TODO here I am supposed to grab the exception and then send another exception with the correct
+            //message.
+            System.out.println(e.getMessage());
+            throw new DataAccessException("Error: bad request"); //just an example
         }
-        if(!gameIsInDB(game)){
-            gamesDB.add(game);
-        } else {
-            throw new DataAccessException("Error: game is already in DB");
-        }
+
+
+//        if(findGameByName(game.getGameName()) != null){ //we found another game inside the db with the same name
+//            throw new DataAccessException("Error: there is another game with the same name");
+//        }
+//        if(!gameIsInDB(game)){
+//            gamesDB.add(game);
+//        } else {
+//            throw new DataAccessException("Error: game is already in DB");
+//        }
     }
 
     private boolean gameIsInDB(Game game) {
@@ -68,22 +102,57 @@ public class GameDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the Game cannot be found.
      */
     public Game find(Game game) throws DataAccessException {
-        Game foundGame = findGameByName(game.getGameName());
+        String sql = "select * from game where gameName = ?";
+        Gson gson = new Gson();
+        Connection connection = database.getConnection();
 
-        if(foundGame == null){
-            throw new DataAccessException("The game was not found in the DB.");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, game.getGameName());
+            List<Game> gamesReturned = new ArrayList<>();
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                String gameName = resultSet.getString(1);
+                String whiteUsername = resultSet.getString(2);
+                String blackUsername = resultSet.getString(3);
+                String gameChess = resultSet.getString(4);
+
+                ChessGameImpl chessGame = gson.fromJson(gameChess, ChessGameImpl.class);
+
+//                CreateGameRequest createRequest = (CreateGameRequest) gson.fromJson(requestBody, CreateGameRequest.class);
+                gamesReturned.add(new Game());
+            }
+
+            if(gamesReturned.size() == 1){
+                System.out.println("Find: success.");
+            } else if (gamesReturned.size() == 0) {
+                throw new DataAccessException("The user was not found in the DB.");
+            } else {
+                System.out.println("Find: too many rows returned. ");
+            }
+
+            return gamesReturned.get(0);
+        } catch (SQLException e) {
+            throw new DataAccessException("Error: " + e.getMessage());
         }
 
-        if(game.getGameID() != foundGame.getGameID()){
-            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
-        } else if (game.getWhiteUsername() != foundGame.getWhiteUsername()){
-            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
-        } else if (game.getBlackUsername() != foundGame.getBlackUsername()) {
-            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
-        } else if (!game.getGame().equals(foundGame.getGame())) { //failing here
-            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
-        }
-        return foundGame;
+
+//        Game foundGame = findGameByName(game.getGameName());
+//
+//        if(foundGame == null){
+//            throw new DataAccessException("The game was not found in the DB.");
+//        }
+//
+//        if(game.getGameID() != foundGame.getGameID()){
+//            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
+//        } else if (game.getWhiteUsername() != foundGame.getWhiteUsername()){
+//            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
+//        } else if (game.getBlackUsername() != foundGame.getBlackUsername()) {
+//            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
+//        } else if (!game.getGame().equals(foundGame.getGame())) { //failing here
+//            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
+//        }
+//        return foundGame;
     }
 
     /**
