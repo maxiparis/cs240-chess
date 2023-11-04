@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class ChessGameImpl implements ChessGame{
     private TeamColor teamTurn;
-    private ChessBoard board;
+    private ChessBoardImpl board;
 
     public ChessGameImpl(TeamColor teamTurn) {
         board = new ChessBoardImpl();
@@ -247,11 +247,11 @@ public class ChessGameImpl implements ChessGame{
 
     @Override
     public void setBoard(ChessBoard board) {
-        this.board = board;
+        this.board = (ChessBoardImpl) board;
     }
 
     @Override
-    public ChessBoard getBoard() {
+    public ChessBoardImpl getBoard() {
         return board;
     }
 
