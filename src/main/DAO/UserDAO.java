@@ -84,25 +84,6 @@ public class UserDAO extends ClearDAO {
 //        }
     }
 
-    private boolean isValid(User user) {
-        if((user.getUsername() == null) || (user.getUsername() == "") ||
-            (user.getPassword() == null) || (user.getPassword() == "") ||
-            (user.getEmail() == null) || (user.getEmail() == "") ){
-            return false;
-        }
-        return true;
-    }
-
-    private boolean userIsInDB(User user) {
-        try {
-            if (find(user.getUsername()) != null){
-                return true;
-            }
-        } catch (DataAccessException e) {
-            return false;
-        }
-        return false;
-    }
 
     /**
      * Tries to find User in the DB. If the User is not in the DB, DataAccessException will be thrown.
@@ -313,5 +294,26 @@ public class UserDAO extends ClearDAO {
 ////            throw new DataAccessException("The DB is empty, therefore nothing can be updated");
 ////        }
 //
+//    }
+
+
+//    private boolean isValid(User user) {
+//        if((user.getUsername() == null) || (user.getUsername() == "") ||
+//            (user.getPassword() == null) || (user.getPassword() == "") ||
+//            (user.getEmail() == null) || (user.getEmail() == "") ){
+//            return false;
+//        }
+//        return true;
+//    }
+//
+//    private boolean userIsInDB(User user) {
+//        try {
+//            if (find(user.getUsername()) != null){
+//                return true;
+//            }
+//        } catch (DataAccessException e) {
+//            return false;
+//        }
+//        return false;
 //    }
 }

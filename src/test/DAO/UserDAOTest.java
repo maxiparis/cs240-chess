@@ -131,44 +131,6 @@ class UserDAOTest {
     }
 
     @Test
-    void findWithUsernameAndPassword() throws DataAccessException {
-        //valid
-            //model = new User("john7", "johnPass", "john@gmail.com");
-        userDAO.insert(model);
-        User actual = userDAO.findWithUsernameAndPassword(model.getUsername(), model.getPassword());
-        assertSame(model, actual);
-
-        //invalid
-        String actualErrorMessage = "";
-            //username does not match password
-            try {
-                User actual2 = userDAO.findWithUsernameAndPassword(model.getUsername(), "badPassword");
-            } catch (DataAccessException e) {
-                actualErrorMessage = e.getMessage();
-            }
-            assertSame("Error: unauthorized", actualErrorMessage);
-
-
-            //username is not in the DB
-            try {
-                User actual3 = userDAO.findWithUsernameAndPassword("badUserName", model.getPassword());
-            } catch (DataAccessException e) {
-                actualErrorMessage = e.getMessage();
-            }
-            assertSame("Error: the username is not in the DB.", actualErrorMessage);
-
-            //empty
-            userDAO.clear();
-            try {
-                User actual4 = userDAO.findWithUsernameAndPassword("badUserName", model.getPassword());
-            } catch (DataAccessException e) {
-                actualErrorMessage = e.getMessage();
-            }
-
-        assertSame("Error: DB is empty.", actualErrorMessage);
-    }
-
-    @Test
     void testFindWithUsernameAndPassword_Valid() throws DataAccessException {
         User actual = userDAO.findWithUsernameAndPassword("kate", "fsd@#$@f");
         User expected = new User("kate","fsd@#$@f","test2@hotmail.cl");
