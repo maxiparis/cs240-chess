@@ -49,7 +49,7 @@ public class UserDAO extends ClearDAO {
      * @param user the User to be inserted into the DB
      * @throws DataAccessException the exception to be thrown in case the User cannot be inserted.
      */
-    public void insert(User user) throws DataAccessException{
+    public void insert(User user) throws DataAccessException {
         String sql = "insert into user (username, password, email) values (?, ?, ?)";
 
         Connection connection = database.getConnection();
@@ -155,20 +155,32 @@ public class UserDAO extends ClearDAO {
      * @param password of the user we are looking for.
      */
     public User findWithUsernameAndPassword(String username, String password) throws DataAccessException {
-        if(usersDB.isEmpty()){
-            throw new DataAccessException("Error: unauthorized"); //description 500
+        try {
+            User foundUser = find(username);
+            if(foundUser.getPassword().equals(password)){
+                return foundUser;
+            }
+            throw new DataAccessException("Error: unauthorized");
+
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error: unauthorized");
         }
 
-        for (User user : usersDB) {
-            if(user.getUsername().equals(username)){
-                if(user.getPassword().equals(password)){
-                    return user;
-                } else {
-                    throw new DataAccessException("Error: unauthorized"); //401
-                }
-            }
-        }
-        throw new DataAccessException("Error: the username is not in the DB."); //500
+
+//        if(usersDB.isEmpty()){
+//            throw new DataAccessException("Error: unauthorized"); //description 500
+//        }
+//
+//        for (User user : usersDB) {
+//            if(user.getUsername().equals(username)){
+//                if(user.getPassword().equals(password)){
+//                    return user;
+//                } else {
+//                    throw new DataAccessException("Error: unauthorized"); //401
+//                }
+//            }
+//        }
+//        throw new DataAccessException("Error: the username is not in the DB."); //500
     }
 
     /**
@@ -178,51 +190,74 @@ public class UserDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the DB does not have any user.
      */
     public HashSet<User> findAll() throws DataAccessException {
-        if(!usersDB.isEmpty()) {
-            return usersDB;
-        } else {
-            throw new DataAccessException("Error: The Users DB is empty.");
-        }
-    }
+        HashSet<User> usersInDB = new HashSet<>();
+        String sql = "select username, password, email from user";
 
-    /**
-     * Tries to update a user already in the DB.
-     * @param username the username of the User to be updated in the DB.
-     * @param user the new User to be inserted into the DB, in the same spot than the user represented by the
-     *             username.
-     * @throws DataAccessException in case the username is not found in any User in the DB.
-     */
-    public void update(String username, String updatedPassword, String updatedEmail) throws DataAccessException {
-        if(!usersDB.isEmpty()){
-            for (User theUser : usersDB) {
-                if(theUser.getUsername() == username){
-                    remove(theUser);
-                    insert(new User(username, updatedPassword, updatedEmail));
-                    return;
-                }
+        Connection connection = database.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                String username = resultSet.getString(1);
+                String password = resultSet.getString(2);
+                String email = resultSet.getString(3);
+
+                usersInDB.add(new User(username, password, email));
             }
 
-            throw new DataAccessException("The DB did not contain a user with the username" +
-                    username);
-        } else {
-            throw new DataAccessException("The DB is empty, therefore nothing can be updated");
-        }
+            if (usersInDB.size() == 0){
+                throw new DataAccessException("Error: The Users DB is empty.");
+            }
 
+            return usersInDB;
+        } catch (SQLException e) {
+            throw new DataAccessException("Error: " + e.getMessage());
+        }
+//        if(!usersDB.isEmpty()) {
+//            return usersDB;
+//        } else {
+//            throw new DataAccessException("Error: The Users DB is empty.");
+//        }
     }
+
 
     /**
      * Tries to remove an User from the DB.
      * @param user the user to be deleted.
      * @throws DataAccessException in case the user is not found in the DB.
      */
-    public void remove(User user) throws DataAccessException{
-        try {
-            User tokenToRemove = find(user.getUsername());
-            usersDB.remove(tokenToRemove);
-        } catch (DataAccessException e) {
-            throw new DataAccessException("The user " + user.toString() + " could not be removed because it is not " +
-                    "in the DB.");
+    public void remove(String username) throws DataAccessException{
+        String sql = "DELETE FROM user WHERE username = ?";
+
+        Connection connection = database.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, username);
+
+            if (preparedStatement.executeUpdate() == 1) {
+                System.out.println("Remove: Success!");
+            } else if (preparedStatement.executeUpdate() == 0) {
+                throw new DataAccessException("Error: the user was not in the DB.");
+            } else {
+                throw new DataAccessException("Error: more than one row was affected.");
+            }
+        } catch (SQLException e) {
+            //TODO here I am supposed to grab the exception and then send another exception with the correct
+            //message.
+            System.out.println(e.getMessage());
+            throw new DataAccessException("Error: " + e.getMessage()); //just an example
         }
+
+
+//        try {
+//            User tokenToRemove = find(user.getUsername());
+//            usersDB.remove(tokenToRemove);
+//        } catch (DataAccessException e) {
+//            throw new DataAccessException("The user " + user.toString() + " could not be removed because it is not " +
+//                    "in the DB.");
+//        }
     }
 
     /**
@@ -233,4 +268,50 @@ public class UserDAO extends ClearDAO {
         super.clear(dataBaseType.USER);
     }
 
+//    /**
+//     * Tries to update a user already in the DB.
+//     * @param username the username of the User to be updated in the DB.
+//     * @param user the new User to be inserted into the DB, in the same spot than the user represented by the
+//     *             username.
+//     * @throws DataAccessException in case the username is not found in any User in the DB.
+//     */
+//    public void update(String username, String updatedPassword, String updatedEmail) throws DataAccessException {
+//        String sql = "UPDATE user SET password = WHERE username = ";
+//
+//        Connection connection = database.getConnection();
+//
+//
+//        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+//            preparedStatement.setString(1, user.getUsername());
+//            preparedStatement.setString(2, user.getPassword());
+//            preparedStatement.setString(3, user.getEmail());
+//
+//            if (preparedStatement.executeUpdate() == 1) {
+//                System.out.println("Insert: Success!");
+//            } else {
+//                System.out.println("Insert: Something unexpected happened. :(");
+//            }
+//        } catch (SQLException e) {
+//            //TODO here I am supposed to grab the exception and then send another exception with the correct
+//            //message.
+//            System.out.println(e.getMessage());
+//            throw new DataAccessException("Error: bad request"); //just an example
+//        }
+//
+//
+////        if(!usersDB.isEmpty()){
+////            for (User theUser : usersDB) {
+////                if(theUser.getUsername() == username){
+////                    remove(theUser);
+////                    insert(new User(username, updatedPassword, updatedEmail));
+////                    return;
+////                }
+////            }
+////
+////            throw new DataAccessException("The DB did not contain a user with the username" + username);
+////        } else {
+////            throw new DataAccessException("The DB is empty, therefore nothing can be updated");
+////        }
+//
+//    }
 }

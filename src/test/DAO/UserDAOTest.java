@@ -76,11 +76,17 @@ class UserDAOTest {
     @Test
     void findAll() throws DataAccessException {
         //valid
-        userDAO.insert(model);
-        userDAO.insert(model2);
         HashSet<User> actual = userDAO.findAll();
-        assertTrue(actual.contains(model));
-        assertTrue(actual.contains(model2));
+        HashSet<User> expected = new HashSet<>();
+
+        expected.add(new User("john","asdfasdf--","ffsdf@hotmail.cl"));
+        expected.add(new User("alex","fsffsff335#","eerer@hotmail.cl"));
+        expected.add(new User("steve","ffeeffsd","steve@hotmail.cl"));
+        expected.add(new User("kate","fsd@#$@f","test2@hotmail.cl"));
+        expected.add(new User("connor","fsdf-sdfsd","test3@hotmail.cl"));
+
+
+        assertEquals(expected, actual);
 
         //invalid - set is empty
         userDAO.clear();
@@ -90,34 +96,20 @@ class UserDAOTest {
 
     }
 
-    @Test
-    void update() throws DataAccessException {
-        //valid
-        userDAO.insert(model);
-        userDAO.update(model.getUsername(), "newPassword", "updatedEmail");
-        User update = new User(model.getUsername(), "newPassword", "updatedEmail");
-        assertTrue(UserDAO.getInstance().getUsersDB().contains(update));
-        assertFalse(UserDAO.getInstance().getUsersDB().contains(model));
-
-        //invalid - trying to update something that is not there
-        assertThrows(DataAccessException.class, () -> {
-           userDAO.update(model2.getUsername(), "badPassoword", "badEmail");
-        });
-    }
 
     @Test
     void remove() throws DataAccessException {
         //valid
-            userDAO.insert(model);
-            userDAO.remove(model);
-            assertTrue(UserDAO.getInstance().getUsersDB().isEmpty());
+        userDAO.remove("john");
+
+        assertThrows(DataAccessException.class, () -> {
+            User actual = userDAO.find("john");
+        });
 
         //invalid - the user is not in the db
-            assertThrows(DataAccessException.class, () -> {
-               userDAO.remove(model2);
-            });
-
-
+        assertThrows(DataAccessException.class, () -> {
+           userDAO.remove("somethingInvalid");
+        });
     }
 
     @Test
@@ -178,21 +170,36 @@ class UserDAOTest {
 
     @Test
     void testFindWithUsernameAndPassword_Valid() throws DataAccessException {
-//        userDAO.insert(model);
-//        userDAO.insert(model2);
+        User actual = userDAO.findWithUsernameAndPassword("kate", "fsd@#$@f");
+        User expected = new User("kate","fsd@#$@f","test2@hotmail.cl");
+        assertEquals(expected, actual);
 
-        RegisterService registerService = new RegisterService();
-        RegisterResponse registerResponse = registerService.register
-                (new RegisterRequest("carla6", "carlaPass", "carla@gmail.com"));
-
-        User foundUser = userDAO.findWithUsernameAndPassword("carla6", "carlaPass");
-        assertNotNull(foundUser);
 
     }
 
     @Test
-    void testFindWithUsernameAndPassword_Invalid() {
+    void testFindWithUsernameAndPassword_Invalid() throws DataAccessException {
+        assertThrows(DataAccessException.class, () -> {
+            User actual = userDAO.findWithUsernameAndPassword("kate", "wrongpass");
+        });
 
+        assertThrows(DataAccessException.class, () -> {
+            User actual = userDAO.findWithUsernameAndPassword("wrongUser", "fsd@#$@f");
+        });
     }
 
+//    @Test
+//    void update() throws DataAccessException {
+//        //valid
+//        userDAO.insert(model);
+//        userDAO.update(model.getUsername(), "newPassword", "updatedEmail");
+//        User update = new User(model.getUsername(), "newPassword", "updatedEmail");
+//        assertTrue(UserDAO.getInstance().getUsersDB().contains(update));
+//        assertFalse(UserDAO.getInstance().getUsersDB().contains(model));
+//
+//        //invalid - trying to update something that is not there
+//        assertThrows(DataAccessException.class, () -> {
+//           userDAO.update(model2.getUsername(), "badPassoword", "badEmail");
+//        });
+//    }
 }
