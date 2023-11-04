@@ -102,6 +102,7 @@ public class GameDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the Game cannot be found.
      */
     public Game find(Game game) throws DataAccessException {
+        //searching with the gameName
         String sql = "select * from game where gameName = ?";
         Gson gson = new Gson();
         Connection connection = database.getConnection();
@@ -109,18 +110,21 @@ public class GameDAO extends ClearDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setString(1, game.getGameName());
             List<Game> gamesReturned = new ArrayList<>();
+
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()){
-                String gameName = resultSet.getString(1);
-                String whiteUsername = resultSet.getString(2);
-                String blackUsername = resultSet.getString(3);
-                String gameChess = resultSet.getString(4);
 
-                ChessGameImpl chessGame = gson.fromJson(gameChess, ChessGameImpl.class);
+            while (resultSet.next()){
+                int gameID = resultSet.getInt(1);
+                String gameName = resultSet.getString(2);
+                String whiteUsername = resultSet.getString(3);
+                String blackUsername = resultSet.getString(4);
+                String gameChess = resultSet.getString(5);
+
+                ChessGameImpl serializedChessGame = gson.fromJson(gameChess, ChessGameImpl.class);
 
 //                CreateGameRequest createRequest = (CreateGameRequest) gson.fromJson(requestBody, CreateGameRequest.class);
-                gamesReturned.add(new Game());
+                gamesReturned.add(new Game(gameID, whiteUsername, blackUsername, gameName, serializedChessGame));
             }
 
             if(gamesReturned.size() == 1){
