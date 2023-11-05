@@ -1,7 +1,6 @@
 package DAO;
 
-import chess.ChessGame;
-import chess.ChessGameImpl;
+import chess.*;
 import dataAccess.DataAccessException;
 import model.Game;
 import org.junit.jupiter.api.AfterEach;
@@ -36,7 +35,15 @@ class GameDAOTest {
     @Test
     void insert() throws DataAccessException {
         //insert one
-        gameDAO.insert(model);
+
+        ChessGameImpl game = new ChessGameImpl(ChessGame.TeamColor.WHITE);
+        ChessBoardImpl board = new ChessBoardImpl();
+        board.resetBoard();
+        game.setBoard(board);
+        Game testJSONSerialization = new Game(1, "sam", "tony",
+                "gameName", game);
+        gameDAO.insert(testJSONSerialization);
+
         assertTrue(GameDAO.getInstance().getGamesDB().contains(model));
 
         gameDAO.insert(model2);

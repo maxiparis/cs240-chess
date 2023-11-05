@@ -10,7 +10,7 @@ public class ChessGameImpl implements ChessGame{
 
     public ChessGameImpl(TeamColor teamTurn) {
         board = new ChessBoardImpl();
-        this.teamTurn=teamTurn;
+        this.teamTurn = teamTurn;
     }
     @Override
     public String toString() {

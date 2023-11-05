@@ -15,6 +15,9 @@ public class ChessBoardImpl implements ChessBoard {
 //        resetBoard();
     }
 
+    public void setBoardTable(ChessPiece[][] boardTable) {
+        this.boardTable = boardTable;
+    }
 
     public ChessPiece[][] getBoardTable() {
         return boardTable;
