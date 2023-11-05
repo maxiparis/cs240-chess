@@ -32,6 +32,16 @@ class ChessGameDeserializerTest {
         String jsonString = gson.toJson(game);
 
         //try to deserialize
-        ChessGameImpl chessGameDeserialized = gson.fromJson(jsonString, ChessGameImpl.class);
+        ChessGame actual = gson.fromJson(jsonString, ChessGame.class);
+
+        ChessGameImpl expected = new ChessGameImpl(ChessGame.TeamColor.WHITE);
+        ChessBoardImpl board2 = new ChessBoardImpl();
+        board2.resetBoard();
+        expected.setBoard(board2);
+
+        assertEquals(expected, actual);
+
+
+
     }
 }
