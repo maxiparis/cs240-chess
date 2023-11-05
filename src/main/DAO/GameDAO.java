@@ -1,10 +1,16 @@
 package DAO;
 
+import chess.ChessGame;
 import chess.ChessGameImpl;
+import chess.ChessPiece;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dataAccess.DataAccessException;
 import model.Game;
+import model.User;
 import requests.CreateGameRequest;
+import typeAdapters.ChessGameDeserializer;
+import typeAdapters.ChessPieceDeserializer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -86,7 +92,7 @@ public class GameDAO extends ClearDAO {
 
     private boolean gameIsInDB(Game game) {
         try {
-            if (find(game) != null){
+            if (find(game.getGameName()) != null){
                 return true;
             }
         } catch (DataAccessException e) {
@@ -101,14 +107,16 @@ public class GameDAO extends ClearDAO {
      * @return a Game object, in case it's found in the DB.
      * @throws DataAccessException the exception to be thrown in case the Game cannot be found.
      */
-    public Game find(Game game) throws DataAccessException {
+    public Game find(String gameName) throws DataAccessException {
         //searching with the gameName
         String sql = "select * from game where gameName = ?";
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(ChessGame.class, new ChessGameDeserializer())
+                .create();
         Connection connection = database.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            preparedStatement.setString(1, game.getGameName());
+            preparedStatement.setString(1, gameName);
             List<Game> gamesReturned = new ArrayList<>();
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -116,23 +124,21 @@ public class GameDAO extends ClearDAO {
 
             while (resultSet.next()){
                 int gameID = resultSet.getInt(1);
-                String gameName = resultSet.getString(2);
+                String game_Name = resultSet.getString(2);
                 String whiteUsername = resultSet.getString(3);
                 String blackUsername = resultSet.getString(4);
                 String gameChess = resultSet.getString(5);
 
-                ChessGameImpl serializedChessGame = gson.fromJson(gameChess, ChessGameImpl.class);
-
-//                CreateGameRequest createRequest = (CreateGameRequest) gson.fromJson(requestBody, CreateGameRequest.class);
-                gamesReturned.add(new Game(gameID, whiteUsername, blackUsername, gameName, serializedChessGame));
+                ChessGameImpl serializedChessGame = (ChessGameImpl) gson.fromJson(gameChess, ChessGame.class);
+                gamesReturned.add(new Game(gameID, whiteUsername, blackUsername, game_Name, serializedChessGame));
             }
 
             if(gamesReturned.size() == 1){
                 System.out.println("Find: success.");
             } else if (gamesReturned.size() == 0) {
-                throw new DataAccessException("The user was not found in the DB.");
+                throw new DataAccessException("The game was not found in the DB");
             } else {
-                System.out.println("Find: too many rows returned. ");
+                throw new DataAccessException("Error: More than one game found.");
             }
 
             return gamesReturned.get(0);
@@ -165,11 +171,43 @@ public class GameDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the DB does not have any Game.
      */
     public HashSet<Game> findAll() throws DataAccessException{
-        if(!gamesDB.isEmpty()) {
-            return gamesDB;
-        } else {
-            throw new DataAccessException("The Games DB is empty.");
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(ChessGame.class, new ChessGameDeserializer())
+                .create();
+
+        HashSet<Game> gamesInDB = new HashSet<>();
+        String sql = "select * from game";
+
+        Connection connection = database.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                int gameID = resultSet.getInt(1);
+                String game_Name = resultSet.getString(2);
+                String whiteUsername = resultSet.getString(3);
+                String blackUsername = resultSet.getString(4);
+                String gameChess = resultSet.getString(5);
+
+                ChessGameImpl serializedChessGame = (ChessGameImpl) gson.fromJson(gameChess, ChessGame.class);
+                gamesInDB.add(new Game(gameID, whiteUsername, blackUsername, game_Name, serializedChessGame));
+            }
+
+            if (gamesInDB.size() == 0){
+                throw new DataAccessException("Error: The Game DB is empty.");
+            }
+
+            return gamesInDB;
+        } catch (SQLException e) {
+            throw new DataAccessException("Error: " + e.getMessage());
         }
+//        if(!gamesDB.isEmpty()) {
+//            return gamesDB;
+//        } else {
+//            throw new DataAccessException("The Games DB is empty.");
+//        }
     }
 
 
@@ -205,7 +243,7 @@ public class GameDAO extends ClearDAO {
      */
     public void remove(Game game) throws DataAccessException{
         try {
-            Game gameToRemove = find(game);
+            Game gameToRemove = find(game.getGameName());
             gamesDB.remove(gameToRemove);
         } catch (DataAccessException e) {
             throw new DataAccessException("The game " + game.toString() + " could not be removed because it is not " +

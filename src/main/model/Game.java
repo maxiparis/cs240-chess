@@ -155,6 +155,14 @@ public class Game {
                 blackUsername==game1.blackUsername && gameName==game1.gameName && game.equals(game1.game);
     }
 
+    public boolean equalsIgnoringGameID(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Game game1=(Game) o;
+        return whiteUsername==whiteUsername &&
+                blackUsername==game1.blackUsername && gameName==game1.gameName && game.equals(game1.game);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(gameID, whiteUsername, blackUsername, gameName, game);
