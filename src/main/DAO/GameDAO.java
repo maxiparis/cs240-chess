@@ -90,17 +90,6 @@ public class GameDAO extends ClearDAO {
 //        }
     }
 
-    private boolean gameIsInDB(Game game) {
-        try {
-            if (find(game.getGameName()) != null){
-                return true;
-            }
-        } catch (DataAccessException e) {
-            return false;
-        }
-        return false;
-    }
-
     /**
      * Tries to find a Game in the DB. If the Game is not in the DB, DataAccessException will be thrown.
      * @param game the Game to be looked for.
@@ -217,22 +206,49 @@ public class GameDAO extends ClearDAO {
      * @param updatedGame the new Game to be inserted into the DB.
      * @throws DataAccessException in case the gameID is not found in the DB.
      */
-    public void updateGame(int gameID, String newWhiteUsername, String newBlackUsername,
-                           String newGameName, ChessGameImpl newGame) throws DataAccessException {
-        if(!gamesDB.isEmpty()){
-            for (Game theGame : gamesDB) {
-                if(theGame.getGameID() == gameID){
-                    remove(theGame);
-                    insert(new Game(gameID, newWhiteUsername, newBlackUsername, newGameName, newGame));
-                    return;
-                }
-            }
+    public void updateGame(String gameName, String newWhiteUsername, String newBlackUsername, ChessGameImpl newGame)
+            throws DataAccessException {
 
-            throw new DataAccessException("The DB did not contain a game with the gameID " +
-                    gameID);
-        } else {
-            throw new DataAccessException("The Games DB is empty, therefore nothing can be updated");
+        String sql = "UPDATE game SET whiteUsername=?, blackUsername=?, game=? WHERE gameName=?";
+        Gson gson = new Gson();
+        String serializedGame = gson.toJson(newGame);
+        Connection connection = database.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, newWhiteUsername);
+            preparedStatement.setString(2, newBlackUsername);
+            preparedStatement.setString(3, serializedGame);
+            preparedStatement.setString(4, gameName);
+
+            if (preparedStatement.executeUpdate() == 1) {
+                System.out.println("Insert: Success!");
+            } else if (preparedStatement.executeUpdate() == 0) {
+                System.out.println("Update: nothing was updated.");
+                throw new DataAccessException("Error: nothing was updated.");
+            } else {
+                System.out.println("Insert: Something unexpected happened. :(");
+            }
+        } catch (SQLException e) {
+            //TODO here I am supposed to grab the exception and then send another exception with the correct message.
+            System.out.println(e.getMessage());
+            throw new DataAccessException("Error: " + e.getMessage()); //just an example
         }
+
+
+//        if(!gamesDB.isEmpty()){
+//            for (Game theGame : gamesDB) {
+//                if(theGame.getGameID() == gameID){
+//                    remove(theGame);
+//                    insert(new Game(gameID, newWhiteUsername, newBlackUsername, newGameName, newGame));
+//                    return;
+//                }
+//            }
+//
+//            throw new DataAccessException("The DB did not contain a game with the gameID " +
+//                    gameID);
+//        } else {
+//            throw new DataAccessException("The Games DB is empty, therefore nothing can be updated");
+//        }
 
     }
 
@@ -293,4 +309,15 @@ public class GameDAO extends ClearDAO {
 
         return toReturn;
     }
+
+//    private boolean gameIsInDB(Game game) {
+//        try {
+//            if (find(game.getGameName()) != null){
+//                return true;
+//            }
+//        } catch (DataAccessException e) {
+//            return false;
+//        }
+//        return false;
+//    }
 }

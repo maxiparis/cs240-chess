@@ -113,22 +113,32 @@ class GameDAOTest {
 
     @Test
     void updateGame() throws DataAccessException {
-        //    public Game(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGameImpl game)
-
-//        Game update = new Game(model.getGameID(), "test1", "test2", "test3",
-//                new ChessGameImpl(ChessGame.TeamColor.BLACK));
         //valid
-//        gameDAO.insert(model);
-//        gameDAO.updateGame(model.getGameID(), update.getWhiteUsername(), update.getBlackUsername(), update.getGameName(),
-//                update.getGame());
+        Game gameBeforeUpdate = gameDAO.find("ourGame");
+        ChessGameImpl chessGameFoundAndUpdated = gameBeforeUpdate.getGame();
+        ChessBoardImpl boardToUpdate = chessGameFoundAndUpdated.getBoard();
+        boardToUpdate.addPiece(new ChessPositionImpl(4,1),
+                new King(ChessGame.TeamColor.WHITE));
 
-//        assertTrue(GameDAO.getInstance().getGamesDB().contains(update));
-//        assertFalse(GameDAO.getInstance().getGamesDB().contains(model));
+        chessGameFoundAndUpdated.setBoard(boardToUpdate);
+
+        gameDAO.updateGame("ourGame", "newWhite", "newBlackie",
+                chessGameFoundAndUpdated);
+
+        Game gameAfterUpdate = gameDAO.find("ourGame");
+
+        assertEquals("ourGame", gameAfterUpdate.getGameName());
+        assertEquals("newWhite", gameAfterUpdate.getWhiteUsername());
+        assertEquals("newBlackie", gameAfterUpdate.getBlackUsername());
+        assertEquals(gameAfterUpdate.getGame(), chessGameFoundAndUpdated);
 
         //invalid - trying to update something that is not there
+//        gameDAO.clear();
+
+        //TODO figure out whats going on here
 //        assertThrows(DataAccessException.class, () -> {
-//            gameDAO.updateGame(model2.getGameID(), "test", "test",
-//                    "test", new ChessGameImpl(ChessGame.TeamColor.WHITE));
+//            gameDAO.updateGame(gameDAO.updateGame("wrongName", "newWhite", "newBlackie",
+//                    chessGameFoundAndUpdated));
 //        });
     }
 

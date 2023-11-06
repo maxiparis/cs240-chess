@@ -209,7 +209,7 @@ public class UserDAO extends ClearDAO {
      * @param user the user to be deleted.
      * @throws DataAccessException in case the user is not found in the DB.
      */
-    public void remove(String username) throws DataAccessException{
+    public void remove(String username) throws DataAccessException {
         String sql = "DELETE FROM user WHERE username = ?";
 
         Connection connection = database.getConnection();
