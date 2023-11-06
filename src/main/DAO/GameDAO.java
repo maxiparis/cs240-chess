@@ -257,14 +257,37 @@ public class GameDAO extends ClearDAO {
      * @param game the Game to be deleted.
      * @throws DataAccessException in case the Game is not found in the DB.
      */
-    public void remove(Game game) throws DataAccessException{
-        try {
-            Game gameToRemove = find(game.getGameName());
-            gamesDB.remove(gameToRemove);
-        } catch (DataAccessException e) {
-            throw new DataAccessException("The game " + game.toString() + " could not be removed because it is not " +
-                    "in the DB.");
+    public void remove(String gameName) throws DataAccessException{
+        String sql = "DELETE FROM game WHERE gameName = ?";
+
+        Connection connection = database.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, gameName);
+
+            if (preparedStatement.executeUpdate() == 1) {
+                System.out.println("Remove: Success!");
+            } else if (preparedStatement.executeUpdate() == 0) {
+                throw new DataAccessException("Error: the user was not in the DB.");
+            } else {
+                throw new DataAccessException("Error: more than one row was affected.");
+            }
+        } catch (SQLException e) {
+            //TODO here I am supposed to grab the exception and then send another exception with the correct
+            //message.
+            System.out.println(e.getMessage());
+            throw new DataAccessException("Error: " + e.getMessage()); //just an example
         }
+
+
+
+//        try {
+//            Game gameToRemove = find(game.getGameName());
+//            gamesDB.remove(gameToRemove);
+//        } catch (DataAccessException e) {
+//            throw new DataAccessException("The game " + game.toString() + " could not be removed because it is not " +
+//                    "in the DB.");
+//        }
     }
 
     /**

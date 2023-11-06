@@ -3,6 +3,7 @@ package DAO;
 import chess.*;
 import dataAccess.DataAccessException;
 import model.Game;
+import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -145,15 +146,20 @@ class GameDAOTest {
     @Test
     void remove() throws DataAccessException {
         //valid
-//        gameDAO.insert(model);
-//        gameDAO.remove(model);
-//        assertTrue(GameDAO.getInstance().getGamesDB().isEmpty());
-//
-//        //invalid - the user is not in the db
-//        assertThrows(DataAccessException.class, () -> {
-//            gameDAO.remove(model2);
-//        });
+        //first, I can find it
+        Game foundGameBeforeRemove = gameDAO.find("Masters");
+        assertNotNull(foundGameBeforeRemove);
 
+        gameDAO.remove("Masters");
+
+        assertThrows(DataAccessException.class, () -> {
+            Game actual = gameDAO.find("Masters");
+        });
+
+        //invalid - the user is not in the db
+        assertThrows(DataAccessException.class, () -> {
+            gameDAO.remove("somethingInvalid");
+        });
     }
 
     @Test
