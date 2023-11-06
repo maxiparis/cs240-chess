@@ -3,8 +3,15 @@ package DAO;
 import dataAccess.DataAccessException;
 import model.AuthToken;
 import model.Game;
+import model.User;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * A class used to do insert, remove, find or update AuthTokens in the DB.
@@ -12,6 +19,8 @@ import java.util.HashSet;
 public class AuthDAO extends ClearDAO {
     private static AuthDAO instance;
     private HashSet<AuthToken> authTokensDB = new HashSet<>();
+    private Database database = Database.getInstance();
+
 
     /**
      * Constructs a new AuthDAO object, and initializes the collection of authTokens.
@@ -41,21 +50,40 @@ public class AuthDAO extends ClearDAO {
      * @throws DataAccessException the exception to be thrown in case the authToken cannot be inserted.
      */
     public void insert(AuthToken token) throws DataAccessException {
-            if(!tokenIsInDB(token)){
-                authTokensDB.add(token);
+        String sql = "insert into authToken (username, token) values (?, ?)";
+
+        Connection connection = database.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, token.getUsername());
+            preparedStatement.setString(2, token.getToken());
+
+            if (preparedStatement.executeUpdate() == 1) {
+                System.out.println("Insert: Success!");
             } else {
-                throw new DataAccessException("The token could not be added because it is already in the DB");
+                System.out.println("Insert: Something unexpected happened. :(");
             }
+        } catch (SQLException e) {
+            //TODO here I am supposed to grab the exception and then send another exception with the correct
+            //message.
+            System.out.println(e.getMessage());
+            throw new DataAccessException("Error: bad request"); //just an example
+        }
+//            if(!tokenIsInDB(token)){
+//                authTokensDB.add(token);
+//            } else {
+//                throw new DataAccessException("The token could not be added because it is already in the DB");
+//            }
     }
 
     private boolean tokenIsInDB(AuthToken token) {
-        try {
-            if (find(token) != null){
-                return true;
-            }
-        } catch (DataAccessException e) {
-            return false;
-        }
+//        try {
+//            if (find(token) != null){
+//                return true;
+//            }
+//        } catch (DataAccessException e) {
+//            return false;
+//        }
         return false;
     }
 
@@ -65,12 +93,41 @@ public class AuthDAO extends ClearDAO {
      * @return a AuthToken object, in case it's found in the DB.
      * @throws DataAccessException the exception to be thrown in case the AuthToken cannot be found.
      */
-    public AuthToken find(AuthToken token) throws DataAccessException {
-        if(authTokensDB.contains(token)){
-            return token;
-        } else {
-            throw new DataAccessException("The token was not found in the DB.");
-        }
+    public AuthToken find(String username) throws DataAccessException {
+            String sql = "select * from authToken where username = ?";
+
+            Connection connection = database.getConnection();
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+                preparedStatement.setString(1, username);
+                List<AuthToken> authTokensReturned = new ArrayList<>();
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()){
+                    String _username = resultSet.getString(1);
+                    String token = resultSet.getString(2);
+
+                    authTokensReturned.add(new AuthToken(_username, token));
+                }
+
+                if(authTokensReturned.size() == 1){
+                    System.out.println("Find: success.");
+                } else if (authTokensReturned.size() == 0) {
+                    throw new DataAccessException("The user was not found in the DB.");
+                } else {
+                    System.out.println("Find: too many rows returned. ");
+                }
+
+                return authTokensReturned.get(0);
+            } catch (SQLException e) {
+                throw new DataAccessException("Error: " + e.getMessage());
+            }
+
+//        if(authTokensDB.contains(token)){
+//            return token;
+//        } else {
+//            throw new DataAccessException("The token was not found in the DB.");
+//        }
     }
 
     /**

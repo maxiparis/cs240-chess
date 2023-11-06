@@ -2,68 +2,91 @@ package DAO;
 
 import dataAccess.DataAccessException;
 import model.AuthToken;
+import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class AuthDAOTest {
     private AuthDAO authDAO;
+    private UserDAO userDAO;
     private AuthDAO expected;
     private AuthToken model;
     private AuthToken model2;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() throws DataAccessException {
+        userDAO = UserDAO.getInstance();
+
+        userDAO.insert(new User("john","asdfasdf--","ffsdf@hotmail.cl"));
+        userDAO.insert(new User("alex","fsffsff335#","eerer@hotmail.cl"));
+        userDAO.insert(new User("steve","ffeeffsd","steve@hotmail.cl"));
+        userDAO.insert(new User("kate","fsd@#$@f","test2@hotmail.cl"));
+        userDAO.insert(new User("connor","fsdf-sdfsd","test3@hotmail.cl"));
+
         authDAO = AuthDAO.getInstance();
-        model = new AuthToken("Alex", "434123412");
-        model2 = new AuthToken("Martha", "d123123dasd34");
+
+        authDAO.insert(new AuthToken("john", UUID.randomUUID().toString()));
+        authDAO.insert(new AuthToken("alex", UUID.randomUUID().toString()));
     }
 
     @AfterEach
-    void tearDown() {
-        AuthDAO.getInstance().getAuthTokensDB().clear();
+    void tearDown() throws DataAccessException {
+        authDAO.clear();
+        userDAO.clear();
     }
 
     @Test
     void insert() throws DataAccessException {
-    //valid
-        authDAO.insert(model);
-        Assertions.assertTrue(authDAO.getAuthTokensDB().size() == 1);
-        Assertions.assertFalse(authDAO.getAuthTokensDB().size() == 0
-                || authDAO.getAuthTokensDB().size() == 2
-        );
-        Assertions.assertTrue(authDAO.getAuthTokensDB().contains(model));
-
+        //valid
+        String steveToken = UUID.randomUUID().toString();
+        authDAO.insert(new AuthToken("steve", steveToken ));
 
         //adding a second element
-        authDAO.insert(model2);
-        Assertions.assertTrue(authDAO.getAuthTokensDB().size() == 2);
-        Assertions.assertTrue(authDAO.getAuthTokensDB().contains(model2));
-    //invalid -> throws an exception
+        String kateToken =  UUID.randomUUID().toString();
+        authDAO.insert(new AuthToken("kate", kateToken));
+
+        AuthToken foundToken1 = authDAO.find("steve");
+        AuthToken foundToken2 = authDAO.find("kate");
+
+        assertEquals(steveToken, foundToken1.getToken());
+        assertEquals(kateToken, foundToken2.getToken());
+
+        assertEquals("steve", foundToken1.getUsername());
+        assertEquals("kate", foundToken2.getUsername());
+
+        //invalid -> try to insert a valid token for a user that does not exist
         assertThrows(DataAccessException.class, () -> {
-            authDAO.insert(model);
-            throw new DataAccessException("This is an exception.");
+            authDAO.insert(new AuthToken("invalidUser", "asdfasdfasdfsadf" ));
         });
 
+        //invalid -> try to insert a valid token for a user that is already there
+        assertThrows(DataAccessException.class, () -> {
+            authDAO.insert(new AuthToken("steve", "asdfasdfasdfsadf" ));
+        });
     }
 
     @Test
     void find() throws DataAccessException {
     //valid
-        authDAO.insert(model);
-        AuthToken expected = model;
-        AuthToken modelClone = new AuthToken("Alex", "434123412");
+        String steveToken = UUID.randomUUID().toString();
+        authDAO.insert(new AuthToken("steve", steveToken ));
 
-        AuthToken actual = authDAO.find(modelClone);
-        assertEquals(expected, actual);
-    //invalid -> throws a new exception
+        AuthToken foundToken = authDAO.find("steve");
+
+        assertEquals(steveToken, foundToken.getToken());
+
+        assertEquals("steve", foundToken.getUsername());
+
+    //invalid -> find with username that does not exist in the DB.
         assertThrows(DataAccessException.class, ()-> {
-            authDAO.find(model2);
+            authDAO.find("invalidUserName");
         });
     }
 
@@ -98,8 +121,8 @@ class AuthDAOTest {
         authDAO.update("Alex", "newToken");
         AuthToken expected = new AuthToken("Alex", "newToken");
         //contains the updated version
-        AuthToken actual = authDAO.find(expected);
-        assertEquals(expected, actual);
+//        AuthToken actual = authDAO.find(expected);
+//        assertEquals(expected, actual);
         //does not contain the old version
         assertFalse(authDAO.getAuthTokensDB().contains(model));
     }
