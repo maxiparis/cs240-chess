@@ -33,9 +33,11 @@ public class ClearDAO {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            database.closeConnection(connection);
+
             throw new DataAccessException(e.getMessage());
         }
-
+        database.closeConnection(connection);
 
     }
 }

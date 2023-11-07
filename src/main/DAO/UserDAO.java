@@ -65,13 +65,19 @@ public class UserDAO extends ClearDAO {
             } else {
                 System.out.println("Insert: Something unexpected happened. :(");
             }
+            database.closeConnection(connection);
+
         } catch (SQLException e) {
             //TODO here I am supposed to grab the exception and then send another exception with the correct
             //message.
             System.out.println(e.getMessage());
             if(e.getMessage().contains("Duplicate")){
+                database.closeConnection(connection);
+
                 throw new DataAccessException("Error: already taken");
             }
+            database.closeConnection(connection);
+
             throw new DataAccessException("Error: bad request"); //just an example
         }
 
@@ -115,13 +121,18 @@ public class UserDAO extends ClearDAO {
             if(usersReturned.size() == 1){
                 System.out.println("Find: success.");
             } else if (usersReturned.size() == 0) {
+                database.closeConnection(connection);
+
                 throw new DataAccessException("The user was not found in the DB.");
             } else {
                 System.out.println("Find: too many rows returned. ");
             }
+            database.closeConnection(connection);
 
             return usersReturned.get(0);
         } catch (SQLException e) {
+            database.closeConnection(connection);
+
             throw new DataAccessException("Error: " + e.getMessage());
         }
 
@@ -192,11 +203,16 @@ public class UserDAO extends ClearDAO {
             }
 
             if (usersInDB.size() == 0){
+                database.closeConnection(connection);
+
                 throw new DataAccessException("Error: The Users DB is empty.");
             }
+            database.closeConnection(connection);
 
             return usersInDB;
         } catch (SQLException e) {
+            database.closeConnection(connection);
+
             throw new DataAccessException("Error: " + e.getMessage());
         }
 //        if(!usersDB.isEmpty()) {
@@ -223,14 +239,20 @@ public class UserDAO extends ClearDAO {
             if (preparedStatement.executeUpdate() == 1) {
                 System.out.println("Remove: Success!");
             } else if (preparedStatement.executeUpdate() == 0) {
+                database.closeConnection(connection);
+
                 throw new DataAccessException("Error: the user was not in the DB.");
             } else {
+                database.closeConnection(connection);
+
                 throw new DataAccessException("Error: more than one row was affected.");
             }
         } catch (SQLException e) {
             //TODO here I am supposed to grab the exception and then send another exception with the correct
             //message.
             System.out.println(e.getMessage());
+            database.closeConnection(connection);
+
             throw new DataAccessException("Error: " + e.getMessage()); //just an example
         }
 

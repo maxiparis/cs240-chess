@@ -64,9 +64,12 @@ public class AuthDAO extends ClearDAO {
             } else {
                 System.out.println("Insert: Something unexpected happened. :(");
             }
+            database.closeConnection(connection);
         } catch (SQLException e) {
             //TODO here I am supposed to grab the exception and then send another exception with the correct
             //message.
+            database.closeConnection(connection);
+
             System.out.println(e.getMessage());
             throw new DataAccessException("Error: bad request"); //just an example
         }
@@ -77,16 +80,16 @@ public class AuthDAO extends ClearDAO {
 //            }
     }
 
-    private boolean tokenIsInDB(AuthToken token) {
-//        try {
-//            if (find(token) != null){
-//                return true;
-//            }
-//        } catch (DataAccessException e) {
-//            return false;
-//        }
-        return false;
-    }
+//    private boolean tokenIsInDB(AuthToken token) {
+////        try {
+////            if (find(token) != null){
+////                return true;
+////            }
+////        } catch (DataAccessException e) {
+////            return false;
+////        }
+//        return false;
+//    }
 
     /**
      * Tries to find an AuthToken in the DB. If the AuthToken is not in the DB, DataAccessException will be thrown.
@@ -114,10 +117,13 @@ public class AuthDAO extends ClearDAO {
                 if(authTokensReturned.size() == 1){
                     System.out.println("Find: success.");
                 } else if (authTokensReturned.size() == 0) {
+                    database.closeConnection(connection);
+
                     throw new DataAccessException("The user was not found in the DB.");
                 } else {
                     System.out.println("Find: too many rows returned. ");
                 }
+                database.closeConnection(connection);
 
                 return authTokensReturned.get(0);
             } catch (SQLException e) {
@@ -152,13 +158,18 @@ public class AuthDAO extends ClearDAO {
             if(authTokensReturned.size() == 1){
                 System.out.println("Find: success.");
             } else if (authTokensReturned.size() == 0) {
+                database.closeConnection(connection);
+
                 throw new DataAccessException("The user was not found in the DB.");
             } else {
                 System.out.println("Find: too many rows returned. ");
             }
+            database.closeConnection(connection);
 
             return authTokensReturned.get(0);
         } catch (SQLException e) {
+            database.closeConnection(connection);
+
             throw new DataAccessException("Error: " + e.getMessage());
         }
 
@@ -192,11 +203,14 @@ public class AuthDAO extends ClearDAO {
             }
 
             if (authsInDB.size() == 0){
+                database.closeConnection(connection);
                 throw new DataAccessException("Error: The Users DB is empty.");
             }
+            database.closeConnection(connection);
 
             return authsInDB;
         } catch (SQLException e) {
+            database.closeConnection(connection);
             throw new DataAccessException("Error: " + e.getMessage());
         }
     }
@@ -225,9 +239,12 @@ public class AuthDAO extends ClearDAO {
             } else {
                 System.out.println("Insert: Something unexpected happened. :(");
             }
+            database.closeConnection(connection);
         } catch (SQLException e) {
             //TODO here I am supposed to grab the exception and then send another exception with the correct message.
             System.out.println(e.getMessage());
+            database.closeConnection(connection);
+
             throw new DataAccessException("Error: " + e.getMessage()); //just an example
         }
 
@@ -270,10 +287,14 @@ public class AuthDAO extends ClearDAO {
             } else {
                 throw new DataAccessException("Error: more than one row was affected.");
             }
+            database.closeConnection(connection);
+
         } catch (SQLException e) {
             //TODO here I am supposed to grab the exception and then send another exception with the correct
             //message.
             System.out.println(e.getMessage());
+            database.closeConnection(connection);
+
             throw new DataAccessException("Error: " + e.getMessage()); //just an example
         }
     }

@@ -72,10 +72,14 @@ public class GameDAO extends ClearDAO {
             } else {
                 System.out.println("Insert: Something unexpected happened. :(");
             }
+            database.closeConnection(connection);
+
         } catch (SQLException e) {
             //TODO here I am supposed to grab the exception and then send another exception with the correct
             //message.
             System.out.println(e.getMessage());
+            database.closeConnection(connection);
+
             throw new DataAccessException("Error: bad request"); //just an example
         }
 
@@ -125,10 +129,15 @@ public class GameDAO extends ClearDAO {
             if(gamesReturned.size() == 1){
                 System.out.println("Find: success.");
             } else if (gamesReturned.size() == 0) {
+                database.closeConnection(connection);
+
                 throw new DataAccessException("The game was not found in the DB");
             } else {
+                database.closeConnection(connection);
+
                 throw new DataAccessException("Error: More than one game found.");
             }
+            database.closeConnection(connection);
 
             return gamesReturned.get(0);
         } catch (SQLException e) {
@@ -185,11 +194,16 @@ public class GameDAO extends ClearDAO {
             }
 
             if (gamesInDB.size() == 0){
+                database.closeConnection(connection);
+
                 throw new DataAccessException("Error: The Game DB is empty.");
             }
+            database.closeConnection(connection);
 
             return gamesInDB;
         } catch (SQLException e) {
+            database.closeConnection(connection);
+
             throw new DataAccessException("Error: " + e.getMessage());
         }
 //        if(!gamesDB.isEmpty()) {
@@ -224,13 +238,19 @@ public class GameDAO extends ClearDAO {
                 System.out.println("Insert: Success!");
             } else if (preparedStatement.executeUpdate() == 0) {
                 System.out.println("Update: nothing was updated.");
+                database.closeConnection(connection);
+
                 throw new DataAccessException("Error: nothing was updated.");
             } else {
                 System.out.println("Insert: Something unexpected happened. :(");
             }
+            database.closeConnection(connection);
+
         } catch (SQLException e) {
             //TODO here I am supposed to grab the exception and then send another exception with the correct message.
             System.out.println(e.getMessage());
+            database.closeConnection(connection);
+
             throw new DataAccessException("Error: " + e.getMessage()); //just an example
         }
 
@@ -268,14 +288,22 @@ public class GameDAO extends ClearDAO {
             if (preparedStatement.executeUpdate() == 1) {
                 System.out.println("Remove: Success!");
             } else if (preparedStatement.executeUpdate() == 0) {
+                database.closeConnection(connection);
+
                 throw new DataAccessException("Error: the user was not in the DB.");
             } else {
+                database.closeConnection(connection);
+
                 throw new DataAccessException("Error: more than one row was affected.");
             }
+            database.closeConnection(connection);
+
         } catch (SQLException e) {
             //TODO here I am supposed to grab the exception and then send another exception with the correct
             //message.
             System.out.println(e.getMessage());
+            database.closeConnection(connection);
+
             throw new DataAccessException("Error: " + e.getMessage()); //just an example
         }
 

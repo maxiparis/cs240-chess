@@ -19,7 +19,7 @@ public class ListGamesService extends AuthTokenValidator {
     public ListGamesResponse listGames(String authToken) {
         try {
             validateAuthToken(authToken);
-            HashSet<Game> gamesHashset = GameDAO.getInstance().getGamesDB();
+            HashSet<Game> gamesHashset = GameDAO.getInstance().findAll();
 
             return new ListGamesResponse(null, gamesHashset);
         } catch (DataAccessException e) {
