@@ -34,7 +34,7 @@ class LoginServiceTest {
         LoginResponse response = loginService.login(request);
         assertNotNull(response);
 
-        assertSame(user.getUsername(), response.getUsername());
+        assertEquals(user.getUsername(), response.getUsername());
     }
 
     @Test
@@ -53,7 +53,7 @@ class LoginServiceTest {
         //username is not in db
         response = loginService.login(new LoginRequest("wrongUserName", "wrongPassword"));
         actualErrorMessage = response.getMessage();
-        assertSame("Error: the username is not in the DB.", actualErrorMessage);
+        assertSame("Error: unauthorized", actualErrorMessage);
 
         //empty
         userDB.clear();
