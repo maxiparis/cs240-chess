@@ -25,7 +25,7 @@ public class JoinGameService extends AuthTokenValidator {
      */
     public JoinGameResponse joinGame (JoinGameRequest request, String authToken){
         try {
-            tryToValidateAuthToken(authToken);
+            validateAuthToken(authToken);
             Game foundGame = GameDAO.getInstance().findGameById(request.getGameID());
 
             ChessGame.TeamColor callerColorRequest = request.getPlayerColor();
@@ -34,7 +34,7 @@ public class JoinGameService extends AuthTokenValidator {
                 return new JoinGameResponse(null); //sending back a valid response
             }
 
-            AuthToken callerToken = AuthDAO.getInstance().findWithAuthToken(authToken);
+            AuthToken callerToken = AuthDAO.getInstance().findWithToken(authToken);
 
             if (callerColorRequest.equals(WHITE)) {
                 if(foundGame.getWhiteUsername() != null){

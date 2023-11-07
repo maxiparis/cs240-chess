@@ -16,9 +16,9 @@ public class ClearApplicationService {
      */
     public ClearApplicationResponse clearApplication() {
         try {
-            UserDAO.getInstance().clear();
-
             AuthDAO.getInstance().clear();
+
+            UserDAO.getInstance().clear();
 
             GameDAO.getInstance().clear();
             return new ClearApplicationResponse(null);

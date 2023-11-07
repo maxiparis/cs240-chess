@@ -160,4 +160,22 @@ class AuthDAOTest {
     void clear() throws DataAccessException {
             authDAO.clear();
     }
+
+    @Test
+    void findWithToken() throws DataAccessException {
+        //valid
+        String steveToken = UUID.randomUUID().toString();
+        authDAO.insert(new AuthToken("steve", steveToken));
+
+        AuthToken foundToken = authDAO.findWithToken(steveToken);
+
+        assertEquals(steveToken, foundToken.getToken());
+
+        assertEquals("steve", foundToken.getUsername());
+
+        //invalid -> find with username that does not exist in the DB.
+        assertThrows(DataAccessException.class, ()-> {
+            authDAO.findWithToken("invalidUserName");
+        });
+    }
 }

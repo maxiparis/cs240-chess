@@ -69,6 +69,9 @@ public class UserDAO extends ClearDAO {
             //TODO here I am supposed to grab the exception and then send another exception with the correct
             //message.
             System.out.println(e.getMessage());
+            if(e.getMessage().contains("Duplicate")){
+                throw new DataAccessException("Error: already taken");
+            }
             throw new DataAccessException("Error: bad request"); //just an example
         }
 

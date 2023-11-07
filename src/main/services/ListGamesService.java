@@ -10,7 +10,7 @@ import java.util.HashSet;
 /**
  * This class represents an API that lists all the games.
  */
-public class ListGamesService extends AuthTokenValidator{
+public class ListGamesService extends AuthTokenValidator {
 
     /**
      * Lists all the games.
@@ -18,7 +18,7 @@ public class ListGamesService extends AuthTokenValidator{
      */
     public ListGamesResponse listGames(String authToken) {
         try {
-            tryToValidateAuthToken(authToken);
+            validateAuthToken(authToken);
             HashSet<Game> gamesHashset = GameDAO.getInstance().getGamesDB();
 
             return new ListGamesResponse(null, gamesHashset);

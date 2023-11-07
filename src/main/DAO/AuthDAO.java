@@ -131,6 +131,44 @@ public class AuthDAO extends ClearDAO {
 //        }
     }
 
+
+    public AuthToken findWithToken(String token) throws DataAccessException {
+        String sql = "select * from authToken where token = ?";
+
+        Connection connection = database.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, token);
+            List<AuthToken> authTokensReturned = new ArrayList<>();
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                String _username = resultSet.getString(1);
+                String _token = resultSet.getString(2);
+
+                authTokensReturned.add(new AuthToken(_username, _token));
+            }
+
+            if(authTokensReturned.size() == 1){
+                System.out.println("Find: success.");
+            } else if (authTokensReturned.size() == 0) {
+                throw new DataAccessException("The user was not found in the DB.");
+            } else {
+                System.out.println("Find: too many rows returned. ");
+            }
+
+            return authTokensReturned.get(0);
+        } catch (SQLException e) {
+            throw new DataAccessException("Error: " + e.getMessage());
+        }
+
+//        if(authTokensDB.contains(token)){
+//            return token;
+//        } else {
+//            throw new DataAccessException("The token was not found in the DB.");
+//        }
+    }
+
     /**
      * Tries to return all AuthToken in the DB. If the DB is emtpy, DataAccessException will be thrown.
      * @return a set with a all the AuthTokens found in the DB.
@@ -248,19 +286,19 @@ public class AuthDAO extends ClearDAO {
         super.clear(dataBaseType.AUTHTOKEN);
     }
 
-    public AuthToken findWithAuthToken(String theToken) throws DataAccessException {
-        if(authTokensDB.isEmpty()){
-            throw new DataAccessException("Error: DB is empty");
-        }
-
-        AuthToken toReturn = null;
-        for (AuthToken token : authTokensDB) {
-            if(token.getToken().equals(theToken)){
-                return token;
-            }
-        }
-
-        throw new DataAccessException("Error: the token was not found in DB.");
-
-    }
+//    public AuthToken findWithAuthToken(String theToken) throws DataAccessException {
+//        if(authTokensDB.isEmpty()){
+//            throw new DataAccessException("Error: DB is empty");
+//        }
+//
+//        AuthToken toReturn = null;
+//        for (AuthToken token : authTokensDB) {
+//            if(token.getToken().equals(theToken)){
+//                return token;
+//            }
+//        }
+//
+//        throw new DataAccessException("Error: the token was not found in DB.");
+//
+//    }
 }

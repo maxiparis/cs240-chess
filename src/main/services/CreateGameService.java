@@ -22,7 +22,7 @@ public class CreateGameService extends AuthTokenValidator{
      */
     public CreateGameResponse createGame (CreateGameRequest request, String authToken){
         try {
-            tryToValidateAuthToken(authToken);
+            validateAuthToken(authToken);
             Game gameToAdd = new Game();
             //gameToAdd will have ID, name, and a game, but no white/black usernames;
             gameToAdd.setGameName(request.getGameName());

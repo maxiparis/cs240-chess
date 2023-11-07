@@ -2,11 +2,13 @@ package services;
 
 import DAO.AuthDAO;
 import DAO.GameDAO;
+import DAO.UserDAO;
 import chess.ChessGame;
 import chess.ChessGameImpl;
 import dataAccess.DataAccessException;
 import model.AuthToken;
 import model.Game;
+import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,15 +23,17 @@ class JoinGameServiceTest {
     private JoinGameService service;
     private AuthDAO authDB;
     private GameDAO gameDB;
+    private UserDAO userDB;
 
     @BeforeEach
     void setUp() throws DataAccessException {
-
         service = new JoinGameService();
         authDB = AuthDAO.getInstance();
         gameDB = GameDAO.getInstance();
+        userDB = UserDAO.getInstance();
 
         authDB.clear();
+        userDB.clear();
         gameDB.clear();
 
 
@@ -44,12 +48,24 @@ class JoinGameServiceTest {
         Game game5 = new Game(5,null, null, "game5",
                 new ChessGameImpl(ChessGame.TeamColor.WHITE));
 
-
         gameDB.insert(game1);
         gameDB.insert(game2);
         gameDB.insert(game3);
         gameDB.insert(game4);
         gameDB.insert(game5);
+
+        User user1 = new User("user1", "password1", "email1");
+        User user2 = new User("user2", "password2", "email2");
+        User user3 = new User("user3", "password3", "email3");
+        User user4 = new User("user4", "password4", "email4");
+        User user5 = new User("user5", "password5", "email5");
+
+        userDB.insert(user1);
+        userDB.insert(user2);
+        userDB.insert(user3);
+        userDB.insert(user4);
+        userDB.insert(user5);
+
 
         AuthToken token1 = new AuthToken("user1", "token1");
         AuthToken token2 = new AuthToken("user2", "token2");
@@ -62,7 +78,6 @@ class JoinGameServiceTest {
         authDB.insert(token3);
         authDB.insert(token4);
         authDB.insert(token5);
-
     }
 
     @AfterEach
@@ -131,7 +146,7 @@ class JoinGameServiceTest {
 
 //        Game gameUpdated = gameDB.findGameById(4);
 
-        assertEquals("Error: DB is empty", response.getMessage(), "The Error message is different.");
+        assertEquals("Error: unauthorized", response.getMessage(), "The Error message is different.");
     }
 
     @Test

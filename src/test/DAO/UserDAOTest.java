@@ -1,6 +1,7 @@
 package DAO;
 
 import dataAccess.DataAccessException;
+import model.AuthToken;
 import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,7 @@ class UserDAOTest {
 
     @BeforeEach
     void setUp() throws DataAccessException {
+        AuthDAO.getInstance().clear();
         userDAO = UserDAO.getInstance();
         model = new User("john7", "johnPass", "john@gmail.com");
         model2 = new User("carla6", "carlaPass", "carla@gmail.com");
@@ -34,6 +36,7 @@ class UserDAOTest {
 
     @AfterEach
     void cleanUp() throws DataAccessException {
+        AuthDAO.getInstance().clear(); //cleaning authTokens to keep data
         userDAO.clear();
     }
 
