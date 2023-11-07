@@ -1,5 +1,6 @@
 package services;
 
+import DAO.AuthDAO;
 import DAO.UserDAO;
 import dataAccess.DataAccessException;
 import model.User;
@@ -17,10 +18,12 @@ class RegisterServiceTest {
 
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws DataAccessException {
         registerService = new RegisterService();
-        request = new RegisterRequest("Tom", "password", "email");
         userDB = UserDAO.getInstance();
+        AuthDAO.getInstance().clear();
+        userDB.clear();
+        request = new RegisterRequest("Tom", "password", "email");
     }
 
     @Test
@@ -29,12 +32,12 @@ class RegisterServiceTest {
         RegisterResponse response = registerService.register(request);
         User requestToUser = new User(request.getUsername(), request.getPassword(), request.getEmail());
 
-        assertSame(userDB.find(requestToUser.getUsername()).getUsername(), request.getUsername());
-        assertSame(userDB.find(requestToUser.getUsername()).getPassword(), request.getPassword());
-        assertSame(userDB.find(requestToUser.getUsername()).getEmail(), request.getEmail());
+        assertEquals(userDB.find(requestToUser.getUsername()).getUsername(), request.getUsername());
+        assertEquals(userDB.find(requestToUser.getUsername()).getPassword(), request.getPassword());
+        assertEquals(userDB.find(requestToUser.getUsername()).getEmail(), request.getEmail());
         assertNull(response.getMessage());
 
-        assertSame(response.getUsername(), request.getUsername());
+        assertEquals(response.getUsername(), request.getUsername());
         assertNotSame(response.getAuthToken(), "");
     }
 
@@ -51,16 +54,16 @@ class RegisterServiceTest {
 
         //invalid - bad request
         RegisterRequest badRequest = new RegisterRequest(null, "pass", "email");
-        RegisterRequest badRequest2 = new RegisterRequest("username", "", "email");
+        RegisterRequest badRequest2 = new RegisterRequest("username", null, "email");
 
         invalidResponse = registerService.register(badRequest);
-        assertSame("Error: bad request", invalidResponse.getMessage());
+        assertEquals("Error: bad request", invalidResponse.getMessage());
         assertNull(invalidResponse.getUsername());
         assertNull(invalidResponse.getAuthToken());
         assertNotNull(invalidResponse.getMessage());
 
         invalidResponse = registerService.register(badRequest2);
-        assertSame("Error: bad request", invalidResponse.getMessage());
+        assertEquals("Error: bad request", invalidResponse.getMessage());
         assertNull(invalidResponse.getUsername());
         assertNull(invalidResponse.getAuthToken());
         assertNotNull(invalidResponse.getMessage());

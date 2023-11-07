@@ -2,12 +2,14 @@ package services;
 
 import DAO.AuthDAO;
 import DAO.GameDAO;
+import DAO.UserDAO;
 import chess.ChessGame;
 import chess.ChessGameImpl;
 import com.mysql.cj.x.protobuf.MysqlxCrud;
 import dataAccess.DataAccessException;
 import model.AuthToken;
 import model.Game;
+import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,7 @@ class ListGamesServiceTest {
     private ListGamesService service;
     private GameDAO gameDB;
     private AuthDAO authDB;
+    private UserDAO userDB;
     private HashSet<Game> expectedGamesSet;
 
 
@@ -30,9 +33,11 @@ class ListGamesServiceTest {
         service = new ListGamesService();
         gameDB = GameDAO.getInstance();
         authDB = AuthDAO.getInstance();
+        userDB = UserDAO.getInstance();
+
         gameDB.clear();
         authDB.clear();
-
+        userDB.clear();
         Game game1 = new Game(1,"white1", "black1", "game1",
                 new ChessGameImpl(ChessGame.TeamColor.WHITE));
         Game game2 = new Game(2,"white2", "black2", "game2",
@@ -56,6 +61,18 @@ class ListGamesServiceTest {
         gameDB.insert(game3);
         gameDB.insert(game4);
         gameDB.insert(game5);
+
+        User user1 = new User("user1", "password1", "email1");
+        User user2 = new User("user2", "password2", "email2");
+        User user3 = new User("user3", "password3", "email3");
+        User user4 = new User("user4", "password4", "email4");
+        User user5 = new User("user5", "password5", "email5");
+
+        userDB.insert(user1);
+        userDB.insert(user2);
+        userDB.insert(user3);
+        userDB.insert(user4);
+        userDB.insert(user5);
 
         AuthToken token1 = new AuthToken("user1", "token1");
         AuthToken token2 = new AuthToken("user2", "token2");
