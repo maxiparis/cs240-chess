@@ -217,14 +217,27 @@ public class AuthDAO extends ClearDAO {
      * @param token the token to be deleted.
      * @throws DataAccessException in case the token is not found in the DB.
      */
-    public void remove(AuthToken token) throws DataAccessException{
-//        try {
-            authTokensDB.remove(token);
-//        } catch (DataAccessException e) {
-//            throw new DataAccessException(e.getMessage());
-//        }
+    public void remove(String username) throws DataAccessException{
+        String sql = "delete from authToken where username = ?";
 
+        Connection connection = database.getConnection();
 
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, username);
+
+            if (preparedStatement.executeUpdate() == 1) {
+                System.out.println("Remove: Success!");
+            } else if (preparedStatement.executeUpdate() == 0) {
+                throw new DataAccessException("Error: the authToken was not in the DB.");
+            } else {
+                throw new DataAccessException("Error: more than one row was affected.");
+            }
+        } catch (SQLException e) {
+            //TODO here I am supposed to grab the exception and then send another exception with the correct
+            //message.
+            System.out.println(e.getMessage());
+            throw new DataAccessException("Error: " + e.getMessage()); //just an example
+        }
     }
 
     /**
