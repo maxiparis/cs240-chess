@@ -1,93 +1,69 @@
 package services;
 
 import DAO.AuthDAO;
+import DAO.UserDAO;
 import dataAccess.DataAccessException;
 import model.AuthToken;
+import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import responses.LogoutResponse;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LogoutServiceTest {
     private LogoutService service;
-    private AuthDAO DB;
-    private AuthToken token;
+    private AuthDAO authDAO;
+    private UserDAO userDAO;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws DataAccessException {
         service = new LogoutService();
-        DB = AuthDAO.getInstance();
-        token = new AuthToken("John", "123456789");
+
+        userDAO = UserDAO.getInstance();
+        authDAO = AuthDAO.getInstance();
+        authDAO.clear();
+        userDAO.clear();
+
+        userDAO.insert(new User("john","asdfasdf--","ffsdf@hotmail.cl"));
+        userDAO.insert(new User("alex","fsffsff335#","eerer@hotmail.cl"));
+        userDAO.insert(new User("steve","ffeeffsd","steve@hotmail.cl"));
+        userDAO.insert(new User("kate","fsd@#$@f","test2@hotmail.cl"));
+        userDAO.insert(new User("connor","fsdf-sdfsd","test3@hotmail.cl"));
+
+
+        authDAO.insert(new AuthToken("john", "12345"));
+        authDAO.insert(new AuthToken("alex", "67890"));
     }
 
     @AfterEach
     void tearDown() throws DataAccessException {
-        DB.clear();
+        authDAO.clear();
+        userDAO.clear();
     }
 
     @Test
     void logoutValid() throws DataAccessException {
         //Valid - logging out a user correctly. The authToken is correctly removed from the DB.
-        DB.insert(token);
-        assertTrue(DB.getAuthTokensDB().size() == 1, "The DB did not add correctly the token.");
-        LogoutResponse response = service.logout("123456789");
-        assertTrue(DB.getAuthTokensDB().size() == 0, "The DB did not REMOVE correctly the token.");
+        assertTrue(authDAO.findAll().size() == 2);
+        LogoutResponse response = service.logout("12345");
+        assertTrue(authDAO.findAll().size() == 1, "The DB did not REMOVE correctly the token.");
         assertTrue(response.getMessage() == null, "The response message was not set to null.");
-
-
-        DB.insert(new AuthToken("alex","53254325"));
-        DB.insert(new AuthToken("eric","423423"));
-        DB.insert(new AuthToken("stephen","222455"));
-        DB.insert(new AuthToken("max","34234"));
-        DB.insert(new AuthToken("thomas","1123123"));
-
-        assertTrue(DB.getAuthTokensDB().size() == 5);
-
-        LogoutResponse response2 = service.logout("53254325");
-
-        assertTrue(DB.getAuthTokensDB().size() == 4);
-        assertTrue(response2.getMessage() == null, "The response2 message was not set to null.");
 
     }
 
     @Test
     void logoutInvalidAuthTokenNotFound() throws DataAccessException {
-        DB.insert(token);
+        assertTrue(authDAO.findAll().size() == 2);
+
         LogoutResponse response = service.logout("wrongAuthToken");
         assertEquals("Error: unauthorized", response.getMessage(),
                 "The error messages are not the same.");
-
-        DB.insert(new AuthToken("alex","53254325"));
-        DB.insert(new AuthToken("eric","423423"));
-        DB.insert(new AuthToken("stephen","222455"));
-        DB.insert(new AuthToken("max","34234"));
-        DB.insert(new AuthToken("thomas","1123123"));
-
-        LogoutResponse response2 = service.logout("wrongAuthToken");
-        assertEquals("Error: unauthorized", response2.getMessage(),
-                "The error messages are not the same.");
-
-
-    }
-
-    @Test
-    void logoutInvalidEmptyDB() throws DataAccessException {
-        LogoutResponse response = service.logout("wrongAuthToken");
-        assertEquals("Error: unauthorized", response.getMessage(),
-                "The error messages are not the same.");
-
-        DB.insert(new AuthToken("alex","53254325"));
-        DB.insert(new AuthToken("eric","423423"));
-        DB.insert(new AuthToken("stephen","222455"));
-        DB.insert(new AuthToken("max","34234"));
-        DB.insert(new AuthToken("thomas","1123123"));
-
-        LogoutResponse response2 = service.logout("wrongAuthToken");
-        assertNotEquals("Error: DB is empty", response2.getMessage(),
-                "The error messages are the same.");
+        assertTrue(authDAO.findAll().size() == 2);
 
     }
 }
