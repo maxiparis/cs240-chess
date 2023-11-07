@@ -8,6 +8,7 @@ import chess.ChessGameImpl;
 import dataAccess.DataAccessException;
 import model.AuthToken;
 import model.Game;
+import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import requests.CreateGameRequest;
@@ -21,6 +22,7 @@ class CreateGameServiceTest {
     GameDAO gameDB;
     AuthDAO authDB;
     AuthToken token;
+    UserDAO userDB;
 
     @BeforeEach
     void setUp() throws DataAccessException {
@@ -28,9 +30,12 @@ class CreateGameServiceTest {
         request = new CreateGameRequest("MyGame");
         gameDB = GameDAO.getInstance();
         authDB = AuthDAO.getInstance();
+        userDB = UserDAO.getInstance();
         gameDB.clear();
         authDB.clear();
+        userDB.clear();
 
+        userDB.insert(new User("testUser", "sdfsdf", "sdfsdf"));
         token = new AuthToken("testUser","testToken");
         authDB.insert(token);
     }
@@ -39,13 +44,19 @@ class CreateGameServiceTest {
     void createGame_Valid() throws DataAccessException {
         //valid
         CreateGameResponse response = service.createGame(request, token.getToken());
+
         Game gameDbShouldHave = new Game(0, null, null, "MyGame",
                 new ChessGameImpl(ChessGame.TeamColor.WHITE));
         //validate what the db has
-        assertNotNull(GameDAO.getInstance().find(gameDbShouldHave.getGameName()));
+        Game foundGame = GameDAO.getInstance().find(gameDbShouldHave.getGameName());
+        assertEquals(gameDbShouldHave.getGameName(), foundGame.getGameName());
+        assertEquals(gameDbShouldHave.getWhiteUsername(), foundGame.getWhiteUsername());
+        assertEquals(gameDbShouldHave.getBlackUsername(), foundGame.getBlackUsername());
+        assertEquals(gameDbShouldHave.getGame(), foundGame.getGame());
+
+
         //validate the response
         assertNull(response.getMessage());
-        assertSame(1, response.getGameID());
     }
 
     @Test
@@ -57,7 +68,7 @@ class CreateGameServiceTest {
         //invalid -- game is already there
         CreateGameResponse invalidResponse = service.createGame(request, token.getToken());
         assertEquals(null, invalidResponse.getGameID(), "The GameID is not null. ");
-        assertSame("Error: there is another game with the same name", invalidResponse.getMessage());
+        assertEquals("Error: bad request", invalidResponse.getMessage());
 
         //Invalid - unauthorized
         CreateGameResponse invalidResponse2 = service.createGame(request, "wrongToken");
