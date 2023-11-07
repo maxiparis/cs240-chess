@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.awt.event.FocusAdapter;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,11 +106,13 @@ class GameDAOTest {
         //valid
         HashSet<Game> actual = gameDAO.findAll();
 
-        //invalid - set is empty
-        gameDAO.clear();
-        assertThrows(DataAccessException.class, () -> {
-            gameDAO.findAll();
-        });
+        Game foundGame1 = gameDAO.find("gameName");
+        Game foundGame2 = gameDAO.find("ourGame");
+        Game foundGame3 = gameDAO.find("Masters");
+
+        assertNotNull(foundGame1);
+        assertNotNull(foundGame2);
+        assertNotNull(foundGame3);
     }
 
     @Test
