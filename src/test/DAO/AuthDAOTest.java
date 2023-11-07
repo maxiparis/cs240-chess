@@ -120,23 +120,23 @@ class AuthDAOTest {
 
     @Test
     void update() throws DataAccessException {
-    //emtpy db
+    //Valid
+        authDAO.update("john", "newToken");
+        AuthToken foundToken = authDAO.find("john");
+        assertEquals("newToken", foundToken.getToken());
+        assertEquals("john", foundToken.getUsername());
+
+    //Invalid
+        //non-emtpy db that does not have the username
+        assertThrows(DataAccessException.class, () -> {
+            authDAO.update("invalidUsername", "isNotGonnaWork");
+        });
+
+        //emtpy db
+        authDAO.clear();
         assertThrows(DataAccessException.class, () -> {
             authDAO.update("Erick", "1238971945");
         });
-    //non-emtpy db that does not have the username
-        authDAO.insert(model);
-        assertThrows(DataAccessException.class, () -> {
-            authDAO.update("Alejandra", "123asda3");
-        });
-    //valid
-        authDAO.update("Alex", "newToken");
-        AuthToken expected = new AuthToken("Alex", "newToken");
-        //contains the updated version
-//        AuthToken actual = authDAO.find(expected);
-//        assertEquals(expected, actual);
-        //does not contain the old version
-        assertFalse(authDAO.getAuthTokensDB().contains(model));
     }
 
     @Test
