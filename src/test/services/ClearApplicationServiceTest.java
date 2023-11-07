@@ -63,10 +63,6 @@ class ClearApplicationServiceTest {
 
         ClearApplicationResponse response = service.clearApplication();
 
-        assertTrue(UserDAO.getInstance().getUsersDB().isEmpty());
-        assertTrue(AuthDAO.getInstance().getAuthTokensDB().isEmpty());
-        assertTrue(GameDAO.getInstance().getGamesDB().isEmpty());
-
         assertNull(response.getMessage());
 
         //calling for the second time

@@ -19,7 +19,6 @@ import java.util.List;
  */
 public class AuthDAO extends ClearDAO {
     private static AuthDAO instance;
-    private HashSet<AuthToken> authTokensDB = new HashSet<>();
     private Database database = Database.getInstance();
 
 
@@ -36,13 +35,6 @@ public class AuthDAO extends ClearDAO {
         return instance;
     }
 
-    public HashSet<AuthToken> getAuthTokensDB() {
-        return authTokensDB;
-    }
-
-    public void setAuthTokensDB(HashSet<AuthToken> authTokensDB) {
-        this.authTokensDB=authTokensDB;
-    }
 
     /**
      * Tries to insert a new authToken into the DB. If the authToken is already in the DB, DataAccessException
@@ -73,23 +65,9 @@ public class AuthDAO extends ClearDAO {
             System.out.println(e.getMessage());
             throw new DataAccessException("Error: bad request"); //just an example
         }
-//            if(!tokenIsInDB(token)){
-//                authTokensDB.add(token);
-//            } else {
-//                throw new DataAccessException("The token could not be added because it is already in the DB");
-//            }
+
     }
 
-//    private boolean tokenIsInDB(AuthToken token) {
-////        try {
-////            if (find(token) != null){
-////                return true;
-////            }
-////        } catch (DataAccessException e) {
-////            return false;
-////        }
-//        return false;
-//    }
 
     /**
      * Tries to find an AuthToken in the DB. If the AuthToken is not in the DB, DataAccessException will be thrown.
@@ -130,11 +108,6 @@ public class AuthDAO extends ClearDAO {
                 throw new DataAccessException("Error: " + e.getMessage());
             }
 
-//        if(authTokensDB.contains(token)){
-//            return token;
-//        } else {
-//            throw new DataAccessException("The token was not found in the DB.");
-//        }
     }
 
 
@@ -173,11 +146,6 @@ public class AuthDAO extends ClearDAO {
             throw new DataAccessException("Error: " + e.getMessage());
         }
 
-//        if(authTokensDB.contains(token)){
-//            return token;
-//        } else {
-//            throw new DataAccessException("The token was not found in the DB.");
-//        }
     }
 
     /**
@@ -247,24 +215,6 @@ public class AuthDAO extends ClearDAO {
 
             throw new DataAccessException("Error: " + e.getMessage()); //just an example
         }
-
-
-
-//        if(!authTokensDB.isEmpty()){
-//            for (AuthToken authToken : authTokensDB) {
-//                if(authToken.getUsername() == username){
-//                    remove(authToken);
-//                    insert(new AuthToken(username, updatedToken));
-////                    authToken.setToken(updatedToken);
-//                    return;
-//                }
-//            }
-//
-//            throw new DataAccessException("The DB did not contain an AuthToken with the username" +
-//                    username);
-//        } else {
-//            throw new DataAccessException("The DB is empty, therefore nothing can be updated");
-//        }
     }
 
     /**
@@ -307,19 +257,4 @@ public class AuthDAO extends ClearDAO {
         super.clear(dataBaseType.AUTHTOKEN);
     }
 
-//    public AuthToken findWithAuthToken(String theToken) throws DataAccessException {
-//        if(authTokensDB.isEmpty()){
-//            throw new DataAccessException("Error: DB is empty");
-//        }
-//
-//        AuthToken toReturn = null;
-//        for (AuthToken token : authTokensDB) {
-//            if(token.getToken().equals(theToken)){
-//                return token;
-//            }
-//        }
-//
-//        throw new DataAccessException("Error: the token was not found in DB.");
-//
-//    }
 }

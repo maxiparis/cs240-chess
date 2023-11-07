@@ -25,17 +25,7 @@ import java.util.List;
  */
 public class GameDAO extends ClearDAO {
     private static GameDAO instance;
-    private HashSet<Game> gamesDB = new HashSet<>();
     private Database database = Database.getInstance();
-
-
-    public HashSet<Game> getGamesDB() {
-        return gamesDB;
-    }
-
-    public void setGamesDB(HashSet<Game> gamesDB) {
-        this.gamesDB = gamesDB;
-    }
 
     /**
      * Constructs a new GameDAO object, and initializes the collection of games.
@@ -84,14 +74,6 @@ public class GameDAO extends ClearDAO {
         }
 
 
-//        if(findGameByName(game.getGameName()) != null){ //we found another game inside the db with the same name
-//            throw new DataAccessException("Error: there is another game with the same name");
-//        }
-//        if(!gameIsInDB(game)){
-//            gamesDB.add(game);
-//        } else {
-//            throw new DataAccessException("Error: game is already in DB");
-//        }
     }
 
     /**
@@ -143,24 +125,6 @@ public class GameDAO extends ClearDAO {
         } catch (SQLException e) {
             throw new DataAccessException("Error: " + e.getMessage());
         }
-
-
-//        Game foundGame = findGameByName(game.getGameName());
-//
-//        if(foundGame == null){
-//            throw new DataAccessException("The game was not found in the DB.");
-//        }
-//
-//        if(game.getGameID() != foundGame.getGameID()){
-//            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
-//        } else if (game.getWhiteUsername() != foundGame.getWhiteUsername()){
-//            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
-//        } else if (game.getBlackUsername() != foundGame.getBlackUsername()) {
-//            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
-//        } else if (!game.getGame().equals(foundGame.getGame())) { //failing here
-//            throw new DataAccessException("The game " + game.toString() + " was not found in the DB.");
-//        }
-//        return foundGame;
     }
 
     /**
@@ -200,11 +164,6 @@ public class GameDAO extends ClearDAO {
 
             throw new DataAccessException("Error: " + e.getMessage());
         }
-//        if(!gamesDB.isEmpty()) {
-//            return gamesDB;
-//        } else {
-//            throw new DataAccessException("The Games DB is empty.");
-//        }
     }
 
 
@@ -247,23 +206,6 @@ public class GameDAO extends ClearDAO {
 
             throw new DataAccessException("Error: " + e.getMessage()); //just an example
         }
-
-
-//        if(!gamesDB.isEmpty()){
-//            for (Game theGame : gamesDB) {
-//                if(theGame.getGameID() == gameID){
-//                    remove(theGame);
-//                    insert(new Game(gameID, newWhiteUsername, newBlackUsername, newGameName, newGame));
-//                    return;
-//                }
-//            }
-//
-//            throw new DataAccessException("The DB did not contain a game with the gameID " +
-//                    gameID);
-//        } else {
-//            throw new DataAccessException("The Games DB is empty, therefore nothing can be updated");
-//        }
-
     }
 
     /**
@@ -300,16 +242,6 @@ public class GameDAO extends ClearDAO {
 
             throw new DataAccessException("Error: " + e.getMessage()); //just an example
         }
-
-
-
-//        try {
-//            Game gameToRemove = find(game.getGameName());
-//            gamesDB.remove(gameToRemove);
-//        } catch (DataAccessException e) {
-//            throw new DataAccessException("The game " + game.toString() + " could not be removed because it is not " +
-//                    "in the DB.");
-//        }
     }
 
     /**
@@ -319,21 +251,6 @@ public class GameDAO extends ClearDAO {
     public void clear() throws DataAccessException {
         super.clear(dataBaseType.GAME);
     }
-
-//    public Game findGameByName(String gameName) {
-//        if(gamesDB.isEmpty()){
-//            return null;
-//        }
-//
-//        Game toReturn = null;
-//        for (Game game : gamesDB) {
-//            if(game.getGameName().equals(gameName)){
-//                toReturn = game;
-//            }
-//        }
-//
-//        return toReturn;
-//    }
 
     public Game findGameById(int gameID) throws DataAccessException {
         //searching with the gameName
@@ -379,34 +296,5 @@ public class GameDAO extends ClearDAO {
             database.closeConnection(connection);
             throw new DataAccessException("Error: " + e.getMessage());
         }
-
-//        if(gamesDB.isEmpty()){
-//            throw new DataAccessException("Error: DB is empty");
-//        }
-//
-//
-//        Game toReturn = null;
-//        for (Game game : gamesDB) {
-//            if(game.getGameID() == gameID){
-//                toReturn = game;
-//            }
-//        }
-//
-//        if(toReturn == null){
-//            throw new DataAccessException("Error: bad request");
-//        }
-//
-//        return toReturn;
     }
-
-//    private boolean gameIsInDB(Game game) {
-//        try {
-//            if (find(game.getGameName()) != null){
-//                return true;
-//            }
-//        } catch (DataAccessException e) {
-//            return false;
-//        }
-//        return false;
-//    }
 }

@@ -23,7 +23,6 @@ public class CreateGameHandler {
     }
 
     public Object handleRequest(Request request, Response response){
-        System.out.println(AuthDAO.getInstance().getAuthTokensDB()); //test
 
         Gson gson = new Gson();
         String requestBody = request.body();
