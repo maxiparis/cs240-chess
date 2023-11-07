@@ -192,12 +192,6 @@ public class GameDAO extends ClearDAO {
                 ChessGameImpl serializedChessGame = (ChessGameImpl) gson.fromJson(gameChess, ChessGame.class);
                 gamesInDB.add(new Game(gameID, whiteUsername, blackUsername, game_Name, serializedChessGame));
             }
-
-            if (gamesInDB.size() == 0){
-                database.closeConnection(connection);
-
-                throw new DataAccessException("Error: The Game DB is empty.");
-            }
             database.closeConnection(connection);
 
             return gamesInDB;
@@ -372,7 +366,7 @@ public class GameDAO extends ClearDAO {
             } else if (gamesReturned.size() == 0) {
                 database.closeConnection(connection);
 
-                throw new DataAccessException("The game was not found in the DB");
+                throw new DataAccessException("Error: bad request");
             } else {
                 database.closeConnection(connection);
 
