@@ -1,5 +1,6 @@
 package DAO;
 
+import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import model.AuthToken;
 import model.Game;
@@ -135,11 +136,30 @@ public class AuthDAO extends ClearDAO {
      * @return a set with a all the AuthTokens found in the DB.
      * @throws DataAccessException the exception to be thrown in case the DB does not have any AuthToken.
      */
-    public HashSet<AuthToken> findAll() throws DataAccessException{
-        if(!authTokensDB.isEmpty()){
-            return authTokensDB;
-        } else {
-            throw new DataAccessException("The AuthToken DB is empty.");
+    public HashSet<AuthToken> findAll() throws DataAccessException {
+        HashSet<AuthToken> authsInDB = new HashSet<>();
+        String sql = "select username, token from authToken";
+
+        Connection connection = database.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                String username = resultSet.getString(1);
+                String token = resultSet.getString(2);
+
+                authsInDB.add(new AuthToken(username, token));
+            }
+
+            if (authsInDB.size() == 0){
+                throw new DataAccessException("Error: The Users DB is empty.");
+            }
+
+            return authsInDB;
+        } catch (SQLException e) {
+            throw new DataAccessException("Error: " + e.getMessage());
         }
     }
 
@@ -151,21 +171,45 @@ public class AuthDAO extends ClearDAO {
      * @throws DataAccessException in case the username is not found in any User in the DB.
      */
     public void update(String username, String updatedToken) throws DataAccessException{
-        if(!authTokensDB.isEmpty()){
-            for (AuthToken authToken : authTokensDB) {
-                if(authToken.getUsername() == username){
-                    remove(authToken);
-                    insert(new AuthToken(username, updatedToken));
-//                    authToken.setToken(updatedToken);
-                    return;
-                }
-            }
+        String sql = "UPDATE authToken SET token=? WHERE username=?";
+        Gson gson = new Gson();
+        Connection connection = database.getConnection();
 
-            throw new DataAccessException("The DB did not contain an AuthToken with the username" +
-                    username);
-        } else {
-            throw new DataAccessException("The DB is empty, therefore nothing can be updated");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, updatedToken);
+            preparedStatement.setString(2, username);
+
+            if (preparedStatement.executeUpdate() == 1) {
+                System.out.println("Update: Success!");
+            } else if (preparedStatement.executeUpdate() == 0) {
+                System.out.println("Update: nothing was updated.");
+                throw new DataAccessException("Error: nothing was updated.");
+            } else {
+                System.out.println("Insert: Something unexpected happened. :(");
+            }
+        } catch (SQLException e) {
+            //TODO here I am supposed to grab the exception and then send another exception with the correct message.
+            System.out.println(e.getMessage());
+            throw new DataAccessException("Error: " + e.getMessage()); //just an example
         }
+
+
+
+//        if(!authTokensDB.isEmpty()){
+//            for (AuthToken authToken : authTokensDB) {
+//                if(authToken.getUsername() == username){
+//                    remove(authToken);
+//                    insert(new AuthToken(username, updatedToken));
+////                    authToken.setToken(updatedToken);
+//                    return;
+//                }
+//            }
+//
+//            throw new DataAccessException("The DB did not contain an AuthToken with the username" +
+//                    username);
+//        } else {
+//            throw new DataAccessException("The DB is empty, therefore nothing can be updated");
+//        }
     }
 
     /**

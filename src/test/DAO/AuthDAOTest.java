@@ -93,16 +93,28 @@ class AuthDAOTest {
     @Test
     void findAll() throws DataAccessException {
     //valid
-        authDAO.insert(model);
-        authDAO.insert(model2);
+        authDAO.clear();
+
+        String johnToken = UUID.randomUUID().toString();
+        String alexToken = UUID.randomUUID().toString();
+
+        authDAO.insert(new AuthToken("john", johnToken));
+        authDAO.insert(new AuthToken("alex", alexToken));
+
         HashSet<AuthToken> actual = authDAO.findAll();
-        assertTrue(actual.contains(model));
-        assertTrue(actual.contains(model2));
+
+        HashSet<AuthToken> expected = new HashSet<>();
+        expected.add(new AuthToken("john", johnToken));
+        expected.add(new AuthToken("alex", alexToken));
+
+
+        assertEquals(2, actual.size());
+        assertEquals(expected, actual);
 
         authDAO.clear();
     //invalid
         assertThrows(DataAccessException.class, () -> {
-            authDAO.clear();
+            HashSet<AuthToken> error=authDAO.findAll();
         });
     }
 
