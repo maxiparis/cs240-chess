@@ -12,10 +12,13 @@ import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import requests.CreateGameRequest;
 import requests.JoinGameRequest;
+import responses.CreateGameResponse;
 import responses.JoinGameResponse;
 
 import java.util.HashSet;
+import java.util.concurrent.CompletionException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -88,14 +91,16 @@ class JoinGameServiceTest {
 
     @Test
     void joinGame_Valid_PlayerWhite() throws DataAccessException {
-        //a player joins a correct game id
-            //verify the db changed
-            //verify the response
-        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.WHITE, 5);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game6");
+        CreateGameService createGameService = new CreateGameService();
+        CreateGameResponse createGameResponse = createGameService.createGame(createGameRequest, "token1");
+        int wrongID = createGameResponse.getGameID() + 1;
+        int correctID = createGameResponse.getGameID();
+        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.WHITE, correctID);
 
         JoinGameResponse response = service.joinGame(request, "token3");
 
-        Game gameUpdated = gameDB.findGameById(5);
+        Game gameUpdated = gameDB.findGameById(correctID);
         String expectedNewUserName = "user3";
         String actualNewUserName = gameUpdated.getWhiteUsername();
 
@@ -106,14 +111,17 @@ class JoinGameServiceTest {
 
     @Test
     void joinGame_Valid_PlayerBlack() throws DataAccessException {
-        //a player joins a correct game id
-            //verify the db changed
-            //verify the response
-        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, 4);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game6");
+        CreateGameService createGameService = new CreateGameService();
+        CreateGameResponse createGameResponse = createGameService.createGame(createGameRequest, "token1");
+        int wrongID = createGameResponse.getGameID() + 1;
+        int correctID = createGameResponse.getGameID();
+
+        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, correctID);
 
         JoinGameResponse response = service.joinGame(request, "token3");
 
-        Game gameUpdated = gameDB.findGameById(4);
+        Game gameUpdated = gameDB.findGameById(correctID);
         String expectedNewUserName = "user3";
         String actualNewUserName = gameUpdated.getBlackUsername();
 
@@ -124,40 +132,45 @@ class JoinGameServiceTest {
 
     @Test
     void joinGame_Valid_Spectator() throws DataAccessException {
-        JoinGameRequest request = new JoinGameRequest(null, 2);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game6");
+        CreateGameService createGameService = new CreateGameService();
+        CreateGameResponse createGameResponse = createGameService.createGame(createGameRequest, "token1");
+        int wrongID = createGameResponse.getGameID() + 1;
+        int correctID = createGameResponse.getGameID();
+
+        JoinGameRequest request = new JoinGameRequest(null, correctID);
 
         JoinGameResponse response = service.joinGame(request, "token3");
 
-        Game gameNotUpdated = gameDB.findGameById(2);
+        Game gameNotUpdated = gameDB.findGameById(correctID);
 
-
-
-        assertEquals("black2", gameNotUpdated.getBlackUsername());
-        assertEquals("white2", gameNotUpdated.getWhiteUsername());
+        assertEquals(null, gameNotUpdated.getBlackUsername());
+        assertEquals(null, gameNotUpdated.getWhiteUsername());
         assertNull(response.getMessage());
     }
     @Test
     void joinGame_Invalid_EmptyDB() throws DataAccessException {
         gameDB.clear();
-
         JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, 4);
 
         JoinGameResponse response = service.joinGame(request, "token3");
 
 //        Game gameUpdated = gameDB.findGameById(4);
 
-        assertEquals("Error: unauthorized", response.getMessage(), "The Error message is different.");
+        assertEquals("Error: bad request", response.getMessage(), "The Error message is different.");
     }
 
     @Test
     void joinGame_Invalid_AlreadyTaken() throws DataAccessException {
-        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, 3);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game6");
+        CreateGameService createGameService = new CreateGameService();
+        CreateGameResponse createGameResponse = createGameService.createGame(createGameRequest, "token1");
+        int wrongID = createGameResponse.getGameID() + 1;
+        int correctID = createGameResponse.getGameID();
 
+        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, correctID);
         JoinGameResponse response = service.joinGame(request, "token3");
-
-        Game gameUpdated = gameDB.findGameById(4);
-        String expectedNewUserName = "user3";
-        String actualNewUserName = gameUpdated.getBlackUsername();
+        response = service.joinGame(request, "token3");
 
 
         assertEquals("Error: already taken", response.getMessage());
@@ -165,22 +178,31 @@ class JoinGameServiceTest {
 
     @Test
     void joinGame_Invalid_Unauthorized() throws DataAccessException {
-        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, 4);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game6");
+        CreateGameService createGameService = new CreateGameService();
+        CreateGameResponse createGameResponse = createGameService.createGame(createGameRequest, "token1");
+        int wrongID = createGameResponse.getGameID() + 1;
+        int correctID = createGameResponse.getGameID();
+
+        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, wrongID);
 
         JoinGameResponse response = service.joinGame(request, "INVALID_TOKEN");
-
-        Game gameUpdated = gameDB.findGameById(4);
 
         assertEquals("Error: unauthorized", response.getMessage());
     }
 
     @Test
     void joinGame_Invalid_GameWasNotFound() throws DataAccessException {
-        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, 8);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game6");
+        CreateGameService createGameService = new CreateGameService();
+        CreateGameResponse createGameResponse = createGameService.createGame(createGameRequest, "token1");
+        int wrongID = createGameResponse.getGameID() + 1;
+
+        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, wrongID);
 
         JoinGameResponse response = service.joinGame(request, "token4");
 
-        Game gameUpdated = gameDB.findGameById(4);
+        Game gameUpdated = gameDB.findGameById(createGameResponse.getGameID());
 
         assertEquals("Error: bad request", response.getMessage());
     }
