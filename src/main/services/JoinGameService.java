@@ -42,6 +42,8 @@ public class JoinGameService extends AuthTokenValidator {
                     return new JoinGameResponse("Error: already taken");
                 } else {
                     foundGame.setWhiteUsername(callerToken.getUsername());
+                    GameDAO.getInstance().updateGame(foundGame.getGameName(), foundGame.getWhiteUsername(),
+                            foundGame.getBlackUsername(), foundGame.getGame());
                 }
             } else if(callerColorRequest.equals(BLACK)){
                 if(foundGame.getBlackUsername() != null){
@@ -49,6 +51,8 @@ public class JoinGameService extends AuthTokenValidator {
                     return new JoinGameResponse("Error: already taken");
                 } else {
                     foundGame.setBlackUsername(callerToken.getUsername());
+                    GameDAO.getInstance().updateGame(foundGame.getGameName(), foundGame.getWhiteUsername(),
+                            foundGame.getBlackUsername(), foundGame.getGame());
                 }
             }
             return new JoinGameResponse(null);

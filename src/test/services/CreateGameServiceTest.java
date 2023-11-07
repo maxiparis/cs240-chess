@@ -42,7 +42,7 @@ class CreateGameServiceTest {
         Game gameDbShouldHave = new Game(0, null, null, "MyGame",
                 new ChessGameImpl(ChessGame.TeamColor.WHITE));
         //validate what the db has
-        assertNotNull(GameDAO.getInstance().findGameByName(gameDbShouldHave.getGameName()));
+        assertNotNull(GameDAO.getInstance().find(gameDbShouldHave.getGameName()));
         //validate the response
         assertNull(response.getMessage());
         assertSame(1, response.getGameID());
