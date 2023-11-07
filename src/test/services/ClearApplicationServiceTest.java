@@ -24,11 +24,14 @@ class ClearApplicationServiceTest {
     private GameDAO gameDB;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws DataAccessException {
         service = new ClearApplicationService();
         userDB = UserDAO.getInstance();
         authDB = AuthDAO.getInstance();
         gameDB = GameDAO.getInstance();
+        gameDB.clear();
+        authDB.clear();
+        userDB.clear();
     }
 
     @Test

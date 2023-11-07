@@ -1,7 +1,10 @@
 package services;
 
+import DAO.AuthDAO;
+import DAO.GameDAO;
 import DAO.UserDAO;
 import dataAccess.DataAccessException;
+import model.AuthToken;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +27,8 @@ class LoginServiceTest {
         request = new LoginRequest("Jason", "1234*");
         userDB = UserDAO.getInstance();
         userDB.clear();
+        AuthDAO.getInstance().clear();
+        GameDAO.getInstance().clear();
     }
 
     @Test
