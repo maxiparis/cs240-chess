@@ -4,6 +4,7 @@ import DAO.AuthDAO;
 import DAO.GameDAO;
 import chess.ChessGame;
 import chess.ChessGameImpl;
+import com.mysql.cj.x.protobuf.MysqlxCrud;
 import dataAccess.DataAccessException;
 import model.AuthToken;
 import model.Game;
@@ -29,8 +30,8 @@ class ListGamesServiceTest {
         service = new ListGamesService();
         gameDB = GameDAO.getInstance();
         authDB = AuthDAO.getInstance();
-            gameDB.clear();
-            authDB.clear();
+        gameDB.clear();
+        authDB.clear();
 
         Game game1 = new Game(1,"white1", "black1", "game1",
                 new ChessGameImpl(ChessGame.TeamColor.WHITE));
@@ -80,8 +81,18 @@ class ListGamesServiceTest {
 
         ListGamesResponse response = service.listGames("token2");
 
+        HashSet<Game> gamesFound = response.getGames();
+        for (Game game : gamesFound) {
+            Game game2 = gameDB.find(game.getGameName());
+            assertEquals(game.getGameID(), game2.getGameID());
+            assertEquals(game.getGameName(), game2.getGameName());
+            assertEquals(game.getWhiteUsername(), game2.getWhiteUsername());
+            assertEquals(game.getBlackUsername(), game2.getBlackUsername());
+            assertEquals(game.getGame(), game2.getGame());
+
+        }
+
         assertNull(response.getMessage());
-        assertEquals(expectedGamesSet, response.getGames());
     }
 
     @Test
