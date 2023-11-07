@@ -326,39 +326,83 @@ public class GameDAO extends ClearDAO {
         super.clear(dataBaseType.GAME);
     }
 
-    public Game findGameByName(String gameName) {
-        if(gamesDB.isEmpty()){
-            return null;
-        }
-
-        Game toReturn = null;
-        for (Game game : gamesDB) {
-            if(game.getGameName().equals(gameName)){
-                toReturn = game;
-            }
-        }
-
-        return toReturn;
-    }
+//    public Game findGameByName(String gameName) {
+//        if(gamesDB.isEmpty()){
+//            return null;
+//        }
+//
+//        Game toReturn = null;
+//        for (Game game : gamesDB) {
+//            if(game.getGameName().equals(gameName)){
+//                toReturn = game;
+//            }
+//        }
+//
+//        return toReturn;
+//    }
 
     public Game findGameById(int gameID) throws DataAccessException {
-        if(gamesDB.isEmpty()){
-            throw new DataAccessException("Error: DB is empty");
-        }
+        //searching with the gameName
+        String sql = "select * from game where gameID = ?";
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(ChessGame.class, new ChessGameDeserializer())
+                .create();
+        Connection connection = database.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setInt(1, gameID);
+            List<Game> gamesReturned = new ArrayList<>();
+
+            ResultSet resultSet = preparedStatement.executeQuery();
 
 
-        Game toReturn = null;
-        for (Game game : gamesDB) {
-            if(game.getGameID() == gameID){
-                toReturn = game;
+            while (resultSet.next()){
+                int _gameID = resultSet.getInt(1);
+                String game_Name = resultSet.getString(2);
+                String whiteUsername = resultSet.getString(3);
+                String blackUsername = resultSet.getString(4);
+                String gameChess = resultSet.getString(5);
+
+                ChessGameImpl serializedChessGame = (ChessGameImpl) gson.fromJson(gameChess, ChessGame.class);
+                gamesReturned.add(new Game(_gameID, whiteUsername, blackUsername, game_Name, serializedChessGame));
             }
+
+            if(gamesReturned.size() == 1){
+                System.out.println("Find: success.");
+            } else if (gamesReturned.size() == 0) {
+                database.closeConnection(connection);
+
+                throw new DataAccessException("The game was not found in the DB");
+            } else {
+                database.closeConnection(connection);
+
+                throw new DataAccessException("Error: More than one game found.");
+            }
+            database.closeConnection(connection);
+
+            return gamesReturned.get(0);
+        } catch (SQLException e) {
+            database.closeConnection(connection);
+            throw new DataAccessException("Error: " + e.getMessage());
         }
 
-        if(toReturn == null){
-            throw new DataAccessException("Error: bad request");
-        }
-
-        return toReturn;
+//        if(gamesDB.isEmpty()){
+//            throw new DataAccessException("Error: DB is empty");
+//        }
+//
+//
+//        Game toReturn = null;
+//        for (Game game : gamesDB) {
+//            if(game.getGameID() == gameID){
+//                toReturn = game;
+//            }
+//        }
+//
+//        if(toReturn == null){
+//            throw new DataAccessException("Error: bad request");
+//        }
+//
+//        return toReturn;
     }
 
 //    private boolean gameIsInDB(Game game) {
