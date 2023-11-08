@@ -65,8 +65,6 @@ public class GameDAO extends ClearDAO {
             database.closeConnection(connection);
 
         } catch (SQLException e) {
-            //TODO here I am supposed to grab the exception and then send another exception with the correct
-            //message.
             System.out.println(e.getMessage());
             database.closeConnection(connection);
 
@@ -132,7 +130,7 @@ public class GameDAO extends ClearDAO {
      * @return a set with a all the Game found in the DB.
      * @throws DataAccessException the exception to be thrown in case the DB does not have any Game.
      */
-    public HashSet<Game> findAll() throws DataAccessException{
+    public HashSet<Game> findAll() throws DataAccessException {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(ChessGame.class, new ChessGameDeserializer())
                 .create();
@@ -161,7 +159,6 @@ public class GameDAO extends ClearDAO {
             return gamesInDB;
         } catch (SQLException e) {
             database.closeConnection(connection);
-
             throw new DataAccessException("Error: " + e.getMessage());
         }
     }
@@ -200,11 +197,10 @@ public class GameDAO extends ClearDAO {
             database.closeConnection(connection);
 
         } catch (SQLException e) {
-            //TODO here I am supposed to grab the exception and then send another exception with the correct message.
             System.out.println(e.getMessage());
             database.closeConnection(connection);
 
-            throw new DataAccessException("Error: " + e.getMessage()); //just an example
+            throw new DataAccessException("Error: " + e.getMessage());
         }
     }
 
@@ -235,12 +231,10 @@ public class GameDAO extends ClearDAO {
             database.closeConnection(connection);
 
         } catch (SQLException e) {
-            //TODO here I am supposed to grab the exception and then send another exception with the correct
-            //message.
             System.out.println(e.getMessage());
             database.closeConnection(connection);
 
-            throw new DataAccessException("Error: " + e.getMessage()); //just an example
+            throw new DataAccessException("Error: " + e.getMessage());
         }
     }
 

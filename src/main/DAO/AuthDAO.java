@@ -58,8 +58,6 @@ public class AuthDAO extends ClearDAO {
             }
             database.closeConnection(connection);
         } catch (SQLException e) {
-            //TODO here I am supposed to grab the exception and then send another exception with the correct
-            //message.
             database.closeConnection(connection);
 
             System.out.println(e.getMessage());
@@ -209,7 +207,6 @@ public class AuthDAO extends ClearDAO {
             }
             database.closeConnection(connection);
         } catch (SQLException e) {
-            //TODO here I am supposed to grab the exception and then send another exception with the correct message.
             System.out.println(e.getMessage());
             database.closeConnection(connection);
 
@@ -240,8 +237,6 @@ public class AuthDAO extends ClearDAO {
             database.closeConnection(connection);
 
         } catch (SQLException e) {
-            //TODO here I am supposed to grab the exception and then send another exception with the correct
-            //message.
             System.out.println(e.getMessage());
             database.closeConnection(connection);
 

@@ -117,20 +117,12 @@ class UserDAOTest {
 
     @Test
     void clear() throws DataAccessException {
+        assertEquals(5, userDAO.findAll().size()); //db is not empty before clear()
         userDAO.clear();
 
-
-//        //valid
-//        userDAO.insert(model);
-//        userDAO.insert(model2);
-//        userDAO.clear();
-//        assertTrue(UserDAO.getInstance().getUsersDB().isEmpty());
-//
-//        //invalid - it was empty already
-//        assertThrows(DataAccessException.class, () -> {
-//            userDAO.clear();
-//        });
-
+        assertThrows(DataAccessException.class, () -> {
+            userDAO.findAll(); //findAll throws exception when the db is empty
+        });
     }
 
     @Test
@@ -152,19 +144,4 @@ class UserDAOTest {
             User actual = userDAO.findWithUsernameAndPassword("wrongUser", "fsd@#$@f");
         });
     }
-
-//    @Test
-//    void update() throws DataAccessException {
-//        //valid
-//        userDAO.insert(model);
-//        userDAO.update(model.getUsername(), "newPassword", "updatedEmail");
-//        User update = new User(model.getUsername(), "newPassword", "updatedEmail");
-//        assertTrue(UserDAO.getInstance().getUsersDB().contains(update));
-//        assertFalse(UserDAO.getInstance().getUsersDB().contains(model));
-//
-//        //invalid - trying to update something that is not there
-//        assertThrows(DataAccessException.class, () -> {
-//           userDAO.update(model2.getUsername(), "badPassoword", "badEmail");
-//        });
-//    }
 }

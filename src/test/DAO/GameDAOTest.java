@@ -103,16 +103,63 @@ class GameDAOTest {
 
     @Test
     void findAll() throws DataAccessException {
+        gameDAO.clear();
+        //insert1
+        ChessGameImpl game = new ChessGameImpl(ChessGame.TeamColor.WHITE);
+        ChessBoardImpl board = new ChessBoardImpl();
+        board.resetBoard();
+        game.setBoard(board);
+        Game gameToInsert = new Game(0, "sam", "tony",
+                "gameName", game);
+        gameDAO.insert(gameToInsert);
+
+
+        //insert2
+        ChessGameImpl game2 = new ChessGameImpl(ChessGame.TeamColor.WHITE);
+        ChessBoardImpl board2 = new ChessBoardImpl();
+        board2.resetBoard();
+        board2.addPiece(new ChessPositionImpl(4,5), new Rook(ChessGame.TeamColor.WHITE));
+        board2.addPiece(new ChessPositionImpl(4,6), new Knight(ChessGame.TeamColor.BLACK));
+        board2.addPiece(new ChessPositionImpl(3,7), new Bishop(ChessGame.TeamColor.WHITE));
+        game2.setBoard(board2);
+        Game gameToInsert2 = new Game(0, null, "alex",
+                "ourGame", game2);
+        gameDAO.insert(gameToInsert2);
+
+        //insert3
+        ChessGameImpl game3 = new ChessGameImpl(ChessGame.TeamColor.BLACK);
+        ChessBoardImpl board3 = new ChessBoardImpl();
+        game3.setBoard(board3);
+        Game gameToInsert3 = new Game(0, "Tom", "theBest",
+                "Masters", game3);
+        gameDAO.insert(gameToInsert3);
+
+
         //valid
         HashSet<Game> actual = gameDAO.findAll();
+        assertEquals(3, actual.size());
 
-        Game foundGame1 = gameDAO.find("gameName");
-        Game foundGame2 = gameDAO.find("ourGame");
-        Game foundGame3 = gameDAO.find("Masters");
+        for (Game gameInActual : actual) {
+            boolean atLeastOneGameNameMatches = (gameInActual.getGameName().equals("Masters") ||
+                    gameInActual.getGameName().equals("gameName") ||
+                    gameInActual.getGameName().equals("ourGame")
+            );
+            assertTrue(atLeastOneGameNameMatches);
 
-        assertNotNull(foundGame1);
-        assertNotNull(foundGame2);
-        assertNotNull(foundGame3);
+            if(gameInActual.getGameName().equals(gameToInsert.getGameName())){
+                assertEquals(gameInActual.getWhiteUsername(), gameToInsert.getWhiteUsername());
+                assertEquals(gameInActual.getBlackUsername(), gameToInsert.getBlackUsername());
+                assertEquals(gameInActual.getGame(), gameToInsert.getGame());
+            } else if(gameInActual.getGameName().equals(gameToInsert2.getGameName()) ){
+                assertEquals(gameInActual.getWhiteUsername(), gameToInsert2.getWhiteUsername());
+                assertEquals(gameInActual.getBlackUsername(), gameToInsert2.getBlackUsername());
+                assertEquals(gameInActual.getGame(), gameToInsert2.getGame());
+            } else if (gameInActual.getGameName().equals(gameToInsert3)) {
+                assertEquals(gameInActual.getWhiteUsername(), gameToInsert3.getWhiteUsername());
+                assertEquals(gameInActual.getBlackUsername(), gameToInsert3.getBlackUsername());
+                assertEquals(gameInActual.getGame(), gameToInsert3.getGame());
+            }
+        }
     }
 
     @Test
@@ -139,11 +186,11 @@ class GameDAOTest {
         //invalid - trying to update something that is not there
 //        gameDAO.clear();
 
-        //TODO figure out whats going on here
-//        assertThrows(DataAccessException.class, () -> {
-//            gameDAO.updateGame(gameDAO.updateGame("wrongName", "newWhite", "newBlackie",
-//                    chessGameFoundAndUpdated));
-//        });
+
+        assertThrows(DataAccessException.class, () -> {
+            gameDAO.updateGame("wrongName", "newWhite",
+                    "newBlackie", chessGameFoundAndUpdated);
+        });
     }
 
     @Test
@@ -167,16 +214,8 @@ class GameDAOTest {
 
     @Test
     void clear() throws DataAccessException {
+        assertEquals(3, gameDAO.findAll().size());
         gameDAO.clear();
-//        //valid
-//        gameDAO.insert(model);
-//        gameDAO.insert(model2);
-//        gameDAO.clear();
-//        assertTrue(GameDAO.getInstance().getGamesDB().isEmpty());
-//
-//        //invalid - it was empty already
-//        assertThrows(DataAccessException.class, () -> {
-//            gameDAO.clear();
-//        });
+        assertTrue(gameDAO.findAll().isEmpty());
     }
 }

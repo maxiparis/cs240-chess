@@ -158,7 +158,6 @@ public class UserDAO extends ClearDAO {
 
             if (usersInDB.size() == 0){
                 database.closeConnection(connection);
-
                 throw new DataAccessException("Error: The Users DB is empty.");
             }
             database.closeConnection(connection);

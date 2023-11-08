@@ -158,7 +158,11 @@ class AuthDAOTest {
 
     @Test
     void clear() throws DataAccessException {
-            authDAO.clear();
+        assertEquals(2, authDAO.findAll().size());
+        authDAO.clear();
+        assertThrows(DataAccessException.class, ()->{
+            authDAO.findAll();
+        });
     }
 
     @Test
