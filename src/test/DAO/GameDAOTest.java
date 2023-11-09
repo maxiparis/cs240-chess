@@ -3,12 +3,10 @@ package DAO;
 import chess.*;
 import dataAccess.DataAccessException;
 import model.Game;
-import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.awt.event.FocusAdapter;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;

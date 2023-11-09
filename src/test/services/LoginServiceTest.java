@@ -4,15 +4,11 @@ import DAO.AuthDAO;
 import DAO.GameDAO;
 import DAO.UserDAO;
 import dataAccess.DataAccessException;
-import model.AuthToken;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import requests.LoginRequest;
-import requests.RegisterRequest;
 import responses.LoginResponse;
-
-import java.awt.image.RescaleOp;
 
 import static org.junit.jupiter.api.Assertions.*;
 

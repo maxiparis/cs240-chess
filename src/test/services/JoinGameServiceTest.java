@@ -17,9 +17,6 @@ import requests.JoinGameRequest;
 import responses.CreateGameResponse;
 import responses.JoinGameResponse;
 
-import java.util.HashSet;
-import java.util.concurrent.CompletionException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class JoinGameServiceTest {

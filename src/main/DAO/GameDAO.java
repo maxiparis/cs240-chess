@@ -2,15 +2,11 @@ package DAO;
 
 import chess.ChessGame;
 import chess.ChessGameImpl;
-import chess.ChessPiece;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dataAccess.DataAccessException;
 import model.Game;
-import model.User;
-import requests.CreateGameRequest;
 import typeAdapters.ChessGameDeserializer;
-import typeAdapters.ChessPieceDeserializer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

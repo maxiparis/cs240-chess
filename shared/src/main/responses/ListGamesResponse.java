@@ -2,7 +2,6 @@ package responses;
 
 import model.Game;
 
-import java.util.Collection;
 import java.util.HashSet;
 
 /**

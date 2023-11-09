@@ -2,9 +2,6 @@ package services;
 
 import DAO.AuthDAO;
 import dataAccess.DataAccessException;
-import model.AuthToken;
-
-import java.util.HashSet;
 
 public class AuthTokenValidator {
 

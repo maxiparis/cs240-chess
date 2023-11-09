@@ -1,14 +1,10 @@
 package DAO;
 
 import dataAccess.DataAccessException;
-import model.AuthToken;
 import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import requests.RegisterRequest;
-import responses.RegisterResponse;
-import services.RegisterService;
 
 import java.util.HashSet;
 

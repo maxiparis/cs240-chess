@@ -5,7 +5,6 @@ import chess.ChessGame;
 import chess.ChessGameImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import model.Game;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

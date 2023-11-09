@@ -1,6 +1,5 @@
 package handlers;
 
-import DAO.AuthDAO;
 import com.google.gson.Gson;
 import requests.CreateGameRequest;
 import responses.CreateGameResponse;

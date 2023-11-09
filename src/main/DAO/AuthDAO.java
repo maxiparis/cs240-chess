@@ -3,8 +3,6 @@ package DAO;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import model.AuthToken;
-import model.Game;
-import model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

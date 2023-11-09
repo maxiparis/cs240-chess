@@ -1,7 +1,6 @@
 package requests;
 
 import chess.ChessGame;
-import chess.ChessPiece;
 
 /**
  * A class to represent the JSON model passed to the JoinGameService

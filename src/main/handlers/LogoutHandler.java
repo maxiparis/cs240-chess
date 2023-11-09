@@ -1,13 +1,10 @@
 package handlers;
 
-import DAO.AuthDAO;
 import com.google.gson.Gson;
 import responses.LogoutResponse;
 import services.LogoutService;
 import spark.Request;
 import spark.Response;
-
-import java.util.Set;
 
 public class LogoutHandler {
     private static LogoutHandler instance;

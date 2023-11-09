@@ -3,7 +3,6 @@ package services;
 import DAO.AuthDAO;
 import DAO.GameDAO;
 import chess.ChessGame;
-import chess.ChessPiece;
 import dataAccess.DataAccessException;
 import model.AuthToken;
 import model.Game;
