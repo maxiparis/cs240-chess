@@ -41,7 +41,15 @@ public class Client {
     }
 
     private static void register() {
+        String username = getInputWithPrompt("Please enter the username");
+        String password = getInputWithPrompt("Please enter the password");
+        String email = getInputWithPrompt("Please enter the email");
 
+    }
+
+    private static String getInputWithPrompt(String prompt) {
+        askForInput(prompt);
+        return inputNext();
     }
 
     private static void askForInput(String message) {
@@ -61,11 +69,9 @@ public class Client {
     }
 
     private static void login() {
-        //example
-        askForInput("Please enter your username");
-        String username = inputNext();
-        askForInput("Please enter your password");
-        String password = inputNext();
+        String username = getInputWithPrompt("Please enter your username");
+        String password = getInputWithPrompt("Please enter your password");
+
         LoginRequest request = new LoginRequest(username, password);
         //here do the login request with the information received
         LoginResponse loginResponse = facade.login(request);

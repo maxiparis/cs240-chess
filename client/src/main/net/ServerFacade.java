@@ -13,7 +13,7 @@ public class ServerFacade {
         try {
             return communicator.post(requestAsJson, "session");
         } catch (Exception e) {
-            System.out.println("Login had an error: " + e.getMessage());
+            System.out.println("Login had an error related to the connection: " + e.getMessage());
         }
         return null;
     }

@@ -14,7 +14,6 @@ public class Server {
         System.out.println("Listening.... Please go to http://localhost:8080/\n");
         runHomePage();
         createRoutes();
-
     }
 
     private static void createRoutes() {
