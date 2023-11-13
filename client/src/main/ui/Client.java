@@ -1,6 +1,11 @@
+import net.ServerFacade;
+import requests.LoginRequest;
+import responses.LoginResponse;
+
 import java.util.Scanner;
 public class Client {
     private Scanner scanner = new Scanner(System.in);
+    private static ServerFacade facade = new ServerFacade();
 
     public static void main(String[] args) {
         preLogin();
@@ -22,6 +27,7 @@ public class Client {
                     login();
                     break;
                 case "3":
+                    register();
                     break;
                 case "4":
                     System.out.println("Thank you for playing!");
@@ -34,12 +40,16 @@ public class Client {
         } while (continueLoop);
     }
 
+    private static void register() {
+
+    }
+
     private static void askForInput(String message) {
         System.out.print(message + ": ");
     }
 
     private static void preLoginHelp() {
-        //TODO improve the login help
+        System.out.println("Type in your keyboard the numbers 1,2,3 or 4 and then press 'Enter' to start");
     }
 
     private static void displayPreLoginOptions() {
@@ -52,8 +62,21 @@ public class Client {
 
     private static void login() {
         //example
-        System.out.println("Please enter your username: ");
-        inputNext();
+        askForInput("Please enter your username");
+        String username = inputNext();
+        askForInput("Please enter your password");
+        String password = inputNext();
+        LoginRequest request = new LoginRequest(username, password);
+        //here do the login request with the information received
+        LoginResponse loginResponse = facade.login(request);
+        if(loginResponse.getMessage() != null || loginResponse == null){
+            //there was an error
+            System.out.println("There was a problem logging you in. ");
+        } else {
+            //it was successful
+            System.out.println("Logged in successfully.");
+            //postLogin();
+        }
     }
 
     private static void wrongInput(String expectedInput) {
