@@ -105,7 +105,7 @@ public class Client {
             System.out.println("There was a problem logging you in: " + loginResponse.getMessage());
         } else {
             System.out.println("Logged in successfully.");
-            //postLogin();
+            postLogin();
         }
     }
 
@@ -117,23 +117,44 @@ public class Client {
             askForInput("Enter a number from 1 - 6");
             switch (inputNext()){
                 case "1":
-                    preLoginHelp();
+                    postLoginHelp();
                     break;
                 case "2":
-                    login();
+                    //logout();
+                    continueLoop = false;
                     break;
                 case "3":
-                    register();
+                    //createGame();
                     break;
                 case "4":
-                    System.out.println("Thank you for playing!");
-                    continueLoop = false;
+                    //listGames();
+                    break;
+                case "5":
+                    //joingGame();
+                    break;
+                case "6":
+                    //joinObserver();
                     break;
                 default:
                     wrongInput("numbers from 1 - 4");
                     break;
             }
         } while (continueLoop);
+    }
+
+    private static void displayPostLoginOptions() {
+        System.out.println("Menu " +
+                "\n 1. Help" +
+                "\n 2. Logout" +
+                "\n 3. Create Game" +
+                "\n 4. List Games" +
+                "\n 5. Join Game" +
+                "\n 6. Join as Observer");
+    }
+
+    private static void postLoginHelp() {
+        System.out.println("Type in your keyboard the numbers 1,2,3,4,5 or 6 and then press 'Enter' to select" +
+                " that option. ");
     }
 
 
