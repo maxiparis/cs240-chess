@@ -51,7 +51,7 @@ public class Client {
                     register();
                     break;
                 case "4":
-                    System.out.println("Thank you for playing!");
+                    printAlertMessage("Thank you for playing!");
                     continueLoop = false;
                     break;
                 default:
@@ -61,8 +61,12 @@ public class Client {
         } while (continueLoop);
     }
 
+    private static void printAlertMessage(String message){
+        System.out.println("---------------------\n" + message + "\n---------------------\n");
+    }
+
     private static void wrongInput(String expectedInput) {
-        System.out.println("Invalid input. Please enter the following input: " + expectedInput);
+        System.out.println("**** Invalid input. Please enter the following input: " + expectedInput);
     }
 
     private static String inputNext() {
@@ -89,7 +93,7 @@ public class Client {
     }
 
     private static void displayPreLoginOptions() {
-        System.out.println("Menu " +
+        System.out.println("Pre-Login Menu " +
                 "\n 1. Help" +
                 "\n 2. Login" +
                 "\n 3. Register" +
@@ -105,11 +109,11 @@ public class Client {
 
         RegisterResponse response = facade.register(request);
         if(response.getMessage() != null){
-            System.out.println("There was a problem registering you: " + response.getMessage());
+            printAlertMessage("There was a problem registering you: " + response.getMessage());
         } else {
-            System.out.println("Registered successfully.");
             setUsernameLoggedIn(response.getUsername());
             setAuthTokenLoggedIn(response.getAuthToken());
+            printAlertMessage("Registered successfully. Welcome " + usernameLoggedIn);
             postLogin();
         }
 
@@ -123,9 +127,11 @@ public class Client {
         //here do the login request with the information received
         LoginResponse loginResponse = facade.login(request);
         if(loginResponse.getMessage() != null){
-            System.out.println("There was a problem logging you in: " + loginResponse.getMessage());
+            printAlertMessage("There was a problem logging you in: " + loginResponse.getMessage());
         } else {
-            System.out.println("Logged in successfully.");
+            setUsernameLoggedIn(loginResponse.getUsername());
+            setAuthTokenLoggedIn(loginResponse.getAuthToken());
+            printAlertMessage("Logged in successfully. Welcome " + usernameLoggedIn);
             postLogin();
         }
     }
@@ -164,7 +170,7 @@ public class Client {
     }
 
     private static void displayPostLoginOptions() {
-        System.out.println("Menu " +
+        System.out.println("Post-Login Menu " +
                 "\n 1. Help" +
                 "\n 2. Logout" +
                 "\n 3. Create Game" +
@@ -174,16 +180,16 @@ public class Client {
     }
 
     private static void postLoginHelp() {
-        System.out.println("Type in your keyboard the numbers 1,2,3,4,5 or 6 and then press 'Enter' to select" +
+        printAlertMessage("Type in your keyboard the numbers 1,2,3,4,5 or 6 and then press 'Enter' to select" +
                 " that option. ");
     }
 
     private static void logout() {
         LogoutResponse response = facade.logout(authTokenLoggedIn);
         if(response.getMessage() != null){
-            System.out.println("There was a problem logging you out: " + response.getMessage());
+            printAlertMessage("There was a problem logging you out: " + response.getMessage());
         } else {
-            System.out.println("Logged out successfully.");
+            printAlertMessage("Logged out successfully.");
         }
 
     }
