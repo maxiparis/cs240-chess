@@ -1,6 +1,8 @@
 import net.ServerFacade;
 import requests.LoginRequest;
+import requests.RegisterRequest;
 import responses.LoginResponse;
+import responses.RegisterResponse;
 
 import java.util.Scanner;
 public class Client {
@@ -40,11 +42,18 @@ public class Client {
         } while (continueLoop);
     }
 
-    private static void register() {
-        String username = getInputWithPrompt("Please enter the username");
-        String password = getInputWithPrompt("Please enter the password");
-        String email = getInputWithPrompt("Please enter the email");
+    private static void wrongInput(String expectedInput) {
+        System.out.println("Invalid input. Please enter the following input: " + expectedInput);
+    }
 
+    private static String inputNext() {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.next();
+    }
+
+    private static String inputNextLine() {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
     }
 
     private static String getInputWithPrompt(String prompt) {
@@ -68,6 +77,23 @@ public class Client {
                 "\n 4. Quit\n");
     }
 
+    private static void register() {
+        String username = getInputWithPrompt("Please enter the username");
+        String password = getInputWithPrompt("Please enter the password");
+        String email = getInputWithPrompt("Please enter the email");
+
+        RegisterRequest request = new RegisterRequest(username, password, email);
+
+        RegisterResponse response = facade.register(request);
+        if(response.getMessage() != null){
+            System.out.println("There was a problem registering you: " + response.getMessage());
+        } else {
+            System.out.println("Registered successfully.");
+            postLogin();
+        }
+
+    }
+
     private static void login() {
         String username = getInputWithPrompt("Please enter your username");
         String password = getInputWithPrompt("Please enter your password");
@@ -75,28 +101,40 @@ public class Client {
         LoginRequest request = new LoginRequest(username, password);
         //here do the login request with the information received
         LoginResponse loginResponse = facade.login(request);
-        if(loginResponse.getMessage() != null || loginResponse == null){
-            //there was an error
-            System.out.println("There was a problem logging you in. ");
+        if(loginResponse.getMessage() != null){
+            System.out.println("There was a problem logging you in: " + loginResponse.getMessage());
         } else {
-            //it was successful
             System.out.println("Logged in successfully.");
             //postLogin();
         }
     }
 
-    private static void wrongInput(String expectedInput) {
-        System.out.println("Invalid input. Please enter the following input: " + expectedInput);
+    private static void postLogin() {
+        System.out.println("Your are now logged in.");
+        boolean continueLoop = true;
+        do {
+            displayPostLoginOptions();
+            askForInput("Enter a number from 1 - 6");
+            switch (inputNext()){
+                case "1":
+                    preLoginHelp();
+                    break;
+                case "2":
+                    login();
+                    break;
+                case "3":
+                    register();
+                    break;
+                case "4":
+                    System.out.println("Thank you for playing!");
+                    continueLoop = false;
+                    break;
+                default:
+                    wrongInput("numbers from 1 - 4");
+                    break;
+            }
+        } while (continueLoop);
     }
 
-    private static String inputNext() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.next();
-    }
-
-    private static String inputNextLine() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
-    }
 
 }

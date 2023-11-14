@@ -1,13 +1,9 @@
 package net;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import com.google.gson.Gson;
-import responses.LoginResponse;
 
 public class ClientCommunicator {
 
@@ -20,7 +16,7 @@ public class ClientCommunicator {
 //        GAME,
 //    }
 
-    public LoginResponse post(String jsonString, String urlPath) throws Exception {
+    public InputStreamReader post(String jsonString, String urlPath) throws Exception {
         String fullURL= "http://localhost:8080/" + urlPath;
         URL url = new URL(fullURL);
 
@@ -51,16 +47,15 @@ public class ClientCommunicator {
             InputStream responseBody = connection.getInputStream();
             // Read response body from InputStream ...
             InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
-            LoginResponse response = new Gson().fromJson(inputStreamReader, LoginResponse.class);
-            return response;
+            //LoginResponse response = new Gson().fromJson(inputStreamReader, LoginResponse.class);
+            return inputStreamReader;
         } else {
             // SERVER RETURNED AN HTTP ERROR
-            System.out.println("There was an error.");
             InputStream responseBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
             InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
-            LoginResponse response = new Gson().fromJson(inputStreamReader, LoginResponse.class);
-            return response;
+//            LoginResponse response = new Gson().fromJson(inputStreamReader, LoginResponse.class);
+            return inputStreamReader;
         }
     }
 }
