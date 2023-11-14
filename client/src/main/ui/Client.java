@@ -2,12 +2,31 @@ import net.ServerFacade;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.LoginResponse;
+import responses.LogoutResponse;
 import responses.RegisterResponse;
 
 import java.util.Scanner;
 public class Client {
     private Scanner scanner = new Scanner(System.in);
     private static ServerFacade facade = new ServerFacade();
+    private static String usernameLoggedIn = "";
+    private static String authTokenLoggedIn = "";
+
+    public String getUsernameLoggedIn() {
+        return usernameLoggedIn;
+    }
+
+    public static void setUsernameLoggedIn(String user) {
+        usernameLoggedIn = user;
+    }
+
+    public String getAuthTokenLoggedIn() {
+        return authTokenLoggedIn;
+    }
+
+    public static void setAuthTokenLoggedIn(String token) {
+        authTokenLoggedIn = token;
+    }
 
     public static void main(String[] args) {
         preLogin();
@@ -89,6 +108,8 @@ public class Client {
             System.out.println("There was a problem registering you: " + response.getMessage());
         } else {
             System.out.println("Registered successfully.");
+            setUsernameLoggedIn(response.getUsername());
+            setAuthTokenLoggedIn(response.getAuthToken());
             postLogin();
         }
 
@@ -120,7 +141,7 @@ public class Client {
                     postLoginHelp();
                     break;
                 case "2":
-                    //logout();
+                    logout();
                     continueLoop = false;
                     break;
                 case "3":
@@ -155,6 +176,16 @@ public class Client {
     private static void postLoginHelp() {
         System.out.println("Type in your keyboard the numbers 1,2,3,4,5 or 6 and then press 'Enter' to select" +
                 " that option. ");
+    }
+
+    private static void logout() {
+        LogoutResponse response = facade.logout(authTokenLoggedIn);
+        if(response.getMessage() != null){
+            System.out.println("There was a problem logging you out: " + response.getMessage());
+        } else {
+            System.out.println("Logged out successfully.");
+        }
+
     }
 
 

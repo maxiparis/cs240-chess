@@ -23,7 +23,6 @@ public class LogoutHandler {
     public Object handleRequest(Request request, Response response){
         Gson gson = new Gson();
         String authorizationToken = request.headers("Authorization");
-//        System.out.println("authorizationToken = " + authorizationToken);
 
         LogoutService service = new LogoutService();
         LogoutResponse result = service.logout(authorizationToken);

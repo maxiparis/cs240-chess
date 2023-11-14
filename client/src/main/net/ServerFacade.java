@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.LoginResponse;
+import responses.LogoutResponse;
 import responses.RegisterResponse;
 
 import java.io.InputStreamReader;
@@ -32,6 +33,18 @@ public class ServerFacade {
             return response;
         } catch (Exception e) {
             RegisterResponse response = new RegisterResponse(e.getMessage(), null, null);
+            return response;
+        }
+    }
+
+    public LogoutResponse logout(String authTokenLoggedIn) {
+        //should I conver the authToken to json?? or should I just pass it as a string?
+        try {
+            InputStreamReader jsonResponse = communicator.delete(authTokenLoggedIn, "session");
+            LogoutResponse response = new Gson().fromJson(jsonResponse, LogoutResponse.class);
+            return response;
+        } catch (Exception e) {
+            LogoutResponse response = new LogoutResponse(e.getMessage());
             return response;
         }
     }

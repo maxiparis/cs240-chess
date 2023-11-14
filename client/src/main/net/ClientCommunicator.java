@@ -3,6 +3,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ClientCommunicator {
@@ -55,6 +56,37 @@ public class ClientCommunicator {
             // Read and process error response body from InputStream ...
             InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
 //            LoginResponse response = new Gson().fromJson(inputStreamReader, LoginResponse.class);
+            return inputStreamReader;
+        }
+    }
+
+    public InputStreamReader delete(String authTokenLoggedIn, String urlPath) throws Exception {
+        String fullURL= "http://localhost:8080/" + urlPath;
+        URL url = new URL(fullURL);
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("DELETE");
+        connection.setDoOutput(true);
+
+        // Set HTTP request headers, if necessary
+        connection.setRequestProperty("Authorization", authTokenLoggedIn);
+
+        // connection.addRequestProperty("Accept", "text/html");
+
+        connection.connect();
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            InputStream responseBody = connection.getInputStream();
+            // Read response body from InputStream ...
+            InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
+            return inputStreamReader;
+        } else {
+            // SERVER RETURNED AN HTTP ERROR
+            InputStream responseBody = connection.getErrorStream();
+            // Read and process error response body from InputStream ...
+            InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
             return inputStreamReader;
         }
     }
