@@ -17,7 +17,7 @@ public class ClientCommunicator {
 //        GAME,
 //    }
 
-    public InputStreamReader post(String jsonString, String urlPath) throws Exception {
+    public InputStreamReader post(String jsonString, String authTokenLoggedIn, String urlPath) throws Exception {
         String fullURL= "http://localhost:8080/" + urlPath;
         URL url = new URL(fullURL);
 
@@ -28,8 +28,9 @@ public class ClientCommunicator {
         connection.setDoOutput(true);
 
         // Set HTTP request headers, if necessary
-        // connection.addRequestProperty("Accept", "text/html");
-
+        if(authTokenLoggedIn != null){
+            connection.setRequestProperty("Authorization", authTokenLoggedIn);
+        }
         connection.connect();
 
         try(OutputStream requestBody = connection.getOutputStream();) {
@@ -38,24 +39,15 @@ public class ClientCommunicator {
         }
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            // Get HTTP response headers, if necessary
-            // Map<String, List<String>> headers = connection.getHeaderFields();
-
-            // OR
-
-            //connection.getHeaderField("Content-Length");
-
             InputStream responseBody = connection.getInputStream();
             // Read response body from InputStream ...
             InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
-            //LoginResponse response = new Gson().fromJson(inputStreamReader, LoginResponse.class);
             return inputStreamReader;
         } else {
             // SERVER RETURNED AN HTTP ERROR
             InputStream responseBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
             InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
-//            LoginResponse response = new Gson().fromJson(inputStreamReader, LoginResponse.class);
             return inputStreamReader;
         }
     }
@@ -72,9 +64,6 @@ public class ClientCommunicator {
 
         // Set HTTP request headers, if necessary
         connection.setRequestProperty("Authorization", authTokenLoggedIn);
-
-        // connection.addRequestProperty("Accept", "text/html");
-
         connection.connect();
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {

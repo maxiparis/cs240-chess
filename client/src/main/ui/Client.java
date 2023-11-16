@@ -1,6 +1,8 @@
 import net.ServerFacade;
+import requests.CreateGameRequest;
 import requests.LoginRequest;
 import requests.RegisterRequest;
+import responses.CreateGameResponse;
 import responses.LoginResponse;
 import responses.LogoutResponse;
 import responses.RegisterResponse;
@@ -151,7 +153,7 @@ public class Client {
                     continueLoop = false;
                     break;
                 case "3":
-                    //createGame();
+                    createGame();
                     break;
                 case "4":
                     //listGames();
@@ -168,6 +170,7 @@ public class Client {
             }
         } while (continueLoop);
     }
+
 
     private static void displayPostLoginOptions() {
         System.out.println("Post-Login Menu " +
@@ -192,6 +195,19 @@ public class Client {
             printAlertMessage("Logged out successfully.");
         }
 
+    }
+
+    private static void createGame() {
+        String gameName = getInputWithPrompt("Enter the name for your new game");
+        //i need to pass the authToken somehow
+        CreateGameRequest request = new CreateGameRequest(gameName);
+        CreateGameResponse response = facade.createGame(request, authTokenLoggedIn);
+        if(response.getMessage() != null){
+            printAlertMessage("There was a problem creating a new game: " + response.getMessage());
+        } else {
+            printAlertMessage("Game " + gameName + " created successfully.");
+            //take the user to the game play
+        }
     }
 
 
