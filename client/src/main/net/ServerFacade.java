@@ -6,7 +6,9 @@ import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.*;
 
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.ExecutionException;
 
 public class ServerFacade {
     private ClientCommunicator communicator = new ClientCommunicator();
@@ -59,5 +61,15 @@ public class ServerFacade {
             return response;
         }
 
+    }
+
+    public ListGamesResponse listGames(String tokenToAuthorize) {
+        try {
+            InputStreamReader jsonResponse = communicator.get(tokenToAuthorize, "game");
+            ListGamesResponse response = new Gson().fromJson(jsonResponse, ListGamesResponse.class);
+            return response;
+        } catch (Exception e) {
+            return new ListGamesResponse(e.getMessage(), null);
+        }
     }
 }

@@ -1,11 +1,9 @@
+import model.Game;
 import net.ServerFacade;
 import requests.CreateGameRequest;
 import requests.LoginRequest;
 import requests.RegisterRequest;
-import responses.CreateGameResponse;
-import responses.LoginResponse;
-import responses.LogoutResponse;
-import responses.RegisterResponse;
+import responses.*;
 
 import java.util.Scanner;
 public class Client {
@@ -86,6 +84,11 @@ public class Client {
         return inputNext();
     }
 
+    private static String getInputWithPromptNextLine(String prompt) {
+        askForInput(prompt);
+        return inputNextLine();
+    }
+
     private static void askForInput(String message) {
         System.out.print(message + ": ");
     }
@@ -156,7 +159,7 @@ public class Client {
                     createGame();
                     break;
                 case "4":
-                    //listGames();
+                    listGames();
                     break;
                 case "5":
                     //joingGame();
@@ -198,8 +201,7 @@ public class Client {
     }
 
     private static void createGame() {
-        String gameName = getInputWithPrompt("Enter the name for your new game");
-        //i need to pass the authToken somehow
+        String gameName = getInputWithPromptNextLine("Enter the name for your new game");
         CreateGameRequest request = new CreateGameRequest(gameName);
         CreateGameResponse response = facade.createGame(request, authTokenLoggedIn);
         if(response.getMessage() != null){
@@ -207,6 +209,59 @@ public class Client {
         } else {
             printAlertMessage("Game " + gameName + " created successfully.");
             //take the user to the game play
+        }
+    }
+
+    private static void listGames() {
+        //Lists all the games that currently exist on the server. Calls the server list API to get all the
+        // game data, and displays the games in a numbered list, including the game name and players (not observers)
+        // in the game. The numbering for the list should be independent of the game IDs.
+        ListGamesResponse response = facade.listGames(authTokenLoggedIn);
+
+        if(response.getMessage() != null){
+            printAlertMessage("There was a problem listing all the games: " + response.getMessage());
+        } else {
+            printAlertMessage("Available games: ");
+
+            int column1Width = 5;
+            int column2Width = 20;
+            int column3Width = 20;
+            int column4Width = 20;
+
+            System.out.println(
+                    String.format("%-" + column1Width + "s%-"+ column2Width + "s%-"+ column3Width + "s%-"+ column4Width + "s",
+                            "#", "Game Name", "White User", "Black User")
+            );
+            System.out.println("------------------------------------------");
+
+            Game[] gamesArray = new Game[response.getGames().size()];
+            int index = 0;
+            for (Game game : response.getGames()) {
+                gamesArray[index] = game;
+                index++;
+            }
+
+            for (int i = 0; i < gamesArray.length; i++) {
+                String whiteUser = gamesArray[i].getWhiteUsername();
+                String blackUser = gamesArray[i].getBlackUsername();
+                if (whiteUser == null){
+                    whiteUser = "-";
+                }
+
+                if (blackUser == null){
+                    blackUser = "-";
+                }
+
+                System.out.println(
+                        String.format("%-" + column1Width + "d%-"+ column2Width + "s%-"+ column3Width + "s%-"+ column4Width + "s",
+                                i, gamesArray[i].getGameName(), whiteUser, blackUser)
+                );
+                //System.out.println(i + "\t" + gamesArray[i].getGameName() + "\t\t" + whiteUser + "\t\t"
+                  //      + blackUser);
+            }
+            //ask if the user wants to join a game
+
+
         }
     }
 

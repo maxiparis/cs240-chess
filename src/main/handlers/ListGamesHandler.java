@@ -24,7 +24,6 @@ public class ListGamesHandler {
 
         String authorizationToken = request.headers("Authorization");
 
-
         ListGamesService service = new ListGamesService();
         ListGamesResponse result = service.listGames(authorizationToken);
 
