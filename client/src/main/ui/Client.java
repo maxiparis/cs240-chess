@@ -1,6 +1,8 @@
+import chess.ChessGame;
 import model.Game;
 import net.ServerFacade;
 import requests.CreateGameRequest;
+import requests.JoinGameRequest;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.*;
@@ -11,6 +13,7 @@ public class Client {
     private static ServerFacade facade = new ServerFacade();
     private static String usernameLoggedIn = "";
     private static String authTokenLoggedIn = "";
+    private static Game[] gamesFromDB;
 
     public String getUsernameLoggedIn() {
         return usernameLoggedIn;
@@ -162,7 +165,7 @@ public class Client {
                     listGames();
                     break;
                 case "5":
-                    //joingGame();
+                    joinGame();
                     break;
                 case "6":
                     //joinObserver();
@@ -213,37 +216,25 @@ public class Client {
     }
 
     private static void listGames() {
-        //Lists all the games that currently exist on the server. Calls the server list API to get all the
-        // game data, and displays the games in a numbered list, including the game name and players (not observers)
-        // in the game. The numbering for the list should be independent of the game IDs.
         ListGamesResponse response = facade.listGames(authTokenLoggedIn);
 
         if(response.getMessage() != null){
             printAlertMessage("There was a problem listing all the games: " + response.getMessage());
         } else {
             printAlertMessage("Available games: ");
+            System.out.printf("%-5s %-20s %-20s %-20s%n", "#", "Game Name", "White User", "Black User");
+            System.out.println("---------------------------------------------------------");
 
-            int column1Width = 5;
-            int column2Width = 20;
-            int column3Width = 20;
-            int column4Width = 20;
-
-            System.out.println(
-                    String.format("%-" + column1Width + "s%-"+ column2Width + "s%-"+ column3Width + "s%-"+ column4Width + "s",
-                            "#", "Game Name", "White User", "Black User")
-            );
-            System.out.println("------------------------------------------");
-
-            Game[] gamesArray = new Game[response.getGames().size()];
+            gamesFromDB = new Game[response.getGames().size()];
             int index = 0;
             for (Game game : response.getGames()) {
-                gamesArray[index] = game;
+                gamesFromDB[index] = game;
                 index++;
             }
 
-            for (int i = 0; i < gamesArray.length; i++) {
-                String whiteUser = gamesArray[i].getWhiteUsername();
-                String blackUser = gamesArray[i].getBlackUsername();
+            for (int i = 0; i < gamesFromDB.length; i++) {
+                String whiteUser = gamesFromDB[i].getWhiteUsername();
+                String blackUser = gamesFromDB[i].getBlackUsername();
                 if (whiteUser == null){
                     whiteUser = "-";
                 }
@@ -252,18 +243,68 @@ public class Client {
                     blackUser = "-";
                 }
 
-                System.out.println(
-                        String.format("%-" + column1Width + "d%-"+ column2Width + "s%-"+ column3Width + "s%-"+ column4Width + "s",
-                                i, gamesArray[i].getGameName(), whiteUser, blackUser)
-                );
-                //System.out.println(i + "\t" + gamesArray[i].getGameName() + "\t\t" + whiteUser + "\t\t"
-                  //      + blackUser);
+
+                System.out.printf("%-5s %-20s %-20s %-20s%n", i, gamesFromDB[i].getGameName(), whiteUser, blackUser);
             }
-            //ask if the user wants to join a game
-
-
+            System.out.println("");
         }
     }
 
 
+
+    private static void joinGame() {
+    /*Allows the user to specify which game they want to join and what color they want to play.
+    They should be able to enter the number of the desired game. Your client will need to keep track of which
+    number corresponds to which game from the last time it listed the games. Calls the server join API to join
+    the user to the game.
+     */
+        listGames();
+        int gameID = 0;
+        ChessGame.TeamColor color = null;
+
+        boolean gameNumberContinue = true;
+        while (gameNumberContinue) {
+            String gameNumberChosen = getInputWithPrompt("Which game do you want to join? (Enter game number or q " +
+                    "to go to previous menu)");
+
+            if (gameNumberChosen.equals("q")){
+                return;
+            }
+
+            try {
+                //try to convert to int
+                //try to get the gameID from the gamesFromDB
+                int indexOfGameChosen = Integer.parseInt(gameNumberChosen);
+                gameID = gamesFromDB[indexOfGameChosen].getGameID();
+                gameNumberContinue = false;
+            } catch (Exception e){
+                printAlertMessage("Invalid input. Error: " + e.getMessage());
+            }
+        }
+
+        boolean gameTeamContinue = true;
+        while (gameTeamContinue){
+            String colorChosen = getInputWithPrompt("What color would you like to be? (Enter 1 for white or 0 for black)");
+            if (colorChosen.equals("1")) {
+                color = ChessGame.TeamColor.WHITE;
+                gameTeamContinue = false;
+            } else if (colorChosen.equals("0")){
+                color = ChessGame.TeamColor.BLACK;
+                gameTeamContinue = false;
+            } else {
+                wrongInput("1 for white or 0 for black");
+            }
+        }
+
+        JoinGameRequest request = new JoinGameRequest(color, gameID);
+        JoinGameResponse response = facade.joinGame(request, authTokenLoggedIn);
+
+        if(response.getMessage() != null){
+            printAlertMessage("There was a problem joining the game: " + response.getMessage());
+        } else {
+            printAlertMessage("You joined the game successfully.");
+            //take the user to the game play
+        }
+
+    }
 }

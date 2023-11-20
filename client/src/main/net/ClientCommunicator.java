@@ -108,4 +108,33 @@ public class ClientCommunicator {
             return inputStreamReader;
         }
     }
+
+    public InputStreamReader put(String jsonString, String authTokenLoggedIn, String urlPath) throws Exception {
+        String fullURL= "http://localhost:8080/" + urlPath;
+        URL url = new URL(fullURL);
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("PUT");
+        connection.setDoOutput(true);
+
+
+        setHeaderAuthorization(authTokenLoggedIn, connection);
+        connection.connect();
+
+        try(OutputStream requestBody = connection.getOutputStream();) {
+            requestBody.write(jsonString.getBytes());
+        }
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            InputStream responseBody = connection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
+            return inputStreamReader;
+        } else { //error code returned
+            InputStream responseBody = connection.getErrorStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
+            return inputStreamReader;
+        }
+    }
 }
