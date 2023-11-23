@@ -38,7 +38,6 @@ public class ServerFacade {
     }
 
     public LogoutResponse logout(String authTokenLoggedIn) {
-        //should I conver the authToken to json?? or should I just pass it as a string?
         try {
             InputStreamReader jsonResponse = communicator.delete(authTokenLoggedIn, "session");
             LogoutResponse response = new Gson().fromJson(jsonResponse, LogoutResponse.class);

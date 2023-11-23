@@ -168,7 +168,7 @@ public class Client {
                     joinGame();
                     break;
                 case "6":
-                    //joinObserver();
+                    joinAsObserver();
                     break;
                 default:
                     wrongInput("numbers from 1 - 4");
@@ -253,11 +253,6 @@ public class Client {
 
 
     private static void joinGame() {
-    /*Allows the user to specify which game they want to join and what color they want to play.
-    They should be able to enter the number of the desired game. Your client will need to keep track of which
-    number corresponds to which game from the last time it listed the games. Calls the server join API to join
-    the user to the game.
-     */
         listGames();
         int gameID = 0;
         ChessGame.TeamColor color = null;
@@ -306,5 +301,40 @@ public class Client {
             //take the user to the game play
         }
 
+    }
+
+    private static void joinAsObserver() {
+        listGames();
+        int gameID = 0;
+
+        boolean gameNumberContinue = true;
+        while (gameNumberContinue) {
+            String gameNumberChosen = getInputWithPrompt("Which game do you want to join? (Enter game number or q " +
+                    "to go to previous menu)");
+
+            if (gameNumberChosen.equals("q")){
+                return;
+            }
+
+            try {
+                //try to convert to int
+                //try to get the gameID from the gamesFromDB
+                int indexOfGameChosen = Integer.parseInt(gameNumberChosen);
+                gameID = gamesFromDB[indexOfGameChosen].getGameID();
+                gameNumberContinue = false;
+            } catch (Exception e){
+                printAlertMessage("Invalid input. Error: " + e.getMessage());
+            }
+        }
+
+        JoinGameRequest request = new JoinGameRequest(null, gameID);
+        JoinGameResponse response = facade.joinGame(request, authTokenLoggedIn);
+
+        if(response.getMessage() != null){
+            printAlertMessage("There was a problem joining (as observer) the game: " + response.getMessage());
+        } else {
+            printAlertMessage("You joined the game as observer successfully.");
+            //take the user to the game play
+        }
     }
 }

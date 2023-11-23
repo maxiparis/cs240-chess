@@ -10,15 +10,6 @@ import java.sql.ResultSet;
 
 public class ClientCommunicator {
 
-//TODO: should I do an enum? The problem is that later I will have to do a switch statement to concatenate
-    //the url (i am taking the url directly from the method parameters)
-//    public enum urlPaths {
-//        SESSION,
-//        DB,
-//        USER,
-//        GAME,
-//    }
-
     public InputStreamReader post(String jsonString, String authTokenLoggedIn, String urlPath) throws Exception {
         String fullURL= "http://localhost:8080/" + urlPath;
         URL url = new URL(fullURL);
@@ -119,7 +110,6 @@ public class ClientCommunicator {
         connection.setRequestMethod("PUT");
         connection.setDoOutput(true);
 
-
         setHeaderAuthorization(authTokenLoggedIn, connection);
         connection.connect();
 
@@ -131,7 +121,7 @@ public class ClientCommunicator {
             InputStream responseBody = connection.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
             return inputStreamReader;
-        } else { //error code returned
+        } else {
             InputStream responseBody = connection.getErrorStream();
             InputStreamReader inputStreamReader = new InputStreamReader(responseBody);
             return inputStreamReader;
