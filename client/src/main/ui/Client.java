@@ -1,3 +1,4 @@
+import chess.ChessBoardImpl;
 import chess.ChessGame;
 import model.Game;
 import net.ServerFacade;
@@ -6,6 +7,7 @@ import requests.JoinGameRequest;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.*;
+import ui.BoardDrawer;
 
 import java.util.Scanner;
 public class Client {
@@ -14,6 +16,7 @@ public class Client {
     private static String usernameLoggedIn = "";
     private static String authTokenLoggedIn = "";
     private static Game[] gamesFromDB;
+    private static ChessGame currentGame = null;
 
     public String getUsernameLoggedIn() {
         return usernameLoggedIn;
@@ -267,10 +270,9 @@ public class Client {
             }
 
             try {
-                //try to convert to int
-                //try to get the gameID from the gamesFromDB
                 int indexOfGameChosen = Integer.parseInt(gameNumberChosen);
                 gameID = gamesFromDB[indexOfGameChosen].getGameID();
+                currentGame = gamesFromDB[indexOfGameChosen].getGame();
                 gameNumberContinue = false;
             } catch (Exception e){
                 printAlertMessage("Invalid input. Error: " + e.getMessage());
@@ -298,7 +300,7 @@ public class Client {
             printAlertMessage("There was a problem joining the game: " + response.getMessage());
         } else {
             printAlertMessage("You joined the game successfully.");
-            //take the user to the game play
+            gamePlay();
         }
 
     }
@@ -321,6 +323,7 @@ public class Client {
                 //try to get the gameID from the gamesFromDB
                 int indexOfGameChosen = Integer.parseInt(gameNumberChosen);
                 gameID = gamesFromDB[indexOfGameChosen].getGameID();
+                currentGame = gamesFromDB[indexOfGameChosen].getGame();
                 gameNumberContinue = false;
             } catch (Exception e){
                 printAlertMessage("Invalid input. Error: " + e.getMessage());
@@ -334,7 +337,19 @@ public class Client {
             printAlertMessage("There was a problem joining (as observer) the game: " + response.getMessage());
         } else {
             printAlertMessage("You joined the game as observer successfully.");
-            //take the user to the game play
+            gamePlay();
         }
     }
+
+    private static void gamePlay() {
+        printBoardForWhite();
+        //printBoardForBlack();
+    }
+
+    private static void printBoardForWhite() {
+        currentGame.getBoard().resetBoard();
+        BoardDrawer drawer = new BoardDrawer((ChessBoardImpl) currentGame.getBoard());
+        drawer.drawBoardWhite();
+    }
+
 }
