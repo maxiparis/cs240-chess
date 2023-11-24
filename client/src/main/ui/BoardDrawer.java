@@ -23,13 +23,22 @@ public class BoardDrawer {
          private static final String PAWN = " P ";
          private static final String EMPTY = "   ";
 
-         private enum SquareColor{
-             LIGHT,
-             DARK
-         }
 
+
+    private enum SquareColor{
+             LIGHT,
+             DARK;
+    }
     public BoardDrawer(ChessBoardImpl board) {
         this.board = board;
+    }
+
+    public void drawBoardBlack() {
+        PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        out.print(ERASE_SCREEN);
+        drawHeadersBlack(out);
+        drawTableBlack(out);
+        drawHeadersBlack(out);
     }
 
     public void drawBoardWhite() {
@@ -38,6 +47,45 @@ public class BoardDrawer {
         drawHeadersWhite(out);
         drawTableWhite(out);
         drawHeadersWhite(out);
+    }
+
+    private void drawHeadersBlack(PrintStream out) {
+        setGrey(out);
+        for (int col = 0; col < BOARD_HEADERS_COLUMNS_IN_SQUARES; col++) {
+            switch (col){
+                case 1:
+                    drawHeaderSquare(out, " h ");
+                    break;
+                case 2:
+                    drawHeaderSquare(out, " g ");
+                    break;
+                case 3:
+                    drawHeaderSquare(out, " f ");
+                    break;
+                case 4:
+                    drawHeaderSquare(out, " e ");
+                    break;
+                case 5:
+                    drawHeaderSquare(out, " d ");
+                    break;
+                case 6:
+                    drawHeaderSquare(out, " c ");
+                    break;
+                case 7:
+                    drawHeaderSquare(out, " b ");
+                    break;
+                case 8:
+                    drawHeaderSquare(out, " a ");
+                    break;
+                default:
+                    drawHeaderSquare(out, EMPTY);
+                    break;
+            }
+            if(col == BOARD_HEADERS_COLUMNS_IN_SQUARES-1){
+                setBlack(out);
+                out.println();
+            }
+        }
     }
 
     private void drawHeadersWhite(PrintStream out) {
@@ -99,6 +147,21 @@ public class BoardDrawer {
         }
     }
 
+    private void drawTableBlack(PrintStream out) {
+        {
+            for (int row = 0; row < TABLE_ROWS_IN_SQUARES; row++) {
+                drawHeaderSquare(out, " " + (row+1) + " ");
+                ChessPiece[] chessPiecesRow = board.getBoardTable()[row]; //if row = 8 then get board.getBoardTable()[7]
+                SquareColor firstRowColor =
+                        ((row+1) == 8 || (row+1) == 6 || (row+1) == 4 || (row+1) == 2) ? SquareColor.DARK : SquareColor.LIGHT;
+                drawTableRowReversed(out, chessPiecesRow, firstRowColor);
+                drawHeaderSquare(out, " " + (row+1) + " ");
+                setBlack(out);
+                out.println();
+            }
+        }
+    }
+
     private void drawTableRow(PrintStream out, ChessPiece[] chessPiecesRow, SquareColor firstRowColor) {
 
         boolean nextBGColorIsLight = (firstRowColor.equals(SquareColor.LIGHT));
@@ -106,6 +169,45 @@ public class BoardDrawer {
         for (int column = 0; column < TABLE_COLUMNS_IN_SQUARES; column++) {
             ChessPiece piece = chessPiecesRow[column];
                 SquareColor teamColor = (nextBGColorIsLight) ? SquareColor.LIGHT : SquareColor.DARK;
+
+            if(piece == null){
+                drawTableSquare(out, EMPTY, ChessGame.TeamColor.WHITE, teamColor ); //team color does not matter
+                nextBGColorIsLight = !nextBGColorIsLight; //changing the color
+                continue;
+            }
+            switch (piece.getPieceType()){
+                case KING:
+                    drawTableSquare(out, KING, piece.getTeamColor(), teamColor );
+                    break;
+                case QUEEN:
+                    drawTableSquare(out, QUEEN, piece.getTeamColor(), teamColor );
+                    break;
+                case BISHOP:
+                    drawTableSquare(out, BISHOP, piece.getTeamColor(), teamColor );
+                    break;
+                case KNIGHT:
+                    drawTableSquare(out, KNIGHT, piece.getTeamColor(), teamColor );
+                    break;
+                case ROOK:
+                    drawTableSquare(out, ROOK, piece.getTeamColor(), teamColor );
+                    break;
+                case PAWN:
+                    drawTableSquare(out, PAWN, piece.getTeamColor(), teamColor );
+                    break;
+                default:
+                    break;
+            }
+            nextBGColorIsLight = !nextBGColorIsLight; //changing the color
+        }
+    }
+
+    private void drawTableRowReversed(PrintStream out, ChessPiece[] chessPiecesRow, SquareColor firstRowColor) {
+
+        boolean nextBGColorIsLight = (firstRowColor.equals(SquareColor.LIGHT));
+
+        for (int column = TABLE_COLUMNS_IN_SQUARES; column > 0; column--) {
+            ChessPiece piece = chessPiecesRow[column-1];
+            SquareColor teamColor = (nextBGColorIsLight) ? SquareColor.LIGHT : SquareColor.DARK;
 
             if(piece == null){
                 drawTableSquare(out, EMPTY, ChessGame.TeamColor.WHITE, teamColor ); //team color does not matter
