@@ -42,35 +42,34 @@ public class BoardDrawer {
 
     private void drawHeadersWhite(PrintStream out) {
         setGrey(out);
-
         for (int col = 0; col < BOARD_HEADERS_COLUMNS_IN_SQUARES; col++) {
                switch (col){
                    case 1:
-                       printHeaderSquare(out, " a ");
+                       drawHeaderSquare(out, " a ");
                        break;
                    case 2:
-                       printHeaderSquare(out, " b ");
+                       drawHeaderSquare(out, " b ");
                        break;
                    case 3:
-                       printHeaderSquare(out, " c ");
+                       drawHeaderSquare(out, " c ");
                        break;
                    case 4:
-                       printHeaderSquare(out, " d ");
+                       drawHeaderSquare(out, " d ");
                        break;
                    case 5:
-                       printHeaderSquare(out, " e ");
+                       drawHeaderSquare(out, " e ");
                        break;
                    case 6:
-                       printHeaderSquare(out, " f ");
+                       drawHeaderSquare(out, " f ");
                        break;
                    case 7:
-                       printHeaderSquare(out, " g ");
+                       drawHeaderSquare(out, " g ");
                        break;
                    case 8:
-                       printHeaderSquare(out, " h ");
+                       drawHeaderSquare(out, " h ");
                        break;
                    default:
-                       printHeaderSquare(out, EMPTY);
+                       drawHeaderSquare(out, EMPTY);
                        break;
                }
                if(col == BOARD_HEADERS_COLUMNS_IN_SQUARES-1){
@@ -80,20 +79,21 @@ public class BoardDrawer {
         }
     }
 
-    private void printHeaderSquare(PrintStream out, String toPrint) {
+    private void drawHeaderSquare(PrintStream out, String toPrint) {
         out.print(SET_BG_COLOR_LIGHT_GREY);
         out.print(SET_TEXT_COLOR_BLACK);
+        out.print(SET_TEXT_BOLD);
         out.print(toPrint);
     }
 
     private void drawTableWhite(PrintStream out) {
         for (int row = TABLE_ROWS_IN_SQUARES; row > 0; row--) {
-            printHeaderSquare(out, " " + row + " ");
+            drawHeaderSquare(out, " " + row + " ");
             ChessPiece[] chessPiecesRow = board.getBoardTable()[row-1]; //if row = 8 then get board.getBoardTable()[7]
             SquareColor firstRowColor =
                     (row == 8 || row == 6 || row == 4 || row == 2 || row == 8) ? SquareColor.LIGHT : SquareColor.DARK;
             drawTableRow(out, chessPiecesRow, firstRowColor);
-            printHeaderSquare(out, " " + row + " ");
+            drawHeaderSquare(out, " " + row + " ");
             setBlack(out);
             out.println();
         }
@@ -138,27 +138,19 @@ public class BoardDrawer {
         }
     }
 
-    private void drawDarkSquare(PrintStream out, String toPrint, ChessGame.TeamColor teamColor) {
-        out.print(SET_BG_COLOR_DARK_GREEN); //bg
-        if(teamColor.equals(ChessGame.TeamColor.WHITE)){
-            out.print(SET_TEXT_COLOR_WHITE); //foreground
-        } else {
-            out.print(SET_TEXT_COLOR_BLACK); //foreground
-        }
-        out.print(toPrint); //text to print
-    }
-
     private void drawTableSquare(PrintStream out, String toPrint, ChessGame.TeamColor teamColor, SquareColor bgColor) {
         if (bgColor.equals(SquareColor.LIGHT)) { //bg
-            out.print(SET_BG_COLOR_GREEN);
+            out.print(SET_BG_COLOR_LIGHT_GREEN_RGB);
         } else { //dark
-            out.print(SET_BG_COLOR_DARK_GREEN);
+            out.print(SET_BG_COLOR_DARK_GREEN_RGB);
         }
 
         if(teamColor.equals(ChessGame.TeamColor.WHITE)){ //fg
-            out.print(SET_TEXT_COLOR_WHITE);
+            out.print(SET_TEXT_COLOR_WHITE_RGB);
+            out.print(SET_TEXT_BOLD);
         } else {
             out.print(SET_TEXT_COLOR_BLACK);
+            out.print(SET_TEXT_BOLD);
         }
         out.print(toPrint); //text to print
     }
