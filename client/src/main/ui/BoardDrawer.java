@@ -39,6 +39,8 @@ public class BoardDrawer {
         drawHeadersBlack(out);
         drawTableBlack(out);
         drawHeadersBlack(out);
+        resetColors(out);
+        out.println();
     }
 
     public void drawBoardWhite() {
@@ -47,6 +49,8 @@ public class BoardDrawer {
         drawHeadersWhite(out);
         drawTableWhite(out);
         drawHeadersWhite(out);
+        resetColors(out);
+        out.println();
     }
 
     private void drawHeadersBlack(PrintStream out) {
@@ -82,7 +86,7 @@ public class BoardDrawer {
                     break;
             }
             if(col == BOARD_HEADERS_COLUMNS_IN_SQUARES-1){
-                setBlack(out);
+                resetColors(out);
                 out.println();
             }
         }
@@ -121,7 +125,7 @@ public class BoardDrawer {
                        break;
                }
                if(col == BOARD_HEADERS_COLUMNS_IN_SQUARES-1){
-                   setBlack(out);
+                   resetColors(out);
                    out.println();
                }
         }
@@ -142,7 +146,7 @@ public class BoardDrawer {
                     (row == 8 || row == 6 || row == 4 || row == 2 || row == 8) ? SquareColor.LIGHT : SquareColor.DARK;
             drawTableRow(out, chessPiecesRow, firstRowColor);
             drawHeaderSquare(out, " " + row + " ");
-            setBlack(out);
+            resetColors(out);
             out.println();
         }
     }
@@ -156,7 +160,7 @@ public class BoardDrawer {
                         ((row+1) == 8 || (row+1) == 6 || (row+1) == 4 || (row+1) == 2) ? SquareColor.DARK : SquareColor.LIGHT;
                 drawTableRowReversed(out, chessPiecesRow, firstRowColor);
                 drawHeaderSquare(out, " " + (row+1) + " ");
-                setBlack(out);
+                resetColors(out);
                 out.println();
             }
         }
@@ -266,5 +270,10 @@ public class BoardDrawer {
     private void setBlack(PrintStream out) {
         out.print(SET_BG_COLOR_BLACK);
         out.print(SET_TEXT_COLOR_BLACK);
+    }
+
+    private static void resetColors(PrintStream out) {
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
     }
 }

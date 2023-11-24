@@ -37,7 +37,7 @@ public class EscapeSequences {
     public static final String SET_TEXT_COLOR_BLUE = SET_TEXT_COLOR + "12m";
     public static final String SET_TEXT_COLOR_MAGENTA = SET_TEXT_COLOR + "5m";
     public static final String SET_TEXT_COLOR_WHITE = SET_TEXT_COLOR + "15m";
-    public static final String RESET_TEXT_COLOR = SET_TEXT_COLOR + "0m";
+    public static final String RESET_TEXT_COLOR = UNICODE_ESCAPE + "[0m";
 
     public static final String SET_BG_COLOR_BLACK = SET_BG_COLOR + "0m";
     public static final String SET_BG_COLOR_LIGHT_GREY = SET_BG_COLOR + "242m";
@@ -49,15 +49,13 @@ public class EscapeSequences {
     public static final String SET_BG_COLOR_BLUE = SET_BG_COLOR + "12m";
     public static final String SET_BG_COLOR_MAGENTA = SET_BG_COLOR + "5m";
     public static final String SET_BG_COLOR_WHITE = SET_BG_COLOR + "15m";
-    public static final String RESET_BG_COLOR = SET_BG_COLOR + "0m";
+    public static final String RESET_BG_COLOR = UNICODE_ESCAPE + "[0m";
 
-    public static final String SET_BG_COLOR_LIGHT_GREEN_RGB = SET_BG_COLOR_RGB + "173;189;143m"; //TODO
-//    public static final String SET_BG_COLOR_LIGHT_GREEN_RGB = SET_BG_COLOR_RGB + "125;137;103m"; //TODO
-//    public static final String SET_BG_COLOR_LIGHT_GREEN_RGB = SET_BG_COLOR_RGB + "186;202;68m"; //TODO
 
-//    public static final String SET_BG_COLOR_DARK_GREEN_RGB = SET_BG_COLOR_RGB + "111;143;114m"; //TODO
-    public static final String SET_BG_COLOR_DARK_GREEN_RGB = SET_BG_COLOR_RGB + "118;150;86m"; //TODO
-    public static final String SET_TEXT_COLOR_WHITE_RGB = SET_TEXT_COLOR_RGB + "255;255;255m"; //TODO
+    //RGB
+    public static final String SET_BG_COLOR_LIGHT_GREEN_RGB = SET_BG_COLOR_RGB + "173;189;143m";
+    public static final String SET_BG_COLOR_DARK_GREEN_RGB = SET_BG_COLOR_RGB + "118;150;86m";
+    public static final String SET_TEXT_COLOR_WHITE_RGB = SET_TEXT_COLOR_RGB + "255;255;255m";
 
     public static final String WHITE_KING = " ♔ ";
     public static final String WHITE_QUEEN = " ♕ ";

@@ -350,6 +350,7 @@ public class Client {
         currentGame.getBoard().resetBoard();
         BoardDrawer drawer = new BoardDrawer((ChessBoardImpl) currentGame.getBoard());
         drawer.drawBoardWhite();
+        drawer.drawBoardBlack();
     }
 
 }
