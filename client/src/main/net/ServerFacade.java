@@ -1,11 +1,15 @@
 package net;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import requests.CreateGameRequest;
 import requests.JoinGameRequest;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.*;
+import typeAdapters.ChessGameDeserializer;
+import typeAdapters.ListGamesResponseDeserializer;
 
 import java.io.InputStreamReader;
 
@@ -64,8 +68,11 @@ public class ServerFacade {
     public ListGamesResponse listGames(String tokenToAuthorize) {
         try {
             InputStreamReader jsonResponse = communicator.get(tokenToAuthorize, "game");
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(ListGamesResponse.class, new ListGamesResponseDeserializer())
+                    .create();
 
-            ListGamesResponse response = new Gson().fromJson(jsonResponse, ListGamesResponse.class);
+            ListGamesResponse response = gson.fromJson(jsonResponse, ListGamesResponse.class);
             return response;
         } catch (Exception e) {
             return new ListGamesResponse(e.getMessage(), null);
