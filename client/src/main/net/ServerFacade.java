@@ -64,6 +64,7 @@ public class ServerFacade {
     public ListGamesResponse listGames(String tokenToAuthorize) {
         try {
             InputStreamReader jsonResponse = communicator.get(tokenToAuthorize, "game");
+
             ListGamesResponse response = new Gson().fromJson(jsonResponse, ListGamesResponse.class);
             return response;
         } catch (Exception e) {

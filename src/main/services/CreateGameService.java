@@ -27,7 +27,10 @@ public class CreateGameService extends AuthTokenValidator{
             //gameToAdd will have ID, name, and a game, but no white/black usernames;
             gameToAdd.setGameName(request.getGameName());
             gameToAdd.setGameID(0);
-            gameToAdd.setGame(new ChessGameImpl(ChessGame.TeamColor.WHITE));
+
+            ChessGameImpl game = new ChessGameImpl(ChessGame.TeamColor.WHITE);
+            game.getBoard().resetBoard();
+            gameToAdd.setGame(game);
 
             GameDAO.getInstance().insert(gameToAdd);
             int gameIDofGameJustAdded = GameDAO.getInstance().find(request.getGameName()).getGameID();

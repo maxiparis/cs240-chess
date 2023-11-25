@@ -24,8 +24,6 @@ class BoardDrawerTest {
     @Test
     void drawBoardWhite() {
         drawer.drawBoardWhite();
-        System.out.println();
-        System.out.println();
         drawer.drawBoardBlack();
         System.out.println("This is a text to test the colors after printing the board");
     }

@@ -342,12 +342,6 @@ public class Client {
     }
 
     private static void gamePlay() {
-        printBoardForWhite();
-        //printBoardForBlack();
-    }
-
-    private static void printBoardForWhite() {
-        currentGame.getBoard().resetBoard();
         BoardDrawer drawer = new BoardDrawer((ChessBoardImpl) currentGame.getBoard());
         drawer.drawBoardWhite();
         drawer.drawBoardBlack();
