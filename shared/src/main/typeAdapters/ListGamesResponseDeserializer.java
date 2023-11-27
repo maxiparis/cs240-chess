@@ -21,7 +21,16 @@ public class ListGamesResponseDeserializer implements JsonDeserializer {
         //"games": [ ... ]
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonArray gamesAsJson = jsonObject.getAsJsonArray("games");
+        if(gamesAsJson == null){
+            try {
+                JsonObject messageJson = jsonObject.getAsJsonObject("message");
+                String message = new Gson().fromJson(messageJson, String.class);
+                return new ListGamesResponse(message, null);
+            } catch (Exception e ) {
+                return new ListGamesResponse(e.getMessage(), null);
+            }
 
+        }
 
         for (JsonElement gameJson : gamesAsJson) {
             // {

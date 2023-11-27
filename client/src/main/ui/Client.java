@@ -35,6 +35,14 @@ public class Client {
     }
 
     public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            // Perform actions or cleanup logic here
+            if(!authTokenLoggedIn.equals("")){
+                System.out.println();
+                logout();
+            }
+        }));
+
         preLogin();
     }
 
@@ -201,9 +209,9 @@ public class Client {
         if(response.getMessage() != null){
             printAlertMessage("There was a problem logging you out: " + response.getMessage());
         } else {
+            authTokenLoggedIn = "";
             printAlertMessage("Logged out successfully.");
         }
-
     }
 
     private static void createGame() {
