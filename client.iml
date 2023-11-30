@@ -21,4 +21,7 @@
     <orderEntry type="library" name="slf4j.simple" level="project" />
     <orderEntry type="module" module-name="shared" />
   </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="e3cc04ff-3506-4684-8d1b-2c0b2bebe938" />
+  </component>
 </module>

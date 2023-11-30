@@ -9,7 +9,6 @@ import java.util.HashSet;
 
 
 public class ListGamesResponseDeserializer implements JsonDeserializer {
-
     @Override
     public ListGamesResponse deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
             throws JsonParseException {

@@ -182,7 +182,7 @@ public class Client {
                     joinAsObserver();
                     break;
                 default:
-                    wrongInput("numbers from 1 - 4");
+                    wrongInput("numbers from 1 - 6");
                     break;
             }
         } while (continueLoop);
@@ -350,9 +350,49 @@ public class Client {
     }
 
     private static void gamePlay() {
-        BoardDrawer drawer = new BoardDrawer((ChessBoardImpl) currentGame.getBoard());
-        drawer.drawBoardWhite();
-        drawer.drawBoardBlack();
+        boolean continueLoop = true;
+        do {
+            displayGameplayOptions();
+            askForInput("Enter a number from 1 - 6");
+            switch (inputNext()){
+                case "1":
+                    //gamePlayHelp();
+                    break;
+                case "2":
+                    //redrawChessBoard();
+                    continueLoop = false;
+                    break;
+                case "3":
+                    //leaveGame();
+                    break;
+                case "4":
+                    //makeMove();
+                    break;
+                case "5":
+                    //resignGame();
+                    break;
+                case "6":
+                    //highlightLegalMovements();
+                    break;
+                default:
+                    wrongInput("numbers from 1 - 6");
+                    break;
+            }
+        } while (continueLoop);
+
+//        BoardDrawer drawer = new BoardDrawer((ChessBoardImpl) currentGame.getBoard());
+//        drawer.drawBoardWhite();
+//        drawer.drawBoardBlack();
+    }
+
+    private static void displayGameplayOptions() {
+        System.out.println("Gameplay Menu " +
+                "\n 1. Help" +
+                "\n 2. Re-draw chess board" +
+                "\n 3. Leave" +
+                "\n 4. Make move" +
+                "\n 5. Resign" +
+                "\n 6. Highlight legal movements");
     }
 
 }

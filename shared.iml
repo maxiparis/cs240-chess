@@ -20,4 +20,7 @@
     <orderEntry type="library" name="google.code.gson" level="project" />
     <orderEntry type="library" name="junit.jupiter" level="project" />
   </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="50d08d06-ecd3-4a2f-bb38-320b94309922" />
+  </component>
 </module>

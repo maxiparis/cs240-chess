@@ -10,10 +10,8 @@ public class BoardDrawer {
     private ChessBoardImpl board;
     //define board sizes and stuff
         //example
-         private static final int SQUARE_SIZE_IN_CHAR = 3; //" R "
          private static final int TABLE_ROWS_IN_SQUARES = 8; //only the table
          private static final int TABLE_COLUMNS_IN_SQUARES = 8; //only the table
-         private static final int BOARD_HEADERS_ROWS_IN_SQUARES = 10; //board plus headers
          private static final int BOARD_HEADERS_COLUMNS_IN_SQUARES = 10; //board plus headers
          private static final String ROOK = " R ";
          private static final String KNIGHT = " N ";
@@ -152,17 +150,15 @@ public class BoardDrawer {
     }
 
     private void drawTableBlack(PrintStream out) {
-        {
-            for (int row = 0; row < TABLE_ROWS_IN_SQUARES; row++) {
-                drawHeaderSquare(out, " " + (row+1) + " ");
-                ChessPiece[] chessPiecesRow = board.getBoardTable()[row]; //if row = 8 then get board.getBoardTable()[7]
-                SquareColor firstRowColor =
-                        ((row+1) == 8 || (row+1) == 6 || (row+1) == 4 || (row+1) == 2) ? SquareColor.DARK : SquareColor.LIGHT;
-                drawTableRowReversed(out, chessPiecesRow, firstRowColor);
-                drawHeaderSquare(out, " " + (row+1) + " ");
-                resetColors(out);
-                out.println();
-            }
+        for (int row = 0; row < TABLE_ROWS_IN_SQUARES; row++) {
+            drawHeaderSquare(out, " " + (row+1) + " ");
+            ChessPiece[] chessPiecesRow = board.getBoardTable()[row]; //if row = 8 then get board.getBoardTable()[7]
+            SquareColor firstRowColor =
+                    ((row+1) == 8 || (row+1) == 6 || (row+1) == 4 || (row+1) == 2) ? SquareColor.DARK : SquareColor.LIGHT;
+            drawTableRowReversed(out, chessPiecesRow, firstRowColor);
+            drawHeaderSquare(out, " " + (row+1) + " ");
+            resetColors(out);
+            out.println();
         }
     }
 
