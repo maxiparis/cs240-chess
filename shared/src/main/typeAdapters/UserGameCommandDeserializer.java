@@ -1,10 +1,10 @@
 package typeAdapters;
 
 import chess.ChessGame;
+import chess.ChessMoveImpl;
 import com.google.gson.*;
 import model.User;
-import webSocketMessages.userCommands.JoinPlayerMessage;
-import webSocketMessages.userCommands.UserGameCommand;
+import webSocketMessages.userCommands.*;
 
 import java.lang.reflect.Type;
 
@@ -28,11 +28,20 @@ public class UserGameCommandDeserializer implements JsonDeserializer {
                         ChessGame.TeamColor.class);
                 return new JoinPlayerMessage(authToken, gameID, playerColor);
             }
-            case JOIN_OBSERVER -> {}
-            case MAKE_MOVE -> {}
-            case LEAVE -> {}
-            case RESIGN -> {}
-            default -> {}
+            case JOIN_OBSERVER -> {
+                return new JoinObserverMessage(authToken, gameID);
+            }
+            case MAKE_MOVE -> {
+                ChessMoveImpl move = context.deserialize(jsonObject.get("move"),
+                        ChessMoveImpl.class);
+                return new MakeMoveMessage(authToken, gameID, move);
+            }
+            case LEAVE -> {
+                return new LeaveMessage(authToken, gameID);
+            }
+            case RESIGN -> {
+                return new ResignMessage(authToken, gameID);
+            }
         }
         return null;
     }
