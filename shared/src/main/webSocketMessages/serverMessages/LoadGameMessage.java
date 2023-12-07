@@ -7,9 +7,8 @@ public class LoadGameMessage extends ServerMessage{
     //TODO - should I use this game? or another one.
     private ChessGameImpl game;
 
-    public LoadGameMessage(ServerMessageType type, ChessGameImpl game) {
-        super(type);
+    public LoadGameMessage(ChessGameImpl game) {
+        super(ServerMessageType.LOAD_GAME);
         this.game = game;
-        super.serverMessageType = ServerMessageType.LOAD_GAME;
     }
 }

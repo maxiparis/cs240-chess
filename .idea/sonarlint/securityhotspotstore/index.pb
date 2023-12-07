@@ -150,3 +150,9 @@ m
 =shared/src/main/typeAdapters/UserGameCommandDeserializer.java,a/3/a351fad04dcd5a30c43e951db5561ccb4909e46f
 q
 Ashared/src/test/typeAdapters/UserGameCommandDeserializerTest.java,1/7/173acb4d22a0cbe5983ca0e29aebb935249d161d
+T
+$shared/src/main/model/AuthToken.java,e/b/eb6a896da350b6504774c5997b99d73100a0a101
+Y
+)src/main/services/AuthTokenValidator.java,8/9/89abd24b741a18772894e7c3b5ef7769e6fc5ea2
+V
+&src/main/services/JoinGameService.java,2/2/22aa94af715a8a70b00c850c72cc0f04321515f1
