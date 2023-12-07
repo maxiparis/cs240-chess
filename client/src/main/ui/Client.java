@@ -1,15 +1,11 @@
-import chess.ChessBoardImpl;
 import chess.ChessGame;
 import model.Game;
 import net.ServerFacade;
-import net.WebSocketCommunicator;
-import net.WebSocketCommunicator2;
 import requests.CreateGameRequest;
 import requests.JoinGameRequest;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.*;
-import ui.BoardDrawer;
 
 import java.util.Scanner;
 public class Client {

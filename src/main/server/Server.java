@@ -23,7 +23,6 @@ public class Server {
 
     private static void createRoutes() {
 
-
         //Register
         Spark.post("/user", Server::handleRegister);
 

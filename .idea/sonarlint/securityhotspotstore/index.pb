@@ -156,3 +156,7 @@ Y
 )src/main/services/AuthTokenValidator.java,8/9/89abd24b741a18772894e7c3b5ef7769e6fc5ea2
 V
 &src/main/services/JoinGameService.java,2/2/22aa94af715a8a70b00c850c72cc0f04321515f1
+k
+;shared/src/main/typeAdapters/ServerMessageDeserializer.java,4/3/4344f1522da7091d97c856e7b679d30e59a242a6
+o
+?shared/src/test/typeAdapters/ServerMessageDeserializerTest.java,8/d/8d4f0db9a14b82ec2a01cdf0dd96973cb66d46ec
