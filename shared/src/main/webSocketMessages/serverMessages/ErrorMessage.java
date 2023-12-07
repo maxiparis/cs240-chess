@@ -5,6 +5,12 @@ public class ErrorMessage extends ServerMessage {
 
     public ErrorMessage(String errorMessage) {
         super(ServerMessageType.ERROR);
-        this.errorMessage = "Error: " + errorMessage;
+
+        String[] split = errorMessage.split(" ");
+        if(split[0].equals("Error:")){
+            this.errorMessage = errorMessage;
+        } else {
+            this.errorMessage = "Error: " + errorMessage;
+        }
     }
 }
