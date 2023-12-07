@@ -1,0 +1,26 @@
+
+^
+java:S1192x"HDefine a constant instead of duplicating this literal "Error: " 5 times.(«ñ‹‹
+‰
+java:S1319"mThe return type of this method should be an interface such as "Set" rather than the implementation "HashSet".(‡½ï³úÿÿÿÿ
+k	java:S117`"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¢Õž×øÿÿÿÿ
+l	java:S117‘"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¢Õž×øÿÿÿÿ
+l	java:S117…"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÛñÓ°üÿÿÿÿ
+l	java:S117†"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¢Õž×øÿÿÿÿ
+¯
+java:S6548"˜A Singleton implementation was detected. Make sure the use of the Singleton pattern is required and the implementation is the right one for the context.(î„ËÙ
+@	java:S1069"+Replace this use of System.out by a logger.(Êþðï
+@	java:S106;"+Replace this use of System.out by a logger.(¾åúÁ
+E	java:S106@"+Replace this use of System.out by a logger.(©þêÜúÿÿÿÿ
+E	java:S106j"+Replace this use of System.out by a logger.(Ñëõšþÿÿÿÿ
+Y
+java:S1155k">Use isEmpty() to check whether the collection is empty or not.(ÊÐËäþÿÿÿÿ
+A	java:S106¸"+Replace this use of System.out by a logger.(Êþðï
+F	java:S106º"+Replace this use of System.out by a logger.(åÍîþÿÿÿÿ
+A	java:S106¿"+Replace this use of System.out by a logger.(¾åúÁ
+F	java:S106Ä"+Replace this use of System.out by a logger.(©þêÜúÿÿÿÿ
+F	java:S106Ù"+Replace this use of System.out by a logger.(Óú¿âþÿÿÿÿ
+F	java:S106æ"+Replace this use of System.out by a logger.(©þêÜúÿÿÿÿ
+F	java:S106"+Replace this use of System.out by a logger.(Ñëõšþÿÿÿÿ
+Z
+java:S1155‘">Use isEmpty() to check whether the collection is empty or not.(ÊÐËäþÿÿÿÿ

@@ -1,0 +1,48 @@
+
+g
+java:S1192"JDefine a constant instead of duplicating this literal "
+ 1. Help" 3 times.(ÉÆ®•8óÀÄ1
+7
+java:S1220""Move this file to a named package.8õÀÄ1
+L	java:S106*"+Replace this use of System.out by a logger.(ªÓ¼áşÿÿÿÿ8 ÀÄ1
+G	java:S1063"+Replace this use of System.out by a logger.(²Ã¹8Ÿ ÀÄ1
+O
+java:S61263"2Replace this String concatenation with Text block.(²Ã¹8Ÿ ÀÄ1
+L	java:S106P"+Replace this use of System.out by a logger.( ¬Ùÿÿÿÿÿ8¡ ÀÄ1
+L	java:S106T"+Replace this use of System.out by a logger.(ÆÑñÈÿÿÿÿÿ8¡ ÀÄ1
+L	java:S106l"+Replace this use of System.out by a logger.(ìë¯Àÿÿÿÿÿ8£ ÀÄ1
+L	java:S106p"+Replace this use of System.out by a logger.(é¯Ï“ùÿÿÿÿ8£ ÀÄ1
+]	java:S125t"<This block of commented-out lines of code should be removed.(ñ¥ùšøÿÿÿÿ8£ ÀÄ1
+F	java:S106~"+Replace this use of System.out by a logger.(ËƒÚE8¤ ÀÄ1
+N
+java:S6126~"2Replace this String concatenation with Text block.(ËƒÚE8¤ ÀÄ1
+M	java:S106ª"+Replace this use of System.out by a logger.(©ğ–ıÿÿÿÿ8¨ ÀÄ1
+M	java:S106Ì"+Replace this use of System.out by a logger.(Û‡¦úÿÿÿÿ8© ÀÄ1
+U
+java:S6126Ì"2Replace this String concatenation with Text block.(Û‡¦úÿÿÿÿ8© ÀÄ1
+M	java:S106÷"+Replace this use of System.out by a logger.(²Ô½œşÿÿÿÿ8­ ÀÄ1
+M	java:S106ø"+Replace this use of System.out by a logger.(É´ğëıÿÿÿÿ8­ ÀÄ1
+M	java:S106"+Replace this use of System.out by a logger.(ĞÓ¶úÿÿÿÿ8® ÀÄ1
+M	java:S106"+Replace this use of System.out by a logger.(ŞÒ—üÿÿÿÿ8® ÀÄ1
+Y	java:S125ò"<This block of commented-out lines of code should be removed.(€“ì8µ ÀÄ1
+^	java:S125õ"<This block of commented-out lines of code should be removed.(Ï‹œ£ÿÿÿÿÿ8µ ÀÄ1
+^	java:S125ù"<This block of commented-out lines of code should be removed.(ºóÉÂøÿÿÿÿ8µ ÀÄ1
+Y	java:S125ü"<This block of commented-out lines of code should be removed.(¦¢ŸØ8µ ÀÄ1
+Y	java:S125ÿ"<This block of commented-out lines of code should be removed.(Â²£8µ ÀÄ1
+Y	java:S125‚"<This block of commented-out lines of code should be removed.(“«ø8µ ÀÄ1
+^	java:S125Š"<This block of commented-out lines of code should be removed.(ü»£Ûıÿÿÿÿ8¶ ÀÄ1
+M	java:S106"+Replace this use of System.out by a logger.(ªÍõ‡üÿÿÿÿ8¶ ÀÄ1
+U
+java:S6126"2Replace this String concatenation with Text block.(ªÍõ‡üÿÿÿÿ8¶ ÀÄ1
+N
+java:S1128"1Remove this unused import 'chess.ChessBoardImpl'.(´â¤®8İıÂÄ1
+X
+java:S1128"6Remove this unused import 'net.WebSocketCommunicator'.(¡ü×şúÿÿÿÿ8İıÂÄ1
+T
+java:S1128"7Remove this unused import 'net.WebSocketCommunicator2'.(§Ú˜ª8İıÂÄ1
+H
+java:S1128"+Remove this unused import 'ui.BoardDrawer'.(åÅ»8İıÂÄ1
+H
+java:S1068"+Remove this unused "scanner" private field.(©ñ®¯8¶ ÀÄ1
+L
+java:S1068"/Remove this unused "currentGame" private field.(ïÑİˆ8· ÀÄ1

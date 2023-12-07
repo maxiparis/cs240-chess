@@ -10,13 +10,20 @@ import javax.sound.sampled.Port;
 public class Server {
     public static void main(String[] args) {
         Spark.externalStaticFileLocation("web");
-        Spark.port(8080);
-        System.out.println("Listening.... Please go to http://localhost:8080/\n");
+        Spark.port(1233);
+        var ws2 = new WebSocketRequestHandler();
+
+        //Websocket Port
+        Spark.webSocket("/connect", ws2);
+
+        System.out.println("Listening.... Please go to http://localhost:1233/\n");
         runHomePage();
         createRoutes();
     }
 
     private static void createRoutes() {
+
+
         //Register
         Spark.post("/user", Server::handleRegister);
 

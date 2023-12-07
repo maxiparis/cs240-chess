@@ -2,6 +2,8 @@ import chess.ChessBoardImpl;
 import chess.ChessGame;
 import model.Game;
 import net.ServerFacade;
+import net.WebSocketCommunicator;
+import net.WebSocketCommunicator2;
 import requests.CreateGameRequest;
 import requests.JoinGameRequest;
 import requests.LoginRequest;
@@ -17,7 +19,6 @@ public class Client {
     private static String authTokenLoggedIn = "";
     private static Game[] gamesFromDB;
     private static ChessGame currentGame = null;
-
     public String getUsernameLoggedIn() {
         return usernameLoggedIn;
     }
@@ -109,6 +110,16 @@ public class Client {
 
     private static void preLoginHelp() {
         System.out.println("Type in your keyboard the numbers 1,2,3 or 4 and then press 'Enter' to start");
+
+
+//        //JUST FOR TESTING WEBSOCKET
+//        try {
+//            var ws = new WebSocketCommunicator();
+//            System.out.println("Sending message to server WS");
+//            ws.send("now is working");
+//        } catch (Exception e) {
+//            System.out.println("The WSComunicator failed: " + e.getMessage());
+//        }
     }
 
     private static void displayPreLoginOptions() {

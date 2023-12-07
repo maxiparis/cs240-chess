@@ -1,6 +1,5 @@
 package net;
 
-import chess.ChessGame;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import requests.CreateGameRequest;
@@ -8,19 +7,21 @@ import requests.JoinGameRequest;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.*;
-import typeAdapters.ChessGameDeserializer;
 import typeAdapters.ListGamesResponseDeserializer;
+import webSocketMessages.userCommands.JoinPlayerMessage;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ServerFacade {
-    private ClientCommunicator communicator = new ClientCommunicator();
+    private HttpCommunicator httpCommunicator= new HttpCommunicator();
+    private WebSocketCommunicator webSocketCommunicator;
 
     public LoginResponse login (LoginRequest request){
         //convert request to JSON
         String requestAsJson = new Gson().toJson(request);
         try {
-            InputStreamReader jsonResponse = communicator.post(requestAsJson, null, "session");
+            InputStreamReader jsonResponse = httpCommunicator.post(requestAsJson, null, "session");
             LoginResponse response = new Gson().fromJson(jsonResponse, LoginResponse.class);
             return response;
         } catch (Exception e) {
@@ -32,7 +33,7 @@ public class ServerFacade {
     public RegisterResponse register(RegisterRequest request) {
         String requestAsJson = new Gson().toJson(request);
         try {
-            InputStreamReader jsonResponse = communicator.post(requestAsJson, null, "user");
+            InputStreamReader jsonResponse = httpCommunicator.post(requestAsJson, null, "user");
             RegisterResponse response = new Gson().fromJson(jsonResponse, RegisterResponse.class);
             return response;
         } catch (Exception e) {
@@ -43,7 +44,7 @@ public class ServerFacade {
 
     public LogoutResponse logout(String authTokenLoggedIn) {
         try {
-            InputStreamReader jsonResponse = communicator.delete(authTokenLoggedIn, "session");
+            InputStreamReader jsonResponse = httpCommunicator.delete(authTokenLoggedIn, "session");
             LogoutResponse response = new Gson().fromJson(jsonResponse, LogoutResponse.class);
             return response;
         } catch (Exception e) {
@@ -55,7 +56,7 @@ public class ServerFacade {
     public CreateGameResponse createGame(CreateGameRequest request, String tokenToAuthorize) {
         String requestAsJson = new Gson().toJson(request);
         try {
-            InputStreamReader jsonResponse = communicator.post(requestAsJson, tokenToAuthorize, "game");
+            InputStreamReader jsonResponse = httpCommunicator.post(requestAsJson, tokenToAuthorize, "game");
             CreateGameResponse response = new Gson().fromJson(jsonResponse, CreateGameResponse.class);
             return response;
         } catch (Exception e) {
@@ -67,7 +68,7 @@ public class ServerFacade {
 
     public ListGamesResponse listGames(String tokenToAuthorize) {
         try {
-            InputStreamReader jsonResponse = communicator.get(tokenToAuthorize, "game");
+            InputStreamReader jsonResponse = httpCommunicator.get(tokenToAuthorize, "game");
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(ListGamesResponse.class, new ListGamesResponseDeserializer())
                     .create();
@@ -82,12 +83,24 @@ public class ServerFacade {
     public JoinGameResponse joinGame(JoinGameRequest request, String tokenToAuthorize) {
         String requestAsJson = new Gson().toJson(request);
         try {
-            InputStreamReader jsonResponse = communicator.put(requestAsJson, tokenToAuthorize, "game");
+            InputStreamReader jsonResponse = httpCommunicator.put(requestAsJson, tokenToAuthorize, "game");
             JoinGameResponse response = new Gson().fromJson(jsonResponse, JoinGameResponse.class);
+            if(response.getMessage() == null){
+                joinGameWS(request, tokenToAuthorize);
+            }
             return response;
         } catch (Exception e) {
             JoinGameResponse response = new JoinGameResponse(e.getMessage());
             return response;
         }
     }
+
+    public void joinGameWS(JoinGameRequest request, String tokenToAuthorize) throws IOException {
+        webSocketCommunicator = new WebSocketCommunicator();
+        JoinPlayerMessage message = new JoinPlayerMessage
+                (tokenToAuthorize, request.getGameID(), request.getPlayerColor());
+        String serializedMessage = new Gson().toJson(message);
+        webSocketCommunicator.send(serializedMessage);
+    }
+
 }

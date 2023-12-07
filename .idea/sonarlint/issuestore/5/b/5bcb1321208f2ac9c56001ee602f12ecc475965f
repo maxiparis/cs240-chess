@@ -1,0 +1,21 @@
+
+J
+java:S1604"(Make this anonymous inner class a lambda(ÆÏ¹úÿÿÿÿ8¾ˆ“Ä1
+u
+java:S1104
+"SMake session a static final constant or non-public and provide accessors if needed.(áÿ“ƒıÿÿÿÿ8áŒ«»Ã1
+w
+java:S1104"UMake container a static final constant or non-public and provide accessors if needed.(’÷º¤ÿÿÿÿÿ8áŒ«»Ã1
+£
+java:S1186!"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(òø¨œøÿÿÿÿ8ÑÇŸÄ1
+£
+java:S1186&"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¢×äıÿÿÿÿ8²ßŸÄ1
+c
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(ÌÀ…Ãúÿÿÿÿ8Íˆ“Ä1
+L	java:S106"+Replace this use of System.out by a logger.(û÷Ãşşÿÿÿÿ8íŒ«»Ã1
+L	java:S106"+Replace this use of System.out by a logger.(ŞÆÿïûÿÿÿÿ8îŒ«»Ã1
+G	java:S106,"+Replace this use of System.err by a logger.(’“¥à8ğŒ«»Ã1
+Z
+java:S1128"8Remove this unused import 'java.net.URISyntaxException'.(Ä®íÿÿÿÿÿ8°ñ•Ä1
+P
+java:S1128".Remove this unused import 'java.util.Scanner'.(ÒÜÅ¸úÿÿÿÿ8°ñ•Ä1

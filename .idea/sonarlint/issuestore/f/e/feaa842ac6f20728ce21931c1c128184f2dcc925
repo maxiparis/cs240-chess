@@ -1,0 +1,26 @@
+
+g	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(Ý­ò¾øÿÿÿÿ8±êŸ®Â1
+g	java:S1122"FDefine and throw a dedicated exception instead of using a generic one.(¬ÛâËùÿÿÿÿ8²êŸ®Â1
+g	java:S112N"FDefine and throw a dedicated exception instead of using a generic one.(¤³”Õøÿÿÿÿ8²êŸ®Â1
+g	java:S112e"FDefine and throw a dedicated exception instead of using a generic one.(ÜË†Þûÿÿÿÿ8²êŸ®Â1
+‹
+java:S1488!"iImmediately return this expression instead of assigning it to the temporary variable "inputStreamReader".(À²Ë´ÿÿÿÿÿ8´êŸ®Â1
+‹
+java:S1488'"iImmediately return this expression instead of assigning it to the temporary variable "inputStreamReader".(À²Ë´ÿÿÿÿÿ8´êŸ®Â1
+‹
+java:S1488C"iImmediately return this expression instead of assigning it to the temporary variable "inputStreamReader".(À²Ë´ÿÿÿÿÿ8´êŸ®Â1
+‹
+java:S1488I"iImmediately return this expression instead of assigning it to the temporary variable "inputStreamReader".(À²Ë´ÿÿÿÿÿ8´êŸ®Â1
+‹
+java:S1488\"iImmediately return this expression instead of assigning it to the temporary variable "inputStreamReader".(À²Ë´ÿÿÿÿÿ8´êŸ®Â1
+‹
+java:S1488`"iImmediately return this expression instead of assigning it to the temporary variable "inputStreamReader".(À²Ë´ÿÿÿÿÿ8µêŸ®Â1
+‹
+java:S1488x"iImmediately return this expression instead of assigning it to the temporary variable "inputStreamReader".(À²Ë´ÿÿÿÿÿ8µêŸ®Â1
+‹
+java:S1488|"iImmediately return this expression instead of assigning it to the temporary variable "inputStreamReader".(À²Ë´ÿÿÿÿÿ8µêŸ®Â1
+]
+java:S1075
+"ARefactor your code to get this URI from a customizable parameter.(€Âý08ÊêŸ®Â1
+‰
+java:S1130,"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(”€›ª8ÒêŸ®Â1

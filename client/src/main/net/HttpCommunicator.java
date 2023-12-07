@@ -4,14 +4,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.ResultSet;
 
-public class ClientCommunicator {
-
+public class HttpCommunicator {
+    private static final String MAIN_PATH = "http://localhost:1233/";
     public InputStreamReader post(String jsonString, String authTokenLoggedIn, String urlPath) throws Exception {
-        String fullURL= "http://localhost:8080/" + urlPath;
+        String fullURL= MAIN_PATH + urlPath;
         URL url = new URL(fullURL);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -50,7 +48,7 @@ public class ClientCommunicator {
     }
 
     public InputStreamReader delete(String authTokenLoggedIn, String urlPath) throws Exception {
-        String fullURL= "http://localhost:8080/" + urlPath;
+        String fullURL= MAIN_PATH  + urlPath;
         URL url = new URL(fullURL);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -78,7 +76,7 @@ public class ClientCommunicator {
     }
 
     public InputStreamReader get(String authTokenLoggedIn, String urlPath) throws Exception {
-        String fullURL= "http://localhost:8080/" + urlPath;
+        String fullURL= MAIN_PATH + urlPath;
         URL url = new URL(fullURL);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -101,7 +99,7 @@ public class ClientCommunicator {
     }
 
     public InputStreamReader put(String jsonString, String authTokenLoggedIn, String urlPath) throws Exception {
-        String fullURL= "http://localhost:8080/" + urlPath;
+        String fullURL= MAIN_PATH + urlPath;
         URL url = new URL(fullURL);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

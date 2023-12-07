@@ -1,0 +1,28 @@
+
+b	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(±ÇÏÂ8ƒªºÄ1
+
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(øÂ¹8‡ªºÄ1
+X
+java:S1854";Remove this useless assignment to local variable "command".(ŒëÓ¶8‰ªºÄ1
+‰
+java:S1130"lRemove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.(±ÇÏÂ8‰ªºÄ1
+L	java:S106"+Replace this use of System.out by a logger.(œšñşÿÿÿÿ8‰ªºÄ1
+I
+java:S1481",Remove this unused "command" local variable.(ŒëÓ¶8ŠªºÄ1
+X	java:S125"<This block of commented-out lines of code should be removed.(û®§8ŠªºÄ1
+‰
+java:S1130#"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(áÀ«Ì8ŠªºÄ1
+L	java:S106$"+Replace this use of System.out by a logger.(´áÀŠÿÿÿÿÿ8ŠªºÄ1
+I
+java:S1128",Remove this unused import 'chess.ChessGame'.(†¶ØŸ8î¬ãÄ1
+O
+java:S1128"-Remove this unused import 'chess.ChessPiece'.(Á€“ˆûÿÿÿÿ8î¬ãÄ1
+J
+java:S1128	"(Remove this unused import 'spark.Spark'.(®’ÜÄøÿÿÿÿ8î¬ãÄ1
+]
+java:S1128
+"@Remove this unused import 'typeAdapters.ChessPieceDeserializer'.(›×Íø8î¬ãÄ1
+l
+java:S1128"ORemove this unused import 'webSocketMessages.userCommands.JoinObserverMessage'.(©¹±î8î¬ãÄ1
+o
+java:S1128"MRemove this unused import 'webSocketMessages.userCommands.JoinPlayerMessage'.(·™ŒÈıÿÿÿÿ8î¬ãÄ1
