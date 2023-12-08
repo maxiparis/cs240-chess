@@ -29,15 +29,15 @@ public class JoinGameService extends AuthTokenValidator {
 
             ChessGame.TeamColor callerColorRequest = request.getPlayerColor();
 
-            if(callerColorRequest == null){ //if the caller did not specify a color, then is spectator
+            if (callerColorRequest == null){ //if the caller did not specify a color, then is spectator
                 return new JoinGameResponse(null); //sending back a valid response
             }
 
             AuthToken callerToken = AuthDAO.getInstance().findWithToken(authToken);
 
             if (callerColorRequest.equals(WHITE)) {
-                if(foundGame.getWhiteUsername() != null){
-//                if(foundGame.getWhiteUsername() != null || foundGame.getWhiteUsername() != ""){
+                if(foundGame.getWhiteUsername() != null &&
+                        !foundGame.getWhiteUsername().equals(callerToken.getUsername())){
                     return new JoinGameResponse("Error: already taken");
                 } else {
                     foundGame.setWhiteUsername(callerToken.getUsername());
@@ -45,8 +45,8 @@ public class JoinGameService extends AuthTokenValidator {
                             foundGame.getBlackUsername(), foundGame.getGame());
                 }
             } else if(callerColorRequest.equals(BLACK)){
-                if(foundGame.getBlackUsername() != null){
-//                if(foundGame.getBlackUsername() != null || foundGame.getBlackUsername() != ""){
+                if(foundGame.getBlackUsername() != null &&
+                        !foundGame.getBlackUsername().equals(callerToken.getUsername())){
                     return new JoinGameResponse("Error: already taken");
                 } else {
                     foundGame.setBlackUsername(callerToken.getUsername());

@@ -3,6 +3,10 @@ package webSocketMessages.serverMessages;
 public class ErrorMessage extends ServerMessage {
     private String  errorMessage;
 
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
     public ErrorMessage(String errorMessage) {
         super(ServerMessageType.ERROR);
 

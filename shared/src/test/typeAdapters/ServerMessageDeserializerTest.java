@@ -70,7 +70,10 @@ class ServerMessageDeserializerTest {
                 .create();
 
         serverMessage = gson.fromJson(json, ServerMessage.class);
+
+        NotificationMessage converted = (NotificationMessage) serverMessage;
         assertEquals(NotificationMessage.class, serverMessage.getClass());
+        assertEquals(message.getMessage(), converted.getMessage());
     }
 
 

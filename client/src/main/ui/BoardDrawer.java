@@ -32,6 +32,7 @@ public class BoardDrawer {
     }
 
     public void drawBoardBlack() {
+        System.out.println();
         PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
         drawHeadersBlack(out);
@@ -42,6 +43,7 @@ public class BoardDrawer {
     }
 
     public void drawBoardWhite() {
+        System.out.println();
         PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
         drawHeadersWhite(out);

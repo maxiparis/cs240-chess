@@ -8,6 +8,7 @@ import requests.JoinGameRequest;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.*;
+import webSocketMessages.serverMessages.ServerMessage;
 
 import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -18,7 +19,12 @@ class ServerFacadeTest {
 
     @BeforeEach
     void setUp() {
-        serverFacade = new ServerFacade();
+        serverFacade = new ServerFacade(new ServerMessageObserver() {
+            @Override
+            public void notify(ServerMessage notification) {
+
+            }
+        });
         //before running this, run server and make sure
         // - there is no user called "test23" in the DB
         // - there is no game called TestGame23 in the DB

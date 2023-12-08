@@ -1,5 +1,4 @@
 package net;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import requests.CreateGameRequest;
@@ -14,8 +13,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ServerFacade {
+
+    private ServerMessageObserver observer;
     private HttpCommunicator httpCommunicator= new HttpCommunicator();
     private WebSocketCommunicator webSocketCommunicator;
+
+    public ServerFacade(ServerMessageObserver observer) {
+        this.observer = observer;
+    }
 
     public LoginResponse login (LoginRequest request){
         //convert request to JSON
@@ -96,7 +101,7 @@ public class ServerFacade {
     }
 
     public void joinGameWS(JoinGameRequest request, String tokenToAuthorize) throws IOException {
-        webSocketCommunicator = new WebSocketCommunicator();
+        webSocketCommunicator = new WebSocketCommunicator(this.observer);
         JoinPlayerMessage message = new JoinPlayerMessage
                 (tokenToAuthorize, request.getGameID(), request.getPlayerColor());
         String serializedMessage = new Gson().toJson(message);

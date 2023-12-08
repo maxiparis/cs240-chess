@@ -1,25 +1,39 @@
+package ui;
+
+import chess.ChessBoardImpl;
 import chess.ChessGame;
 import model.Game;
 import net.ServerFacade;
+import net.ServerMessageObserver;
 import requests.CreateGameRequest;
 import requests.JoinGameRequest;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.*;
+import webSocketMessages.serverMessages.ErrorMessage;
+import webSocketMessages.serverMessages.LoadGameMessage;
+import webSocketMessages.serverMessages.NotificationMessage;
+import webSocketMessages.serverMessages.ServerMessage;
 
 import java.util.Scanner;
-public class Client {
-    private Scanner scanner = new Scanner(System.in);
-    private static ServerFacade facade = new ServerFacade();
-    private static String usernameLoggedIn = "";
-    private static String authTokenLoggedIn = "";
-    private static Game[] gamesFromDB;
-    private static ChessGame currentGame = null;
+public class Client implements ServerMessageObserver {
+    public ServerFacade facade;
+    private String usernameLoggedIn = "";
+    private String authTokenLoggedIn = "";
+    private Game[] gamesFromDB;
+    private ChessGame.TeamColor currentTeamColor;
+    private ChessGame currentGame = null;
+
+
+    public Client() {
+        facade = new ServerFacade(this);
+    }
+
     public String getUsernameLoggedIn() {
         return usernameLoggedIn;
     }
 
-    public static void setUsernameLoggedIn(String user) {
+    public void setUsernameLoggedIn(String user) {
         usernameLoggedIn = user;
     }
 
@@ -27,11 +41,11 @@ public class Client {
         return authTokenLoggedIn;
     }
 
-    public static void setAuthTokenLoggedIn(String token) {
+    public void setAuthTokenLoggedIn(String token) {
         authTokenLoggedIn = token;
     }
 
-    public static void main(String[] args) {
+    public void run() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             // Perform actions or cleanup logic here
             if(!authTokenLoggedIn.equals("")){
@@ -43,7 +57,7 @@ public class Client {
         preLogin();
     }
 
-    private static void preLogin() {
+    private void preLogin() {
         System.out.println("******************" +
                 "\nWelcome to 240 Chess Game!" +
                 "\n");
@@ -72,39 +86,39 @@ public class Client {
         } while (continueLoop);
     }
 
-    private static void printAlertMessage(String message){
+    private void printAlertMessage(String message){
         System.out.println("---------------------\n" + message + "\n---------------------\n");
     }
 
-    private static void wrongInput(String expectedInput) {
+    private void wrongInput(String expectedInput) {
         System.out.println("**** Invalid input. Please enter the following input: " + expectedInput);
     }
 
-    private static String inputNext() {
+    private String inputNext() {
         Scanner scanner = new Scanner(System.in);
         return scanner.next();
     }
 
-    private static String inputNextLine() {
+    private String inputNextLine() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
 
-    private static String getInputWithPrompt(String prompt) {
+    private String getInputWithPrompt(String prompt) {
         askForInput(prompt);
         return inputNext();
     }
 
-    private static String getInputWithPromptNextLine(String prompt) {
+    private String getInputWithPromptNextLine(String prompt) {
         askForInput(prompt);
         return inputNextLine();
     }
 
-    private static void askForInput(String message) {
+    private void askForInput(String message) {
         System.out.print(message + ": ");
     }
 
-    private static void preLoginHelp() {
+    private void preLoginHelp() {
         System.out.println("Type in your keyboard the numbers 1,2,3 or 4 and then press 'Enter' to start");
 
 
@@ -118,7 +132,7 @@ public class Client {
 //        }
     }
 
-    private static void displayPreLoginOptions() {
+    private void displayPreLoginOptions() {
         System.out.println("Pre-Login Menu " +
                 "\n 1. Help" +
                 "\n 2. Login" +
@@ -126,7 +140,7 @@ public class Client {
                 "\n 4. Quit\n");
     }
 
-    private static void register() {
+    private void register() {
         String username = getInputWithPrompt("Please enter the username");
         String password = getInputWithPrompt("Please enter the password");
         String email = getInputWithPrompt("Please enter the email");
@@ -145,7 +159,7 @@ public class Client {
 
     }
 
-    private static void login() {
+    private void login() {
         String username = getInputWithPrompt("Please enter your username");
         String password = getInputWithPrompt("Please enter your password");
 
@@ -162,7 +176,7 @@ public class Client {
         }
     }
 
-    private static void postLogin() {
+    private void postLogin() {
         System.out.println("Your are now logged in.");
         boolean continueLoop = true;
         do {
@@ -196,7 +210,7 @@ public class Client {
     }
 
 
-    private static void displayPostLoginOptions() {
+    private void displayPostLoginOptions() {
         System.out.println("Post-Login Menu " +
                 "\n 1. Help" +
                 "\n 2. Logout" +
@@ -206,12 +220,12 @@ public class Client {
                 "\n 6. Join as Observer");
     }
 
-    private static void postLoginHelp() {
+    private void postLoginHelp() {
         printAlertMessage("Type in your keyboard the numbers 1,2,3,4,5 or 6 and then press 'Enter' to select" +
                 " that option. ");
     }
 
-    private static void logout() {
+    private void logout() {
         LogoutResponse response = facade.logout(authTokenLoggedIn);
         if(response.getMessage() != null){
             printAlertMessage("There was a problem logging you out: " + response.getMessage());
@@ -221,7 +235,7 @@ public class Client {
         }
     }
 
-    private static void createGame() {
+    private void createGame() {
         String gameName = getInputWithPromptNextLine("Enter the name for your new game");
         CreateGameRequest request = new CreateGameRequest(gameName);
         CreateGameResponse response = facade.createGame(request, authTokenLoggedIn);
@@ -233,7 +247,7 @@ public class Client {
         }
     }
 
-    private static void listGames() {
+    private void listGames() {
         ListGamesResponse response = facade.listGames(authTokenLoggedIn);
 
         if(response.getMessage() != null){
@@ -270,7 +284,7 @@ public class Client {
 
 
 
-    private static void joinGame() {
+    private void joinGame() {
         listGames();
         int gameID = 0;
         ChessGame.TeamColor color = null;
@@ -314,13 +328,15 @@ public class Client {
         if(response.getMessage() != null){
             printAlertMessage("There was a problem joining the game: " + response.getMessage());
         } else {
+            //keep copy of the team the player is playing
+            currentTeamColor= color;
             printAlertMessage("You joined the game successfully.");
             gamePlay();
         }
 
     }
 
-    private static void joinAsObserver() {
+    private void joinAsObserver() {
         listGames();
         int gameID = 0;
 
@@ -356,7 +372,7 @@ public class Client {
         }
     }
 
-    private static void gamePlay() {
+    private void gamePlay() {
         boolean continueLoop = true;
         do {
             displayGameplayOptions();
@@ -370,13 +386,13 @@ public class Client {
                     continueLoop = false;
                     break;
                 case "3":
-                    //leaveGame();
+                    leaveGame();
                     break;
                 case "4":
-                    //makeMove();
+//                    makeMove();
                     break;
                 case "5":
-                    //resignGame();
+                    resignGame();
                     break;
                 case "6":
                     //highlightLegalMovements();
@@ -387,12 +403,18 @@ public class Client {
             }
         } while (continueLoop);
 
-//        BoardDrawer drawer = new BoardDrawer((ChessBoardImpl) currentGame.getBoard());
-//        drawer.drawBoardWhite();
-//        drawer.drawBoardBlack();
+
     }
 
-    private static void displayGameplayOptions() {
+    private void resignGame() {
+        //if succesfull then make sure to make currentTeamColor is null or reseted
+    }
+
+    private void leaveGame() {
+        //if succesfull then make sure to make currentTeamColor is null or reseted
+    }
+
+    private void displayGameplayOptions() {
         System.out.println("Gameplay Menu " +
                 "\n 1. Help" +
                 "\n 2. Re-draw chess board" +
@@ -402,4 +424,28 @@ public class Client {
                 "\n 6. Highlight legal movements");
     }
 
+    @Override
+    public void notify(ServerMessage notification) {
+        switch (notification.getServerMessageType()){
+            case NOTIFICATION -> {
+                NotificationMessage converted = (NotificationMessage) notification;
+                System.out.println(converted.getMessage());
+            }
+            case ERROR -> {
+                ErrorMessage converted = (ErrorMessage) notification;
+                System.out.println(converted.getErrorMessage());
+            }
+            case LOAD_GAME -> {
+                LoadGameMessage converted = (LoadGameMessage) notification;
+                currentGame = converted.getGame();
+
+                BoardDrawer drawer = new BoardDrawer((ChessBoardImpl) currentGame.getBoard());
+                if(currentTeamColor.equals(ChessGame.TeamColor.WHITE)){
+                    drawer.drawBoardWhite();
+                } else if (currentTeamColor.equals(ChessGame.TeamColor.BLACK)) {
+                    drawer.drawBoardBlack();
+                }
+            }
+        }
+    }
 }
