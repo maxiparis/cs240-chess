@@ -37,8 +37,8 @@ public class WebSocketCommunicator extends Endpoint {
         }
     }
 
-    public void send(String msg) throws IOException {
-        this.session.getBasicRemote().sendText(msg);
+    public void send(String jsonMessage) throws IOException {
+        this.session.getBasicRemote().sendText(jsonMessage);
     }
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {

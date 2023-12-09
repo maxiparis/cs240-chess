@@ -14,7 +14,9 @@ import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
+import webSocketMessages.userCommands.LeaveMessage;
 
+import java.io.IOException;
 import java.util.Scanner;
 public class Client implements ServerMessageObserver {
     public ServerFacade facade;
@@ -23,6 +25,7 @@ public class Client implements ServerMessageObserver {
     private Game[] gamesFromDB;
     private ChessGame.TeamColor currentTeamColor;
     private ChessGame currentGame = null;
+    private int currentGameID;
 
 
     public Client() {
@@ -120,16 +123,6 @@ public class Client implements ServerMessageObserver {
 
     private void preLoginHelp() {
         System.out.println("Type in your keyboard the numbers 1,2,3 or 4 and then press 'Enter' to start");
-
-
-//        //JUST FOR TESTING WEBSOCKET
-//        try {
-//            var ws = new WebSocketCommunicator();
-//            System.out.println("Sending message to server WS");
-//            ws.send("now is working");
-//        } catch (Exception e) {
-//            System.out.println("The WSComunicator failed: " + e.getMessage());
-//        }
     }
 
     private void displayPreLoginOptions() {
@@ -330,6 +323,7 @@ public class Client implements ServerMessageObserver {
         } else {
             //keep copy of the team the player is playing
             currentTeamColor= color;
+            currentGameID = gameID;
             printAlertMessage("You joined the game successfully.");
             gamePlay();
         }
@@ -412,6 +406,12 @@ public class Client implements ServerMessageObserver {
 
     private void leaveGame() {
         //if succesfull then make sure to make currentTeamColor is null or reseted
+        LeaveMessage message = new LeaveMessage(authTokenLoggedIn, currentGameID);
+        try {
+            facade.leaveGameWS(message);
+        } catch (IOException e) {
+            printAlertMessage("Leave Game error: " + e.getMessage());
+        }
     }
 
     private void displayGameplayOptions() {

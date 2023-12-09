@@ -1,11 +1,10 @@
 package server;
 
 import handlers.*;
+import handlers.websocket.WebSocketRequestHandler;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
-
-import javax.sound.sampled.Port;
 
 public class Server {
     public static void main(String[] args) {

@@ -8,6 +8,7 @@ import requests.RegisterRequest;
 import responses.*;
 import typeAdapters.ListGamesResponseDeserializer;
 import webSocketMessages.userCommands.JoinPlayerMessage;
+import webSocketMessages.userCommands.LeaveMessage;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -100,7 +101,7 @@ public class ServerFacade {
         }
     }
 
-    public void joinGameWS(JoinGameRequest request, String tokenToAuthorize) throws IOException {
+    private void joinGameWS(JoinGameRequest request, String tokenToAuthorize) throws IOException {
         webSocketCommunicator = new WebSocketCommunicator(this.observer);
         JoinPlayerMessage message = new JoinPlayerMessage
                 (tokenToAuthorize, request.getGameID(), request.getPlayerColor());
@@ -108,4 +109,8 @@ public class ServerFacade {
         webSocketCommunicator.send(serializedMessage);
     }
 
+    public void leaveGameWS(LeaveMessage leaveMessage) throws IOException {
+        String jsonMessage = new Gson().toJson(leaveMessage);
+        webSocketCommunicator.send(jsonMessage);
+    }
 }
