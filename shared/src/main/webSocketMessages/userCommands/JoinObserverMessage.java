@@ -8,4 +8,8 @@ public class JoinObserverMessage extends UserGameCommand {
         this.gameID = gameID;
         super.commandType = CommandType.JOIN_OBSERVER;
     }
+
+    public int getGameID() {
+        return gameID;
+    }
 }

@@ -7,6 +7,7 @@ import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.*;
 import typeAdapters.ListGamesResponseDeserializer;
+import webSocketMessages.userCommands.JoinObserverMessage;
 import webSocketMessages.userCommands.JoinPlayerMessage;
 import webSocketMessages.userCommands.LeaveMessage;
 
@@ -102,11 +103,22 @@ public class ServerFacade {
     }
 
     private void joinGameWS(JoinGameRequest request, String tokenToAuthorize) throws IOException {
+        String serializedMessage = null;
         webSocketCommunicator = new WebSocketCommunicator(this.observer);
-        JoinPlayerMessage message = new JoinPlayerMessage
-                (tokenToAuthorize, request.getGameID(), request.getPlayerColor());
-        String serializedMessage = new Gson().toJson(message);
-        webSocketCommunicator.send(serializedMessage);
+
+        if(request.getPlayerColor() == null){
+            JoinObserverMessage message = new JoinObserverMessage(tokenToAuthorize, request.getGameID());
+            serializedMessage = new Gson().toJson(message);
+        } else {
+            JoinPlayerMessage message = new JoinPlayerMessage
+                    (tokenToAuthorize, request.getGameID(), request.getPlayerColor());
+            serializedMessage = new Gson().toJson(message);
+        }
+
+        if (serializedMessage != null) {
+            webSocketCommunicator.send(serializedMessage);
+        }
+
     }
 
     public void leaveGameWS(LeaveMessage leaveMessage) throws IOException {

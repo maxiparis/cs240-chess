@@ -53,6 +53,9 @@ public class Client implements ServerMessageObserver {
             // Perform actions or cleanup logic here
             if(!authTokenLoggedIn.equals("")){
                 System.out.println();
+                if(currentGame != null){ //there is a game going on
+                    leaveGame();
+                }
                 logout();
             }
         }));
@@ -325,7 +328,7 @@ public class Client implements ServerMessageObserver {
             currentTeamColor= color;
             currentGameID = gameID;
             printAlertMessage("You joined the game successfully.");
-            gamePlay();
+            gamePlayPlayer();
         }
 
     }
@@ -361,15 +364,43 @@ public class Client implements ServerMessageObserver {
         if(response.getMessage() != null){
             printAlertMessage("There was a problem joining (as observer) the game: " + response.getMessage());
         } else {
+            currentGameID = gameID;
             printAlertMessage("You joined the game as observer successfully.");
-            gamePlay();
+            gamePlayObserver();
         }
     }
 
-    private void gamePlay() {
+    private void gamePlayObserver() {
         boolean continueLoop = true;
         do {
-            displayGameplayOptions();
+            displayGameplayObserverOptions();
+            askForInput("Enter a number from 1 - 2");
+            switch (inputNext()){
+                case "1":
+                    //gamePlayHelp();
+                    break;
+                case "2":
+                    if(leaveGame()) {
+                        continueLoop = false;
+                    };
+                    break;
+                default:
+                    wrongInput("numbers from 1 - 2");
+                    break;
+            }
+        } while (continueLoop);
+    }
+
+    private void displayGameplayObserverOptions() {
+        System.out.println("Gameplay Observer Menu " +
+                "\n 1. Help" +
+                "\n 2. Leave");
+    }
+
+    private void gamePlayPlayer() {
+        boolean continueLoop = true;
+        do {
+            displayGameplayPlayerOptions();
             askForInput("Enter a number from 1 - 6");
             switch (inputNext()){
                 case "1":
@@ -377,10 +408,11 @@ public class Client implements ServerMessageObserver {
                     break;
                 case "2":
                     //redrawChessBoard();
-                    continueLoop = false;
                     break;
                 case "3":
-                    leaveGame();
+                    if(leaveGame()) {
+                        continueLoop = false;
+                    };
                     break;
                 case "4":
 //                    makeMove();
@@ -404,17 +436,23 @@ public class Client implements ServerMessageObserver {
         //if succesfull then make sure to make currentTeamColor is null or reseted
     }
 
-    private void leaveGame() {
+    private boolean leaveGame() {
         //if succesfull then make sure to make currentTeamColor is null or reseted
         LeaveMessage message = new LeaveMessage(authTokenLoggedIn, currentGameID);
         try {
             facade.leaveGameWS(message);
+            printAlertMessage("You have left the game succesfully");
+            currentTeamColor = null;
+            currentGame = null;
+            currentGameID = 0;
+            return true;
         } catch (IOException e) {
             printAlertMessage("Leave Game error: " + e.getMessage());
+            return false;
         }
     }
 
-    private void displayGameplayOptions() {
+    private void displayGameplayPlayerOptions() {
         System.out.println("Gameplay Menu " +
                 "\n 1. Help" +
                 "\n 2. Re-draw chess board" +
@@ -440,7 +478,7 @@ public class Client implements ServerMessageObserver {
                 currentGame = converted.getGame();
 
                 BoardDrawer drawer = new BoardDrawer((ChessBoardImpl) currentGame.getBoard());
-                if(currentTeamColor.equals(ChessGame.TeamColor.WHITE)){
+                if(currentTeamColor == null || currentTeamColor.equals(ChessGame.TeamColor.WHITE)){
                     drawer.drawBoardWhite();
                 } else if (currentTeamColor.equals(ChessGame.TeamColor.BLACK)) {
                     drawer.drawBoardBlack();

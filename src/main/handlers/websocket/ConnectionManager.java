@@ -1,5 +1,7 @@
 package handlers.websocket;
 
+import model.AuthToken;
+import org.eclipse.jetty.client.AuthenticationProtocolHandler;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.common.WebSocketSession;
 
@@ -8,7 +10,7 @@ import java.util.*;
 
 //This class is in charge of updating and sending messages to the connections
 public class ConnectionManager {
-    Map<String, Connection> byAuthToken = new HashMap<>();
+    Map<AuthToken, Connection> byAuthToken = new HashMap<>();
     Map<Integer, Set<Connection>> byGameID = new HashMap<>();
 
 
@@ -36,15 +38,17 @@ public class ConnectionManager {
     }
 
 
-    public void broadcastToGame(int gameID, String authTokenToExclude, String jsonMessage) throws IOException {
+    public void broadcastToGame(int gameID, AuthToken authTokenToExclude, String jsonMessage) throws IOException {
         Set<Connection> connectionS = byGameID.get(gameID);
 
-        for (Connection connection : connectionS) {
-            if(!connection.getAuthToken().equals(authTokenToExclude)){
-                connection.send(jsonMessage);
+        if (connectionS != null) {
+            for (Connection connection : connectionS) {
+                if(!connection.getAuthToken().equals(authTokenToExclude)){
+                    connection.send(jsonMessage);
 
-                //testing
-                System.out.println("Message sent to " + connection.getAuthToken() + ": " + jsonMessage);
+                    //testing
+                    System.out.println("Message sent to " + connection.getAuthToken() + ": " + jsonMessage);
+                }
             }
         }
     }
@@ -56,7 +60,7 @@ public class ConnectionManager {
 
     //********************* connectionsByAuthToken **************************//
 
-    public Connection addByAuthToken(String authToken, Session session){
+    public Connection addByAuthToken(AuthToken authToken, Session session){
         Connection connection = new Connection(authToken, session);
         byAuthToken.put(authToken, connection);
         return connection;
@@ -67,19 +71,35 @@ public class ConnectionManager {
     }
 
 
-    public void removeByAuthToken(String authToken, int gameID){
-        byAuthToken.remove(authToken);
-
-        Set<Connection> connectionsCopy = byGameID.get(gameID);
-//        for (Connection connection : byGameID.get(gameID)) {
-//            if(connection.getAuthToken().equals(authToken)){
-//                connectionsCopy.remove();
-//            }
-//        }
-    }
 
 
     //********************* both **************************//
+
+    /**
+     * Removes that authoken from both collections of connections.
+     * @param authToken to be removed
+     * @param gameID where the authoken will be in the ByGameID map.
+     */
+    public void removeByAuthToken(AuthToken authToken, int gameID){
+        byAuthToken.remove(authToken);
+
+        //1. copy all the connections from the original hashset, where the connection.authToken.username is not
+        //equal to the authToken parameter.
+        //2. I am gonna have a new hashset. replace that hashset into the gameID
+
+        Set<Connection> connectionsCopy = new HashSet<>();
+
+        if (byGameID.get(gameID) != null) {
+            for (Connection connection : byGameID.get(gameID)) {
+                if(!connection.getAuthToken().equals(authToken)){
+                    connectionsCopy.add(connection);
+                }
+            }
+        }
+
+        byGameID.put(gameID, connectionsCopy);
+
+    }
 
 
 }
