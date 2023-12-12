@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ChessPieceTest {
@@ -175,5 +177,12 @@ class ChessPieceTest {
         //   1 2 3 4 5 6 7 8
     }
 
+
+    @Test
+    public void pieceMoves() {
+        ChessPositionImpl position = new ChessPositionImpl(2, 1);
+        ChessPiece piece = testBoard.getPiece(position );
+        Set<ChessMoveImpl> chessMoves = piece.pieceMoves(testBoard, position);
+    }
 
 }

@@ -10,9 +10,12 @@ import typeAdapters.ListGamesResponseDeserializer;
 import webSocketMessages.userCommands.JoinObserverMessage;
 import webSocketMessages.userCommands.JoinPlayerMessage;
 import webSocketMessages.userCommands.LeaveMessage;
+import webSocketMessages.userCommands.MakeMoveMessage;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.management.MemoryUsage;
+import java.nio.channels.WritableByteChannel;
 
 public class ServerFacade {
 
@@ -118,11 +121,16 @@ public class ServerFacade {
         if (serializedMessage != null) {
             webSocketCommunicator.send(serializedMessage);
         }
-
     }
 
     public void leaveGameWS(LeaveMessage leaveMessage) throws IOException {
         String jsonMessage = new Gson().toJson(leaveMessage);
+//        webSocketCommunicator = new WebSocketCommunicator(this.observer);
+        webSocketCommunicator.send(jsonMessage);
+    }
+
+    public void makeMoveWS(MakeMoveMessage message) throws IOException {
+        String jsonMessage = new Gson().toJson(message);
         webSocketCommunicator.send(jsonMessage);
     }
 }

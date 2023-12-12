@@ -12,4 +12,12 @@ public class MakeMoveMessage extends UserGameCommand {
         this.move = chessMove;
         super.commandType = CommandType.MAKE_MOVE;
     }
+
+    public int getGameID() {
+        return gameID;
+    }
+
+    public ChessMoveImpl getMove() {
+        return move;
+    }
 }

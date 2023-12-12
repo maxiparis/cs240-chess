@@ -10,9 +10,10 @@ import java.util.*;
 
 //This class is in charge of updating and sending messages to the connections
 public class ConnectionManager {
+    //TODO consider removing byAuthToken because I am never using it. I am only adding and
+    //removing, but never accessing it.
     Map<AuthToken, Connection> byAuthToken = new HashMap<>();
     Map<Integer, Set<Connection>> byGameID = new HashMap<>();
-
 
     //********************* connectionsByGameId **************************//
 
@@ -43,7 +44,7 @@ public class ConnectionManager {
 
         if (connectionS != null) {
             for (Connection connection : connectionS) {
-                if(!connection.getAuthToken().equals(authTokenToExclude)){
+                if(authTokenToExclude == null || !connection.getAuthToken().equals(authTokenToExclude)){
                     connection.send(jsonMessage);
 
                     //testing

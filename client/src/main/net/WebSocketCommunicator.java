@@ -42,12 +42,13 @@ public class WebSocketCommunicator extends Endpoint {
     }
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
+        System.out.println("WebSocket Opened");
     }
 
 
     @Override
     public void onClose(Session session, CloseReason closeReason) {
-
+        System.err.println("WebSocket Closed: " + closeReason.getCloseCode() + ". Reason: " + closeReason.getReasonPhrase());
     }
 
     @Override

@@ -7,8 +7,8 @@ public class ChessPositionImpl implements ChessPosition{
     private int columnNumber;
 
     public ChessPositionImpl(int rowNumber, int columnNumber) {
-        this.rowNumber=rowNumber;
-        this.columnNumber=columnNumber;
+        this.rowNumber = rowNumber;
+        this.columnNumber = columnNumber;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package ui;
 
-import chess.ChessBoardImpl;
-import chess.ChessGame;
+import chess.*;
 import model.Game;
 import net.ServerFacade;
 import net.ServerMessageObserver;
@@ -15,7 +14,9 @@ import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.LeaveMessage;
+import webSocketMessages.userCommands.MakeMoveMessage;
 
+import javax.swing.text.rtf.RTFEditorKit;
 import java.io.IOException;
 import java.util.Scanner;
 public class Client implements ServerMessageObserver {
@@ -415,7 +416,7 @@ public class Client implements ServerMessageObserver {
                     };
                     break;
                 case "4":
-//                    makeMove();
+                    makeMove();
                     break;
                 case "5":
                     resignGame();
@@ -430,6 +431,151 @@ public class Client implements ServerMessageObserver {
         } while (continueLoop);
 
 
+    }
+
+    private void makeMove() {
+        String moveUnformatted = getInputWithPrompt("What move do you want to do? (for help type h)");
+        try {
+            if(moveUnformatted.equals("h")){
+                System.out.println("Format your move in this way: [source]:[destine]:[promotion piece], for example: " +
+                        "a7:a8:queen. If your move will not end in promotion, do not include a promotion piece: b3:b7");
+                makeMove();
+            } else {
+                String[] splitString = moveUnformatted.split(":");
+
+                String startAsString = null;
+                String endAsString = null;
+                String promotionPieceAsString = null;
+                ChessPositionImpl startPosition = null;
+                ChessPositionImpl endPosition = null;
+
+                if(splitString.length == 2){ //no promotion
+                    startAsString = splitString[0];
+                    startPosition = StringToChessPosition(startAsString);
+
+                    endAsString = splitString[1];
+                    endPosition = StringToChessPosition(endAsString);
+
+                    if(startPosition == null || endPosition == null){
+                        wrongInput("Format your move in this way: [source]:[destine]:[promotion piece], " +
+                                "for example: a7:a8:queen. If your move will not end in promotion, do not include a" +
+                                " promotion piece: b3:b7");
+                        return;
+                    }
+
+                    ChessMoveImpl move = new ChessMoveImpl(startPosition, endPosition);
+                    MakeMoveMessage moveMessage = new MakeMoveMessage(authTokenLoggedIn, currentGameID, move);
+                    facade.makeMoveWS(moveMessage);
+                } else if (splitString.length == 3) { //with promotion
+                    startAsString = splitString[0];
+                    startPosition = StringToChessPosition(startAsString);
+
+                    endAsString = splitString[1];
+                    endPosition = StringToChessPosition(endAsString);
+
+                    promotionPieceAsString = splitString[2];
+                    ChessPiece.PieceType promotionPiece = StringToPromotionPiece(promotionPieceAsString);
+
+                    if(startPosition == null || endPosition == null || promotionPiece == null){
+                        wrongInput("Format your move in this way: [source]:[destine]:[promotion piece], " +
+                                "for example: a7:a8:queen. If your move will not end in promotion, do not include a" +
+                                " promotion piece: b3:b7");
+                        return;
+                    }
+
+                    ChessMoveImpl move = new ChessMoveImpl(startPosition, endPosition, promotionPiece);
+                    MakeMoveMessage moveMessage = new MakeMoveMessage(authTokenLoggedIn, currentGameID, move);
+                    facade.makeMoveWS(moveMessage);
+                } else {
+                    wrongInput("Format your move in this way: [source]:[destine]:[promotion piece], " +
+                            "for example: a7:a8:queen. If your move will not end in promotion, do not include a" +
+                            " promotion piece: b3:b7");
+                }
+            }
+        } catch (IOException e) {
+            printAlertMessage("Error: " + e.getMessage());
+        }
+    }
+
+    public ChessPiece.PieceType StringToPromotionPiece(String promotionPieceAsString) {
+        try {
+            switch (promotionPieceAsString.toLowerCase()){
+                case "queen": {
+                    return ChessPiece.PieceType.QUEEN;
+                }
+                case "bishop": {
+                    return ChessPiece.PieceType.BISHOP;
+                }
+                case "rook": {
+                    return ChessPiece.PieceType.ROOK;
+                }
+                case "knight": {
+                    return ChessPiece.PieceType.KNIGHT;
+                }
+                default: {
+                    return null;
+                }
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public ChessPositionImpl StringToChessPosition(String positionAsString) {
+        //"a5"   where a = column  and 5 = row
+        try {
+            if(positionAsString.length() != 2){
+                return null;
+            }
+            int rowNumber = Integer.parseInt(String.valueOf(positionAsString.charAt(1)));
+
+            if(rowNumber < 1 || rowNumber > 8){
+                return null;
+            }
+
+            int columnNumber = 0;
+            switch(positionAsString.charAt(0)){
+                case 'a': {
+                    columnNumber = 1;
+                    break;
+                }
+                case 'b': {
+                    columnNumber = 2;
+                    break;
+                }
+                case 'c': {
+                    columnNumber = 3;
+                    break;
+                }
+                case 'd': {
+                    columnNumber = 4;
+                    break;
+                }
+                case 'e': {
+                    columnNumber = 5;
+                    break;
+                }
+                case 'f': {
+                    columnNumber = 6;
+                    break;
+                }
+                case 'g': {
+                    columnNumber = 7;
+                    break;
+                }
+                case 'h': {
+                    columnNumber = 8;
+                    break;
+                }
+                default: {
+                    return null; //to let know it was incorrect
+                }
+            }
+
+            return new ChessPositionImpl(rowNumber, columnNumber);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private void resignGame() {

@@ -32,6 +32,7 @@ public class Pawn implements ChessPiece{
 
     @Override
     public Set<ChessMoveImpl> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        System.out.println("pieceMoves:1");
         Set<ChessMoveImpl> possibleMoves = new HashSet<>();
 
         int myPositionColumn = myPosition.getColumn();
@@ -69,6 +70,8 @@ public class Pawn implements ChessPiece{
 
         int columnToLeft = myPositionColumn - 1;
         int columnToRight = myPositionColumn + 1;
+
+        System.out.println("pieceMoves:2");
 
         ChessPositionImpl diagonalLeft = new ChessPositionImpl(forwardMove, columnToLeft);
         ChessPositionImpl diagonalRight = new ChessPositionImpl(forwardMove, columnToRight);
@@ -127,6 +130,7 @@ public class Pawn implements ChessPiece{
                 possibleMoves.add(move);
             }
         }
+        System.out.println("pieceMoves:3");
 
         return possibleMoves;
     }
