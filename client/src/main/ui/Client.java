@@ -15,6 +15,7 @@ import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.LeaveMessage;
 import webSocketMessages.userCommands.MakeMoveMessage;
+import webSocketMessages.userCommands.ResignMessage;
 
 import javax.swing.text.rtf.RTFEditorKit;
 import java.io.IOException;
@@ -419,7 +420,9 @@ public class Client implements ServerMessageObserver {
                     makeMove();
                     break;
                 case "5":
-                    resignGame();
+                    if(resignGame()) {
+                        continueLoop = false;
+                    };
                     break;
                 case "6":
                     //highlightLegalMovements();
@@ -578,8 +581,22 @@ public class Client implements ServerMessageObserver {
         }
     }
 
-    private void resignGame() {
+    private boolean resignGame() {
         //if succesfull then make sure to make currentTeamColor is null or reseted
+        String confirmation = getInputWithPrompt("Do you want to resign? (answer yes or no)");
+        if(confirmation.toLowerCase().equals("yes")){
+            ResignMessage message = new ResignMessage(authTokenLoggedIn, currentGameID);
+            try {
+                facade.resignWS(message);
+                currentGame = null;
+                currentGameID = 0;
+                currentTeamColor = null;
+                return true;
+            } catch (IOException e) {
+                System.out.println("There was a problem and you could not resign. ");
+            }
+        }
+        return false;
     }
 
     private boolean leaveGame() {

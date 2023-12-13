@@ -287,4 +287,5 @@ public class GameDAO extends ClearDAO {
             throw new DataAccessException("Error: " + e.getMessage());
         }
     }
+
 }

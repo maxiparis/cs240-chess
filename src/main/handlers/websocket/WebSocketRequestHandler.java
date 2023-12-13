@@ -49,7 +49,7 @@ public class WebSocketRequestHandler {
                     case JOIN_OBSERVER -> joinObserver(connection, command);
                     case MAKE_MOVE -> makeMove(connection, command);
                     case LEAVE -> leave(connection.getAuthToken(), command);
-                    case RESIGN -> {}
+                    case RESIGN -> resign(connection, command);
                 }
             }
         } catch (DataAccessException da) {
@@ -59,6 +59,47 @@ public class WebSocketRequestHandler {
         } catch (Exception e) {
             System.out.println("onMessage had an error: " + e.getMessage());
         }
+    }
+
+    private void resign(Connection rootClientConnection, UserGameCommand command) throws DataAccessException, IOException {
+        //Server marks the game as over (no more moves can be made). Game is updated in the database.
+            //get the color of the root client
+            //mark the game as won by the other color
+        ResignMessage resignMessage = (ResignMessage) command;
+        ChessGame.TeamColor colorWhoWon = null;
+
+        Game gameFromDB = GameDAO.getInstance().findGameById(resignMessage.getGameID());
+        if(gameFromDB.getGame().getTeamTurn().equals(ChessGame.TeamColor.WHITE_WON) ||
+                gameFromDB.getGame().getTeamTurn().equals(ChessGame.TeamColor.BLACK_WON)){
+            //someone already won, you can't do that
+            ErrorMessage errorMessage = new ErrorMessage("You cannot resign because you the game is over.");
+            rootClientConnection.send(gson.toJson(errorMessage));
+            return;
+        }
+
+        if(rootClientConnection.getAuthToken().getUsername().equals(gameFromDB.getWhiteUsername())){
+            gameFromDB.getGame().setTeamTurn(ChessGame.TeamColor.BLACK_WON);
+            colorWhoWon = ChessGame.TeamColor.BLACK;
+            GameDAO.getInstance().updateGame(gameFromDB.getGameName(), gameFromDB.getWhiteUsername(),
+                    gameFromDB.getBlackUsername(), gameFromDB.getGame());
+        } else if(rootClientConnection.getAuthToken().getUsername().equals(gameFromDB.getBlackUsername())){
+            gameFromDB.getGame().setTeamTurn(ChessGame.TeamColor.WHITE_WON);
+            colorWhoWon = ChessGame.TeamColor.WHITE;
+            GameDAO.getInstance().updateGame(gameFromDB.getGameName(), gameFromDB.getWhiteUsername(),
+                    gameFromDB.getBlackUsername(), gameFromDB.getGame());
+        } else { // none of the names matches, send an error back
+            ErrorMessage errorMessage = new ErrorMessage("You cannot resign, because you are not a player.");
+            rootClientConnection.send(gson.toJson(errorMessage));
+            return;
+        }
+
+
+        //Server sends a Notification message to all clients in that game informing them that the root client left.
+        // This applies to both players and observers.
+        NotificationMessage notificationMessage = new NotificationMessage
+                ("Player " + rootClientConnection.getAuthToken().getUsername() + " resigned. " + colorWhoWon + " won.");
+        connections.broadcastToGame(resignMessage.getGameID(), null,
+                gson.toJson(notificationMessage));
     }
 
     private void makeMove(Connection rootClientConnection, UserGameCommand command) throws DataAccessException, IOException {
