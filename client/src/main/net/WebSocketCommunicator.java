@@ -48,7 +48,7 @@ public class WebSocketCommunicator extends Endpoint {
 
     @Override
     public void onClose(Session session, CloseReason closeReason) {
-        System.err.println("WebSocket Closed: " + closeReason.getCloseCode() + ". Reason: " + closeReason.getReasonPhrase());
+        System.out.println("\nWebSocket Closed: " + closeReason.getCloseCode());
     }
 
     @Override

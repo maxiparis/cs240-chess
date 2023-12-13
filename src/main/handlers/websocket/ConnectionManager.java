@@ -82,6 +82,7 @@ public class ConnectionManager {
      * @param gameID where the authoken will be in the ByGameID map.
      */
     public void removeByAuthToken(AuthToken authToken, int gameID){
+
         byAuthToken.remove(authToken);
 
         //1. copy all the connections from the original hashset, where the connection.authToken.username is not
@@ -94,6 +95,8 @@ public class ConnectionManager {
             for (Connection connection : byGameID.get(gameID)) {
                 if(!connection.getAuthToken().equals(authToken)){
                     connectionsCopy.add(connection);
+                } else {
+                    connection.getSession().close();
                 }
             }
         }
