@@ -13,24 +13,32 @@ import model.AuthToken;
 import model.Game;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.api.*;
+import services.AuthTokenValidator;
 import typeAdapters.UserGameCommandDeserializer;
+import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.userCommands.*;
 
 
+import javax.xml.validation.Validator;
 import java.io.IOException;
 
 @WebSocket
 public class WebSocketRequestHandler {
 
     private ConnectionManager connections = new ConnectionManager();
+    private Gson gson = new Gson();
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String jsonMessage) {
+    public void onMessage(Session session, String jsonMessage) throws IOException {
         try {
             System.out.println("Server received a message: " + jsonMessage);
-            UserGameCommand command = readJson(jsonMessage);
+            UserGameCommand command = readJson(jsonMessage) ;
+
+            //VALIDATE AUTHOKEN, GAMEID
+            AuthTokenValidator authTokenValidator = new AuthTokenValidator();
+            authTokenValidator.validateAuthToken(command.getAuthToken());
 
             AuthToken rootAuthToken = AuthDAO.getInstance().findWithToken(command.getAuthToken());
             Connection connection = connections.addByAuthToken(rootAuthToken, session);
@@ -44,12 +52,16 @@ public class WebSocketRequestHandler {
                     case RESIGN -> {}
                 }
             }
+        } catch (DataAccessException da) {
+            //send an error message
+            ErrorMessage errorMessage = new ErrorMessage(da.getMessage());
+            session.getRemote().sendString(gson.toJson(errorMessage));
         } catch (Exception e) {
             System.out.println("onMessage had an error: " + e.getMessage());
         }
     }
 
-    private void makeMove(Connection rootClientConnection, UserGameCommand command) throws DataAccessException {
+    private void makeMove(Connection rootClientConnection, UserGameCommand command) throws DataAccessException, IOException {
         MakeMoveMessage makeMoveMessage = (MakeMoveMessage) command;
 
         Game gameFromDB = GameDAO.getInstance().findGameById(makeMoveMessage.getGameID());
@@ -78,24 +90,29 @@ public class WebSocketRequestHandler {
 
                 //send load game to all players/observers in the game
                 LoadGameMessage loadGameMessage = new LoadGameMessage(updatedGameFromDB.getGame());
-                String jsonMessage = new Gson().toJson(loadGameMessage);
+                String jsonMessage = gson.toJson(loadGameMessage);
 
                 connections.broadcastToGame(makeMoveMessage.getGameID(), null, jsonMessage);
 
                 //send notification of the move to all others in the game ("player x has made the move: a2a5")
                 NotificationMessage moveNotification = new NotificationMessage("Player " + rootUsername +
                         " made the move " + moveAsMessage(makeMoveMessage.getMove()));
-                String notificationAsJson = new Gson().toJson(moveNotification);
+                String notificationAsJson = gson.toJson(moveNotification);
                 connections.broadcastToGame(makeMoveMessage.getGameID(), rootClientConnection.getAuthToken(),
                         notificationAsJson);
             } catch (InvalidMoveException e) {
-                System.out.println("InvalidMoveException was triggered" + e.getMessage());
                 //the move was not valid, send message back saying is not his turn
+
+                System.out.println("InvalidMoveException was triggered " + e.getMessage());
+                ErrorMessage error = new ErrorMessage(e.getMessage());
+                rootClientConnection.send(gson.toJson(error));
             } catch (IOException e) {
                 System.out.println("Error. connections.broadcastToGame is failling.");
             }
         } else {
             //is not the turn of the root, send message back saying is not his turn
+            ErrorMessage error = new ErrorMessage("It is not your turn yet");
+            rootClientConnection.send(gson.toJson(error));
         }
 
 
@@ -176,15 +193,38 @@ public class WebSocketRequestHandler {
             throws DataAccessException, IOException {
         JoinPlayerMessage joinCommand = (JoinPlayerMessage) command;
 
+        //validate player is joining the correct side
+        Game gameFromDB = GameDAO.getInstance().findGameById(joinCommand.getGameID());
+        ChessGame.TeamColor colorChosen = joinCommand.getPlayerColor();
+
+        //I ONLY want to allow the root to join if the team they chose is their own name
+        boolean isRootUserNameInGameAlready = true;
+        if(colorChosen.equals(ChessGame.TeamColor.WHITE)){
+            isRootUserNameInGameAlready = gameFromDB.getWhiteUsername() != null &&
+                    gameFromDB.getWhiteUsername().equals(rootClientConnection.getAuthToken().getUsername());
+        } else if(colorChosen.equals(ChessGame.TeamColor.BLACK)){
+            isRootUserNameInGameAlready = gameFromDB.getBlackUsername() != null &&
+                    gameFromDB.getBlackUsername().equals(rootClientConnection.getAuthToken().getUsername());
+        }
+
+        if(!isRootUserNameInGameAlready){
+            //send message back saying is
+            ErrorMessage errorMessage = new ErrorMessage("That team is already taken.");
+            rootClientConnection.send(gson.toJson(errorMessage));
+            return;
+        }
+
+        ChessGameImpl game = gameFromDB.getGame();
+
+
+
         connections.addByGameID(joinCommand.getGameID(), rootClientConnection);
 
-        Game gameFromDB = GameDAO.getInstance().findGameById(joinCommand.getGameID());
-        ChessGameImpl game = gameFromDB.getGame();
 
         //Server sends a LOAD_GAME message back to the root client.
         LoadGameMessage loadGameMessage = new LoadGameMessage(game);
 
-        String messageForRootClient = new Gson().toJson(loadGameMessage);
+        String messageForRootClient = gson.toJson(loadGameMessage);
         rootClientConnection.send(messageForRootClient);
 
         //Server sends a Notification message to all other clients in that game informing them what color
@@ -194,7 +234,7 @@ public class WebSocketRequestHandler {
         NotificationMessage notificationForOthers =
                 new NotificationMessage("Player " + rootUsername + " has joined as " + rootColor + " player.");
 
-        String notificationAsJson = new Gson().toJson(notificationForOthers);
+        String notificationAsJson = gson.toJson(notificationForOthers);
 
         connections.broadcastToGame(joinCommand.getGameID(), rootClientConnection.getAuthToken(), notificationAsJson);
     }
@@ -211,7 +251,7 @@ public class WebSocketRequestHandler {
         //Server sends a LOAD_GAME message back to the root client.
         LoadGameMessage loadGameMessage = new LoadGameMessage(game);
 
-        String messageForRootClient = new Gson().toJson(loadGameMessage);
+        String messageForRootClient = gson.toJson(loadGameMessage);
         rootClientConnection.send(messageForRootClient);
 
         //Server sends a Notification message to all other clients in that game informing them the rootClient
@@ -220,7 +260,7 @@ public class WebSocketRequestHandler {
         NotificationMessage notificationForOthers =
                 new NotificationMessage("Player " + rootUsername + " has joined as observer.");
 
-        String notificationAsJson = new Gson().toJson(notificationForOthers);
+        String notificationAsJson = gson.toJson(notificationForOthers);
 
         connections.broadcastToGame(joinCommand.getGameID(), rootClientConnection.getAuthToken(), notificationAsJson);
     }
@@ -247,7 +287,7 @@ public class WebSocketRequestHandler {
         //send notifications to all others
         NotificationMessage message = new NotificationMessage("Player " + authTokenLeaving.getUsername() + " has left" +
                 " the game.");
-        String jsonMessage = new Gson().toJson(message);
+        String jsonMessage = gson.toJson(message);
         connections.broadcastToGame(leaveCommand.getGameID(), authTokenLeaving, jsonMessage);
     }
 

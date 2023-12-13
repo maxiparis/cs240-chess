@@ -617,7 +617,8 @@ public class Client implements ServerMessageObserver {
             }
             case ERROR -> {
                 ErrorMessage converted = (ErrorMessage) notification;
-                System.out.println(converted.getErrorMessage());
+                System.out.println();
+                printAlertMessage(converted.getErrorMessage());
             }
             case LOAD_GAME -> {
                 LoadGameMessage converted = (LoadGameMessage) notification;
@@ -629,6 +630,7 @@ public class Client implements ServerMessageObserver {
                 } else if (currentTeamColor.equals(ChessGame.TeamColor.BLACK)) {
                     drawer.drawBoardBlack();
                 }
+                System.out.println("Is " + currentGame.getTeamTurn() + "'s turn");
             }
         }
     }
