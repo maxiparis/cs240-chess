@@ -70,9 +70,10 @@ public class WebSocketRequestHandler {
 
         Game gameFromDB = GameDAO.getInstance().findGameById(resignMessage.getGameID());
         if(gameFromDB.getGame().getTeamTurn().equals(ChessGame.TeamColor.WHITE_WON) ||
-                gameFromDB.getGame().getTeamTurn().equals(ChessGame.TeamColor.BLACK_WON)){
+                gameFromDB.getGame().getTeamTurn().equals(ChessGame.TeamColor.BLACK_WON) ||
+                gameFromDB.getGame().getTeamTurn().equals(ChessGame.TeamColor.STALEMATE)){
             //someone already won, you can't do that
-            ErrorMessage errorMessage = new ErrorMessage("You cannot resign because you the game is over.");
+            ErrorMessage errorMessage = new ErrorMessage("You cannot resign because the game is over.");
             rootClientConnection.send(gson.toJson(errorMessage));
             return;
         }
@@ -107,6 +108,17 @@ public class WebSocketRequestHandler {
 
         Game gameFromDB = GameDAO.getInstance().findGameById(makeMoveMessage.getGameID());
 
+        //Verifying the game is not over
+        if(gameFromDB.getGame().getTeamTurn().equals(ChessGame.TeamColor.WHITE_WON) ||
+                gameFromDB.getGame().getTeamTurn().equals(ChessGame.TeamColor.BLACK_WON) ||
+                gameFromDB.getGame().getTeamTurn().equals(ChessGame.TeamColor.STALEMATE)){
+            //someone already won, you can't do a move
+            ErrorMessage errorMessage = new ErrorMessage("You cannot make a move because the game is over.");
+            rootClientConnection.send(gson.toJson(errorMessage));
+            return;
+        }
+
+
         //verify whose turn is it
         ChessGame.TeamColor rootClientTeam = null;
         String rootUsername = rootClientConnection.getAuthToken().getUsername();
@@ -122,6 +134,20 @@ public class WebSocketRequestHandler {
             //try to do the movement now that we know is the turn of the root
             try {
                 gameFromDB.getGame().makeMove(makeMoveMessage.getMove());
+
+                //if someone won after that move, update DB and send messages
+                if(gameFromDB.getGame().isInCheckmate(ChessGame.TeamColor.WHITE)){
+                    //black won
+                    gameFromDB.getGame().setTeamTurn(ChessGame.TeamColor.BLACK_WON);
+                } else if (gameFromDB.getGame().isInCheckmate(ChessGame.TeamColor.BLACK)) {
+                    //white won
+                    gameFromDB.getGame().setTeamTurn(ChessGame.TeamColor.WHITE_WON);
+                } else if (gameFromDB.getGame().isInStalemate(ChessGame.TeamColor.WHITE) ||
+                        gameFromDB.getGame().isInStalemate(ChessGame.TeamColor.BLACK)) {
+                    //they are in stalemate
+                    gameFromDB.getGame().setTeamTurn(ChessGame.TeamColor.STALEMATE);
+                }
+
                 //updating in DB
                 GameDAO.getInstance().updateGame(gameFromDB.getGameName(), gameFromDB.getWhiteUsername(),
                         gameFromDB.getBlackUsername(), gameFromDB.getGame());

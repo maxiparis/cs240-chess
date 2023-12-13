@@ -4,6 +4,8 @@ import chess.*;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
+
 import static ui.EscapeSequences.*;
 
 public class BoardDrawer {
@@ -21,6 +23,143 @@ public class BoardDrawer {
          private static final String PAWN = " P ";
          private static final String EMPTY = "   ";
 
+    public void drawBoardWhiteHighlighting(ChessPositionImpl positionToCheck, Set<ChessMoveImpl> validMoves) {
+        System.out.println();
+        PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        out.print(ERASE_SCREEN);
+        drawHeadersWhite(out);
+        drawTableWhiteHighlighting(out, positionToCheck, validMoves);
+        drawHeadersWhite(out);
+        resetColors(out);
+        out.println();
+    }
+
+    private void drawTableWhiteHighlighting(PrintStream out, ChessPositionImpl positionToCheck,
+                                            Set<ChessMoveImpl> validMoves) {
+
+        for (int row = TABLE_ROWS_IN_SQUARES; row > 0; row--) {
+            drawHeaderSquare(out, " " + row + " ");
+            ChessPiece[] chessPiecesRow = board.getBoardTable()[row-1]; //if row = 8 then get board.getBoardTable()[7]
+            SquareColor firstRowColor =
+                    (row == 8 || row == 6 || row == 4 || row == 2) ? SquareColor.LIGHT : SquareColor.DARK;
+            drawTableRowHighlighting(out, chessPiecesRow, firstRowColor, row, positionToCheck, validMoves);
+            drawHeaderSquare(out, " " + row + " ");
+            resetColors(out);
+            out.println();
+        }
+    }
+
+    private void drawTableRowHighlighting(PrintStream out, ChessPiece[] chessPiecesRow, SquareColor firstRowColor,
+                                          int rowNumber, ChessPositionImpl positionToCheck,
+                                          Set<ChessMoveImpl> validMoves) {
+
+        boolean nextBGColorIsLight = (firstRowColor.equals(SquareColor.LIGHT));
+
+        for (int column = 0; column < TABLE_COLUMNS_IN_SQUARES; column++) {
+
+            final int COLUMN_1BASED = column + 1; //the column number but in 1 based. To be used by ChessPositionImpl
+
+            ChessPositionImpl currentPosition = new ChessPositionImpl(rowNumber, COLUMN_1BASED);
+
+            ChessPiece piece = chessPiecesRow[column];
+            SquareColor teamColor = (nextBGColorIsLight) ? SquareColor.LIGHT : SquareColor.DARK;
+
+
+            boolean highlightPositionToCheck = false;
+            boolean highlightValidMove = false;
+            //checking if the current position is the position of my position to check
+            if(positionToCheck.equals(currentPosition)){
+                highlightPositionToCheck = true;
+            }
+
+            if(validMoves != null){
+                for (ChessMoveImpl validMove : validMoves) {
+                    if(validMove.getEndPosition().equals(currentPosition)   ){
+                        highlightValidMove = true;
+                    }
+                }
+            }
+
+            if(piece == null){
+                drawTableSquareHighlighting(out, EMPTY, ChessGame.TeamColor.WHITE, teamColor, highlightPositionToCheck,
+                        highlightValidMove); //team color does not matter
+                nextBGColorIsLight = !nextBGColorIsLight; //changing the color
+                continue;
+            }
+
+            switch (piece.getPieceType()){
+                case KING:
+                    drawTableSquareHighlighting(out, KING, piece.getTeamColor(), teamColor, highlightPositionToCheck,
+                            highlightValidMove);
+                    break;
+                case QUEEN:
+                    drawTableSquareHighlighting(out, QUEEN, piece.getTeamColor(), teamColor, highlightPositionToCheck,
+                            highlightValidMove);
+                    break;
+                case BISHOP:
+                    drawTableSquareHighlighting(out, BISHOP, piece.getTeamColor(), teamColor, highlightPositionToCheck,
+                            highlightValidMove );
+                    break;
+                case KNIGHT:
+                    drawTableSquareHighlighting(out, KNIGHT, piece.getTeamColor(), teamColor, highlightPositionToCheck,
+                            highlightValidMove );
+                    break;
+                case ROOK:
+                    drawTableSquareHighlighting(out, ROOK, piece.getTeamColor(), teamColor, highlightPositionToCheck,
+                            highlightValidMove );
+                    break;
+                case PAWN:
+                    drawTableSquareHighlighting(out, PAWN, piece.getTeamColor(), teamColor, highlightPositionToCheck,
+                            highlightValidMove );
+                    break;
+                default:
+                    break;
+            }
+            nextBGColorIsLight = !nextBGColorIsLight; //changing the color
+        }
+
+    }
+
+    private void drawTableSquareHighlighting
+            (PrintStream out, String toPrint, ChessGame.TeamColor teamColor, SquareColor bgColor,
+             boolean highlightPositionToCheck, boolean highlightValidMove) {
+
+        if(highlightPositionToCheck){
+            out.print(SET_BG_COLOR_YELLOW);
+            out.print(SET_TEXT_COLOR_BLACK);
+            out.print(SET_TEXT_BOLD);
+            out.print(toPrint);
+            return;
+        }
+
+
+        if (bgColor.equals(SquareColor.LIGHT)) { //bg
+            if(highlightValidMove){
+                out.print(SET_BG_COLOR_GREEN);
+            } else {
+                out.print(SET_BG_COLOR_LIGHT_GREEN_RGB);
+            }
+        } else { //dark
+            if(highlightValidMove){
+                out.print(SET_BG_COLOR_DARK_GREEN);
+            } else {
+                out.print(SET_BG_COLOR_DARK_GREEN_RGB);
+            }
+        }
+
+        if(teamColor.equals(ChessGame.TeamColor.WHITE)){ //fg
+            out.print(SET_TEXT_COLOR_WHITE_RGB);
+            out.print(SET_TEXT_BOLD);
+        } else {
+            out.print(SET_TEXT_COLOR_BLACK);
+            out.print(SET_TEXT_BOLD);
+        }
+        out.print(toPrint); //text to print
+    }
+
+    public void drawBoardBlackHighlighting(ChessPositionImpl positionToCheck, Set<ChessMoveImpl> validMoves) {
+
+    }
 
 
     private enum SquareColor{
@@ -143,7 +282,7 @@ public class BoardDrawer {
             drawHeaderSquare(out, " " + row + " ");
             ChessPiece[] chessPiecesRow = board.getBoardTable()[row-1]; //if row = 8 then get board.getBoardTable()[7]
             SquareColor firstRowColor =
-                    (row == 8 || row == 6 || row == 4 || row == 2 || row == 8) ? SquareColor.LIGHT : SquareColor.DARK;
+                    (row == 8 || row == 6 || row == 4 || row == 2) ? SquareColor.LIGHT : SquareColor.DARK;
             drawTableRow(out, chessPiecesRow, firstRowColor);
             drawHeaderSquare(out, " " + row + " ");
             resetColors(out);
@@ -170,7 +309,7 @@ public class BoardDrawer {
 
         for (int column = 0; column < TABLE_COLUMNS_IN_SQUARES; column++) {
             ChessPiece piece = chessPiecesRow[column];
-                SquareColor teamColor = (nextBGColorIsLight) ? SquareColor.LIGHT : SquareColor.DARK;
+            SquareColor teamColor = (nextBGColorIsLight) ? SquareColor.LIGHT : SquareColor.DARK;
 
             if(piece == null){
                 drawTableSquare(out, EMPTY, ChessGame.TeamColor.WHITE, teamColor ); //team color does not matter

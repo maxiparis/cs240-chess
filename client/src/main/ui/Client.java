@@ -20,6 +20,8 @@ import webSocketMessages.userCommands.ResignMessage;
 import javax.swing.text.rtf.RTFEditorKit;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.Set;
+
 public class Client implements ServerMessageObserver {
     public ServerFacade facade;
     private String usernameLoggedIn = "";
@@ -379,12 +381,18 @@ public class Client implements ServerMessageObserver {
             askForInput("Enter a number from 1 - 2");
             switch (inputNext()){
                 case "1":
-                    //gamePlayHelp();
+                    gamePlayHelpObserver();
                     break;
                 case "2":
                     if(leaveGame()) {
                         continueLoop = false;
                     };
+                    break;
+                case "3":
+                    redrawChessBoard();
+                    break;
+                case "4":
+                    highlightLegalMovements();
                     break;
                 default:
                     wrongInput("numbers from 1 - 2");
@@ -393,10 +401,17 @@ public class Client implements ServerMessageObserver {
         } while (continueLoop);
     }
 
+    private void gamePlayHelpObserver() {
+        System.out.println("Type in your keyboard the numbers 1,2,3 or 4 and then press 'Enter' to start");
+
+    }
+
     private void displayGameplayObserverOptions() {
         System.out.println("Gameplay Observer Menu " +
                 "\n 1. Help" +
-                "\n 2. Leave");
+                "\n 2. Leave" +
+                "\n 3. Redraw board" +
+                "\n 4. Highlight Legal Moves");
     }
 
     private void gamePlayPlayer() {
@@ -406,10 +421,10 @@ public class Client implements ServerMessageObserver {
             askForInput("Enter a number from 1 - 6");
             switch (inputNext()){
                 case "1":
-                    //gamePlayHelp();
+                    gamePlayHelp();
                     break;
                 case "2":
-                    //redrawChessBoard();
+                    redrawChessBoard();
                     break;
                 case "3":
                     if(leaveGame()) {
@@ -425,7 +440,7 @@ public class Client implements ServerMessageObserver {
                     };
                     break;
                 case "6":
-                    //highlightLegalMovements();
+                    highlightLegalMovements();
                     break;
                 default:
                     wrongInput("numbers from 1 - 6");
@@ -434,6 +449,43 @@ public class Client implements ServerMessageObserver {
         } while (continueLoop);
 
 
+    }
+
+    private void gamePlayHelp() {
+        System.out.println("Type in your keyboard the numbers 1,2,3,4,5 or 6 and then press 'Enter' to start");
+
+    }
+
+    private void highlightLegalMovements() {
+        String positionUnformatted = getInputWithPrompt("What position do you want to check? (for help type h)");
+
+        ChessPositionImpl positionToCheck = null;
+        if (positionUnformatted.equals("h")) {
+            System.out.println("Format your move in this way [column as letter][row as number], for example: b3");
+            highlightLegalMovements();
+        } else {
+            positionToCheck=StringToChessPosition(positionUnformatted);
+            if (positionToCheck == null) {
+                wrongInput("Format your move in this way [column as letter][row as number], for example: b3");
+                return;
+            }
+        }
+
+        Set<ChessMoveImpl> validMoves = currentGame.validMoves(positionToCheck);
+        loadGameHighlightingMoves(positionToCheck, validMoves);
+    }
+
+    private void loadGameHighlightingMoves(ChessPositionImpl positionToCheck, Set<ChessMoveImpl> validMoves) {
+        BoardDrawer drawer = new BoardDrawer((ChessBoardImpl) currentGame.getBoard());
+        if(currentTeamColor == null || currentTeamColor.equals(ChessGame.TeamColor.WHITE)){
+            drawer.drawBoardWhiteHighlighting(positionToCheck, validMoves);
+        } else if (currentTeamColor.equals(ChessGame.TeamColor.BLACK)) {
+            drawer.drawBoardBlackHighlighting(positionToCheck, validMoves);
+        }
+    }
+
+    private void redrawChessBoard() {
+        loadGame();
     }
 
     private void makeMove() {
@@ -641,14 +693,27 @@ public class Client implements ServerMessageObserver {
                 LoadGameMessage converted = (LoadGameMessage) notification;
                 currentGame = converted.getGame();
 
-                BoardDrawer drawer = new BoardDrawer((ChessBoardImpl) currentGame.getBoard());
-                if(currentTeamColor == null || currentTeamColor.equals(ChessGame.TeamColor.WHITE)){
-                    drawer.drawBoardWhite();
-                } else if (currentTeamColor.equals(ChessGame.TeamColor.BLACK)) {
-                    drawer.drawBoardBlack();
-                }
-                System.out.println("Is " + currentGame.getTeamTurn() + "'s turn");
+                loadGame();
             }
         }
+    }
+
+    private void loadGame() {
+        BoardDrawer drawer = new BoardDrawer((ChessBoardImpl) currentGame.getBoard());
+        if(currentTeamColor == null || currentTeamColor.equals(ChessGame.TeamColor.WHITE)){
+            drawer.drawBoardWhite();
+        } else if (currentTeamColor.equals(ChessGame.TeamColor.BLACK)) {
+            drawer.drawBoardBlack();
+        }
+        if(currentGame.getTeamTurn().equals(ChessGame.TeamColor.WHITE_WON)){
+            printAlertMessage("White has won!. Game is over.");
+        } else if (currentGame.getTeamTurn().equals(ChessGame.TeamColor.BLACK_WON)) {
+            printAlertMessage("Black has won!. Game is over.");
+        } else if (currentGame.getTeamTurn().equals(ChessGame.TeamColor.STALEMATE)) {
+            printAlertMessage("This game is in stalemate. Game is over.");
+        } else {
+            System.out.println("Is " + currentGame.getTeamTurn() + "'s turn");
+        }
+
     }
 }

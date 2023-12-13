@@ -35,9 +35,11 @@ public class ChessGameImpl implements ChessGame{
         Set<ChessMoveImpl> validMovesBeforeCheckFilter;
 
         ChessPiece piece = board.getPiece(startPosition);
+
         if(piece == null){
             return null;
         }
+
         validMovesBeforeCheckFilter = piece.pieceMoves(board, startPosition);
 
         //filter here
@@ -228,7 +230,7 @@ public class ChessGameImpl implements ChessGame{
 
     @Override
     public boolean isInStalemate(TeamColor teamColor) {
-        boolean inCheck=isInCheck(teamColor);
+        boolean inCheck = isInCheck(teamColor);
         boolean teamHasLegalMoves = false;
 
         //for each of my pieces
