@@ -125,31 +125,35 @@ public class BoardDrawer {
              boolean highlightPositionToCheck, boolean highlightValidMove) {
 
         if(highlightPositionToCheck){
-            out.print(SET_BG_COLOR_YELLOW);
-            out.print(SET_TEXT_COLOR_BLACK);
-            out.print(SET_TEXT_BOLD);
-            out.print(toPrint);
-            return;
-        }
-
-
-        if (bgColor.equals(SquareColor.LIGHT)) { //bg
-            if(highlightValidMove){
-                out.print(SET_BG_COLOR_GREEN);
-            } else {
-                out.print(SET_BG_COLOR_LIGHT_GREEN_RGB);
+            if(teamColor.equals(ChessGame.TeamColor.WHITE)){
+                out.print(SET_BG_COLOR_MAGENTA);
+            } else { //BLACK
+                out.print(SET_BG_COLOR_YELLOW);
+//            out.print(SET_TEXT_COLOR_BLACK);
+//            out.print(SET_TEXT_BOLD);
+//            out.print(toPrint);
+//            return;
             }
-        } else { //dark
-            if(highlightValidMove){
-                out.print(SET_BG_COLOR_DARK_GREEN);
-            } else {
-                out.print(SET_BG_COLOR_DARK_GREEN_RGB);
+        } else {
+            if (bgColor.equals(SquareColor.LIGHT)) { //bg
+                if (highlightValidMove) {
+                    out.print(SET_BG_COLOR_GREEN);
+                } else {
+                    out.print(SET_BG_COLOR_LIGHT_GREEN_RGB);
+                }
+            } else { //dark
+                if (highlightValidMove) {
+                    out.print(SET_BG_COLOR_DARK_GREEN);
+                } else {
+                    out.print(SET_BG_COLOR_DARK_GREEN_RGB);
+                }
             }
         }
 
         if(teamColor.equals(ChessGame.TeamColor.WHITE)){ //fg
             out.print(SET_TEXT_COLOR_WHITE_RGB);
             out.print(SET_TEXT_BOLD);
+
         } else {
             out.print(SET_TEXT_COLOR_BLACK);
             out.print(SET_TEXT_BOLD);
@@ -158,7 +162,86 @@ public class BoardDrawer {
     }
 
     public void drawBoardBlackHighlighting(ChessPositionImpl positionToCheck, Set<ChessMoveImpl> validMoves) {
+        System.out.println();
+        PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        out.print(ERASE_SCREEN);
+        drawHeadersBlack(out);
+        drawTableBlackHighlighting(out, positionToCheck, validMoves);
+        drawHeadersBlack(out);
+        resetColors(out);
+        out.println();
+    }
 
+    private void drawTableBlackHighlighting(PrintStream out, ChessPositionImpl positionToCheck, Set<ChessMoveImpl> validMoves) {
+        for (int row = 0; row < TABLE_ROWS_IN_SQUARES; row++) {
+            drawHeaderSquare(out, " " + (row+1) + " ");
+            ChessPiece[] chessPiecesRow = board.getBoardTable()[row]; //if row = 8 then get board.getBoardTable()[7]
+            SquareColor firstRowColor =
+                    ((row+1) == 8 || (row+1) == 6 || (row+1) == 4 || (row+1) == 2) ? SquareColor.DARK : SquareColor.LIGHT;
+            drawTableRowReversedHighlighting(out, chessPiecesRow, firstRowColor, row+1, positionToCheck, validMoves);
+            drawHeaderSquare(out, " " + (row+1) + " ");
+            resetColors(out);
+            out.println();
+        }
+    }
+
+    private void drawTableRowReversedHighlighting(PrintStream out, ChessPiece[] chessPiecesRow, SquareColor firstRowColor, int rowNumber, ChessPositionImpl positionToCheck, Set<ChessMoveImpl> validMoves) {
+
+        boolean nextBGColorIsLight = (firstRowColor.equals(SquareColor.LIGHT));
+
+        for (int column = TABLE_COLUMNS_IN_SQUARES; column > 0; column--) {
+
+            ChessPositionImpl currentPosition = new ChessPositionImpl(rowNumber, column);
+
+            ChessPiece piece = chessPiecesRow[column-1];
+            SquareColor teamColor = (nextBGColorIsLight) ? SquareColor.LIGHT : SquareColor.DARK;
+
+
+            boolean highlightPositionToCheck = false;
+            boolean highlightValidMove = false;
+            //checking if the current position is the position of my position to check
+            if(positionToCheck.equals(currentPosition)){
+                highlightPositionToCheck = true;
+            }
+
+            if(validMoves != null){
+                for (ChessMoveImpl validMove : validMoves) {
+                    if(validMove.getEndPosition().equals(currentPosition)   ){
+                        highlightValidMove = true;
+                    }
+                }
+            }
+
+
+            if(piece == null){
+                drawTableSquareHighlighting(out, EMPTY, ChessGame.TeamColor.WHITE, teamColor, highlightPositionToCheck, highlightValidMove); //team color does not matter
+                nextBGColorIsLight = !nextBGColorIsLight; //changing the color
+                continue;
+            }
+            switch (piece.getPieceType()){
+                case KING:
+                    drawTableSquareHighlighting(out, KING, piece.getTeamColor(), teamColor, highlightPositionToCheck, highlightValidMove );
+                    break;
+                case QUEEN:
+                    drawTableSquareHighlighting(out, QUEEN, piece.getTeamColor(), teamColor, highlightPositionToCheck, highlightValidMove );
+                    break;
+                case BISHOP:
+                    drawTableSquareHighlighting(out, BISHOP, piece.getTeamColor(), teamColor, highlightPositionToCheck, highlightValidMove );
+                    break;
+                case KNIGHT:
+                    drawTableSquareHighlighting(out, KNIGHT, piece.getTeamColor(), teamColor, highlightPositionToCheck, highlightValidMove );
+                    break;
+                case ROOK:
+                    drawTableSquareHighlighting(out, ROOK, piece.getTeamColor(), teamColor, highlightPositionToCheck, highlightValidMove );
+                    break;
+                case PAWN:
+                    drawTableSquareHighlighting(out, PAWN, piece.getTeamColor(), teamColor, highlightPositionToCheck, highlightValidMove );
+                    break;
+                default:
+                    break;
+            }
+            nextBGColorIsLight = !nextBGColorIsLight; //changing the color
+        }
     }
 
 

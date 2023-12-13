@@ -56,5 +56,39 @@ class BoardDrawerTest {
         positionToCheck = new ChessPositionImpl(4, 7);
         validMoves = game.validMoves(positionToCheck);
         drawer.drawBoardWhiteHighlighting(positionToCheck, validMoves);
+
+        positionToCheck = new ChessPositionImpl(7, 4);
+        validMoves = game.validMoves(positionToCheck);
+        drawer.drawBoardWhiteHighlighting(positionToCheck, validMoves);
+
+
+    }
+
+    @Test
+    void drawBoardBlackHighlighting() throws InvalidMoveException {
+        ChessGameImpl game = new ChessGameImpl(ChessGame.TeamColor.WHITE);
+        board = new ChessBoardImpl();
+        board.resetBoard();
+        game.setBoard(board);
+
+        ChessPositionImpl positionToCheck = new ChessPositionImpl(2, 4);
+        Set<ChessMoveImpl> validMoves = game.validMoves(positionToCheck);
+
+        drawer = new BoardDrawer(board);
+        drawer.drawBoardBlackHighlighting(positionToCheck, validMoves);
+
+        game.makeMove(new ChessMoveImpl(new ChessPositionImpl(2, 5), new ChessPositionImpl(3,5)));
+
+        drawer = new BoardDrawer(board);
+        positionToCheck = new ChessPositionImpl(1, 4);
+        validMoves = game.validMoves(positionToCheck);
+        drawer.drawBoardBlackHighlighting(positionToCheck, validMoves);
+
+        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+        game.makeMove(new ChessMoveImpl(positionToCheck, new ChessPositionImpl(4, 7)));
+        drawer = new BoardDrawer(board);
+        positionToCheck = new ChessPositionImpl(4, 7);
+        validMoves = game.validMoves(positionToCheck);
+        drawer.drawBoardBlackHighlighting(positionToCheck, validMoves);
     }
 }

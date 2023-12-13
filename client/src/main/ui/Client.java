@@ -482,6 +482,16 @@ public class Client implements ServerMessageObserver {
         } else if (currentTeamColor.equals(ChessGame.TeamColor.BLACK)) {
             drawer.drawBoardBlackHighlighting(positionToCheck, validMoves);
         }
+
+        if(currentGame.getTeamTurn().equals(ChessGame.TeamColor.WHITE_WON)){
+            printAlertMessage("White has won!. Game is over.");
+        } else if (currentGame.getTeamTurn().equals(ChessGame.TeamColor.BLACK_WON)) {
+            printAlertMessage("Black has won!. Game is over.");
+        } else if (currentGame.getTeamTurn().equals(ChessGame.TeamColor.STALEMATE)) {
+            printAlertMessage("This game is in stalemate. Game is over.");
+        } else {
+            System.out.println("Is " + currentGame.getTeamTurn() + "'s turn");
+        }
     }
 
     private void redrawChessBoard() {
