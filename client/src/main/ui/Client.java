@@ -722,6 +722,11 @@ public class Client implements ServerMessageObserver {
         } else if (currentGame.getTeamTurn().equals(ChessGame.TeamColor.STALEMATE)) {
             printAlertMessage("This game is in stalemate. Game is over.");
         } else {
+            if(currentGame.isInCheck(ChessGame.TeamColor.WHITE)){
+                System.out.println("White is in check.");
+            } else if (currentGame.isInCheck(ChessGame.TeamColor.BLACK)){
+                System.out.println("Black is in check.");
+            }
             System.out.println("Is " + currentGame.getTeamTurn() + "'s turn");
         }
 

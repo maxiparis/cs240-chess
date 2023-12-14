@@ -24,6 +24,8 @@ public interface ChessGame {
     enum TeamColor {
         WHITE,
         BLACK,
+        WHITE_IN_CHECK,
+        BLACK_IN_CHECK,
         WHITE_WON,
         BLACK_WON,
         STALEMATE
