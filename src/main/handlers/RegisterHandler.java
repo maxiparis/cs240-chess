@@ -38,7 +38,6 @@ public class RegisterHandler {
             response.status(400);
         }
 
-        //TODO move this function to a superclass that is shared with LoginHandler
         tryToInsertTokenJustCreated(result);
 
 

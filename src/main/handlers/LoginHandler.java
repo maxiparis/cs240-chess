@@ -37,7 +37,6 @@ public class LoginHandler {
             response.status(401);
         }
 
-        //TODO try to make a superclass that can hold this method and share it with RegisterHandler
         tryToInsertTokenJustCreated(result);
 
         return gson.toJson(result);

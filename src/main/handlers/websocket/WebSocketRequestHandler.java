@@ -21,7 +21,6 @@ import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.userCommands.*;
 
 
-import javax.xml.validation.Validator;
 import java.io.IOException;
 
 @WebSocket
@@ -41,7 +40,8 @@ public class WebSocketRequestHandler {
             authTokenValidator.validateAuthToken(command.getAuthToken());
 
             AuthToken rootAuthToken = AuthDAO.getInstance().findWithToken(command.getAuthToken());
-            Connection connection = connections.addByAuthToken(rootAuthToken, session);
+//            Connection connection = connections.addByAuthToken(rootAuthToken, session);
+            Connection connection = new Connection(rootAuthToken, session);
 
             if(connection != null){
                 switch (command.getCommandType()){
@@ -285,7 +285,7 @@ public class WebSocketRequestHandler {
 
 
 
-        connections.addByGameID(joinCommand.getGameID(), rootClientConnection);
+        connections.add(joinCommand.getGameID(), rootClientConnection);
 
 
         //Server sends a LOAD_GAME message back to the root client.
@@ -310,7 +310,7 @@ public class WebSocketRequestHandler {
             throws DataAccessException, IOException {
         JoinObserverMessage joinCommand = (JoinObserverMessage) command;
 
-        connections.addByGameID(joinCommand.getGameID(), rootClientConnection);
+        connections.add(joinCommand.getGameID(), rootClientConnection);
 
         Game gameFromDB = GameDAO.getInstance().findGameById(joinCommand.getGameID());
         ChessGameImpl game = gameFromDB.getGame();
@@ -334,7 +334,7 @@ public class WebSocketRequestHandler {
 
     private void leave(AuthToken authTokenLeaving, UserGameCommand command) throws DataAccessException, IOException {
         LeaveMessage leaveCommand = (LeaveMessage) command;
-        connections.removeByAuthToken(authTokenLeaving, leaveCommand.getGameID());
+        connections.remove(authTokenLeaving, leaveCommand.getGameID());
 
         //remove from DB (will only work for players. with observers it will just update to the same game in the DB)
         Game gameFound = GameDAO.getInstance().findGameById((leaveCommand.getGameID()));
